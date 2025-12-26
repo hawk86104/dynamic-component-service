@@ -1,10 +1,10 @@
 /*
- * @Description: 
+ * @Description:
  * @Version: 1.668
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-26 10:28:22
+ * @LastEditTime: 2025-12-26 15:31:10
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -25,8 +25,8 @@ export default defineConfig({
       exposes: {
         './TheExperience': './src/components/TheExperience.vue',
       },
-      // shared: ['vue','three','@tresjs/core'],
-      shared: ['vue'],
+      shared: ['vue', 'three'],
+      // shared: ['vue','@tresjs/core'],
     }),
   ],
   build: {

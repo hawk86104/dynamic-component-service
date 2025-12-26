@@ -34,5 +34,5 @@ onBeforeRender(({ elapsed }) => {
     cast-shadow
   />
   <TresAxesHelper />
-  <TresGridHelper :args="[10, 10]" />
+  <!-- <TresGridHelper :args="[10, 10]" /> -->
 </template>
