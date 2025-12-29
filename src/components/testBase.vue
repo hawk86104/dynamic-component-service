@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 09:51:37
+ * @LastEditTime: 2025-12-29 17:27:18
 -->
 <script setup lang="ts">
 import type { TresObject } from '@tresjs/core'
@@ -24,23 +24,22 @@ onBeforeRender(({ elapsed }) => {
 </script>
 
 <template>
-  <!-- <TresPerspectiveCamera :position="[5, 5, 5]" :look-at="[0, 0, 0]" /> -->
-  <TresAmbientLight
-    :intensity="0.5"
-    color="white"
-  />
-  <TresMesh
-    ref="boxRef"
-    :position="[0, 2, 0]"
-  >
-    <TresBoxGeometry :args="[1, 1, 1]" />
-    <TresMeshNormalMaterial />
-  </TresMesh>
-  <TresDirectionalLight
-    :position="[0, 2, 4]"
-    :intensity="1"
-    cast-shadow
-  />
-  <TresAxesHelper />
-  <!-- <TresGridHelper :args="[10, 10]" /> -->
+  <TresGroup>
+    <TresAmbientLight
+      :intensity="0.5"
+      color="white"
+    />
+    <TresMesh
+      ref="boxRef"
+      :position="[0, 2, 0]"
+    >
+      <TresBoxGeometry :args="[1, 1, 1]" />
+      <TresMeshNormalMaterial />
+    </TresMesh>
+    <TresDirectionalLight
+      :position="[0, 2, 4]"
+      :intensity="1"
+      cast-shadow
+    />
+  </TresGroup>
 </template>
