@@ -1,0 +1,97 @@
+<!--
+ * @Description:
+ * @Version: 1.668
+ * @Autor: 地虎降天龙
+ * @Date: 2024-06-12 17:42:50
+ * @LastEditors: 地虎降天龙
+ * @LastEditTime: 2025-12-29 09:12:42
+-->
+<script lang="ts" setup>
+import * as THREE from 'three'
+import { reactive, ref, watch } from 'vue'
+import { useLoop } from '@tresjs/core'
+import { useTexture } from '../common/useTexture'
+
+const props = withDefaults(
+  defineProps<{
+    type?: string
+    color?: string
+    opacity?: number
+    rotationZ?: number
+    videoLoop?: boolean
+  }>(),
+  {
+    type: 'imgA',
+    color: '#fff',
+    opacity: 0.95,
+    rotationZ: 0.01,
+    videoLoop: false,
+  },
+)
+const tmRef = ref()
+const { onBeforeRender } = useLoop()
+onBeforeRender(() => {
+  if (tmRef.value) {
+    tmRef.value.rotation.z += props.rotationZ
+  }
+})
+
+const congfigRes = {
+  imgA: { type: 'img', path: './image/imgFloor1.png' },
+  imgB: { type: 'img', path: './image/imgFloor2.png' },
+  imgC: { type: 'img', path: './image/imgFloor3.png' },
+} as any
+
+const tmsMaterial = reactive({
+  color: props.color as any,
+  map: null as THREE.Texture | null,
+  side: THREE.DoubleSide,
+  transparent: true,
+  opacity: props.opacity,
+  blending: THREE.AdditiveBlending,
+  depthTest: true,
+  depthWrite: false,
+})
+
+const videoDom = document.createElement('video')
+watch(() => props.type, async (type) => {
+  tmsMaterial.map?.dispose()
+  if (congfigRes[type].type === 'img') {
+    const texture = await useTexture([congfigRes[type].path]) as any
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+    texture.repeat.set(1, 1)
+    tmsMaterial.map = texture
+  }
+  else if (congfigRes[type].type === 'video') {
+    videoDom.src = congfigRes[type].path
+    videoDom.crossOrigin = 'anonymous'
+    videoDom.loop = props.videoLoop
+    videoDom.muted = true
+    videoDom.play()
+    const texture = new THREE.VideoTexture(videoDom)
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+    texture.repeat.set(1, 1)
+    tmsMaterial.map = texture
+  }
+}, { immediate: true })
+
+watch(
+  () => [props.color, props.opacity, props.videoLoop],
+  ([color, opacity, videoLoop]: any) => {
+    tmsMaterial.color = new THREE.Color(color)
+    tmsMaterial.opacity = opacity
+    videoDom.loop = videoLoop
+  },
+)
+</script>
+
+<template>
+  <TresMesh ref="tmRef">
+    <TresPlaneGeometry :args="[10, 10]" />
+    <TresMeshBasicMaterial v-bind="tmsMaterial" />
+  </TresMesh>
+</template>

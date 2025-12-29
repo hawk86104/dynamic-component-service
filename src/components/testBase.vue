@@ -1,3 +1,11 @@
+<!--
+ * @Description:
+ * @Version: 1.668
+ * @Autor: 地虎降天龙
+ * @Date: 2025-12-26 08:14:02
+ * @LastEditors: 地虎降天龙
+ * @LastEditTime: 2025-12-29 09:51:37
+-->
 <script setup lang="ts">
 import type { TresObject } from '@tresjs/core'
 import { useLoop } from '@tresjs/core'
@@ -16,7 +24,7 @@ onBeforeRender(({ elapsed }) => {
 </script>
 
 <template>
-  <TresPerspectiveCamera :position="[5, 5, 5]" :look-at="[0, 0, 0]" />
+  <!-- <TresPerspectiveCamera :position="[5, 5, 5]" :look-at="[0, 0, 0]" /> -->
   <TresAmbientLight
     :intensity="0.5"
     color="white"
