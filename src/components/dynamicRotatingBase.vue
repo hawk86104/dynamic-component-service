@@ -4,13 +4,14 @@
  * @Autor: 地虎降天龙
  * @Date: 2024-06-12 17:42:50
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 09:12:42
+ * @LastEditTime: 2025-12-29 11:16:25
 -->
 <script lang="ts" setup>
 import * as THREE from 'three'
 import { reactive, ref, watch } from 'vue'
 import { useLoop } from '@tresjs/core'
 import { useTexture } from '../common/useTexture'
+import { getResUrl } from '../common/utils'
 
 const props = withDefaults(
   defineProps<{
@@ -37,9 +38,9 @@ onBeforeRender(() => {
 })
 
 const congfigRes = {
-  imgA: { type: 'img', path: './image/imgFloor1.png' },
-  imgB: { type: 'img', path: './image/imgFloor2.png' },
-  imgC: { type: 'img', path: './image/imgFloor3.png' },
+  imgA: { type: 'img', path: getResUrl('./image/imgFloor1.png') },
+  imgB: { type: 'img', path: getResUrl('./image/imgFloor2.png') },
+  imgC: { type: 'img', path: getResUrl('./image/imgFloor3.png') },
 } as any
 
 const tmsMaterial = reactive({
