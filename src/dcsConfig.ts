@@ -4,11 +4,11 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 10:05:11
+ * @LastEditTime: 2025-12-30 10:50:30
  */
 const config = {
   name: 'baseSample',
-  version: '1.0.0',
+  version: '1.0.1',
   description: '动态组件服务示例组件库',
   components: [
     {

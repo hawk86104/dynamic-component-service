@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-30 09:27:29
+ * @LastEditTime: 2025-12-30 21:46:05
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -33,8 +33,11 @@ export default defineConfig({
         './config': './src/dcsConfig.js',
         ...exposeMap,
       },
-      shared: ['vue', 'three'],
-      // shared: ['vue','@tresjs/core'],
+      shared: {
+        vue: {},
+        three: { requiredVersion: "0.180.0" }
+        // three: { version: '0.180.0',shareScope: 'three-default' },
+      },
     }),
   ],
   build: {
