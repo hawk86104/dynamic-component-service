@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-30 21:46:05
+ * @LastEditTime: 2025-12-30 22:08:56
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -35,7 +35,9 @@ export default defineConfig({
       },
       shared: {
         vue: {},
-        three: { requiredVersion: "0.180.0" }
+        three: { requiredVersion: '0.180.0' },
+        // "@tresjs/cientos": { requiredVersion: '5.2.0' },
+        // "@tresjs/core": { requiredVersion: '5.2.0' },
         // three: { version: '0.180.0',shareScope: 'three-default' },
       },
     }),
