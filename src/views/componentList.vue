@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-30 08:13:22
+ * @LastEditTime: 2025-12-30 08:47:47
 -->
 <script setup lang="ts">
 import { computed } from 'vue'
@@ -23,13 +23,11 @@ import dcsConfig from '../dcsConfig'
 const isDev = import.meta.env.DEV
 
 const currentBaseUrl = computed(() => {
-  const { protocol, hostname, port } = window.location
-  return `${protocol}//${hostname}${port ? `:${port}` : ''}/`
+  return window.location.origin + window.location.pathname
 })
 
 function goPreview(item: any) {
-  const url = `${currentBaseUrl.value}preview/${item.type}`
-  window.open(url, '_blank')
+  window.open(`${currentBaseUrl.value}#/preview/${item.type}`, '_blank')
 }
 </script>
 

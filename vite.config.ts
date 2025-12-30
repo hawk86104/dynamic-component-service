@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 16:13:32
+ * @LastEditTime: 2025-12-30 09:27:29
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -19,6 +19,7 @@ dcsConfig.components.forEach((item) => {
   exposeMap[`./${item.type}`] = item.comFile
 })
 export default defineConfig({
+  // base: './',
   plugins: [
     vue({
       ...templateCompilerOptions,
@@ -37,6 +38,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    // assetsDir: 'assets',
     rollupOptions: {
       output: {
         manualChunks: {
