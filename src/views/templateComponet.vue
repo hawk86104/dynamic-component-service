@@ -1,3 +1,11 @@
+<!--
+ * @Description:
+ * @Version: 1.668
+ * @Autor: 地虎降天龙
+ * @Date: 2025-12-29 16:50:24
+ * @LastEditors: 地虎降天龙
+ * @LastEditTime: 2025-12-30 08:02:27
+-->
 <script setup lang="ts">
 import { defineAsyncComponent, reactive } from 'vue'
 import { createConfigPane } from './createConfigPane'
@@ -18,8 +26,14 @@ const foundComponent = loader
     })
   : null
 const attrsData = reactive(props.componentConfig?.default || {})
-createConfigPane(document.getElementById('pane')!, props.componentConfig.config, attrsData)
+const pane = createConfigPane(document.getElementById('pane')!, props.componentConfig.config, attrsData)
 
+const defaultState = reactive({
+  showGrid: true,
+  showAxes: true,
+})
+pane.addBinding(defaultState, 'showGrid', { label: '显示网格' })
+pane.addBinding(defaultState, 'showAxes', { label: '显示轴' })
 let position = [0, 0, 0]
 if (props.componentConfig?.defaultObject3D?.position) {
   position = [
@@ -57,4 +71,6 @@ if (props.componentConfig?.defaultObject3D?.scale) {
       v-bind="attrsData"
     />
   </Suspense>
+  <TresGridHelper v-if="defaultState.showGrid" :position-y="0.1" />
+  <TresAxesHelper v-if="defaultState.showAxes" />
 </template>

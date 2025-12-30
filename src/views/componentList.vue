@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 16:08:10
+ * @LastEditTime: 2025-12-30 08:13:22
 -->
 <script setup lang="ts">
 import { computed } from 'vue'
@@ -34,7 +34,7 @@ function goPreview(item: any) {
 </script>
 
 <template>
-  <NSpace vertical size="large">
+  <NSpace vertical size="large" style="padding: 8px;">
     <!-- 顶部信息 -->
     <NCard>
       <NSpace vertical size="small">
@@ -90,17 +90,20 @@ function goPreview(item: any) {
             </div>
           </template>
 
-          <NSpace vertical size="small">
-            <NText strong>
+          <NSpace vertical size="small" style="padding-top: 16px;">
+            <NEllipsis strong>
               名称：{{ item.name }}
-            </NText>
-
-            <NText depth="3">
-              类型名：{{ item.type }}
-            </NText>
+            </NEllipsis>
 
             <NEllipsis depth="3">
-              文件路径：{{ item.comFile }}
+              类型名：{{ item.type }}
+            </NEllipsis>
+
+            <NEllipsis depth="3">
+              文件路径：
+            </NEllipsis>
+            <NEllipsis depth="3">
+              {{ item.comFile }}
             </NEllipsis>
           </NSpace>
         </NCard>
@@ -132,6 +135,6 @@ function goPreview(item: any) {
 .preview-wrapper img {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 </style>
