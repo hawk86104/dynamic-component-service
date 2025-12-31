@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-30 22:08:56
+ * @LastEditTime: 2025-12-31 11:07:14
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
@@ -14,8 +14,8 @@ import federation from '@originjs/vite-plugin-federation'
 import dcsConfig from './src/dcsConfig'
 
 // https://vitejs.dev/config/
-const exposeMap = {}
-dcsConfig.components.forEach((item) => {
+const exposeMap = {} as any
+dcsConfig.components.forEach((item: any) => {
   exposeMap[`./${item.type}`] = item.comFile
 })
 export default defineConfig({

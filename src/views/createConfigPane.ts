@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 17:17:45
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 17:22:30
+ * @LastEditTime: 2025-12-31 11:13:20
  */
 import { Pane } from 'tweakpane';
 
@@ -44,7 +44,7 @@ export function createConfigPane(
               return acc;
             }, {} as Record<string, any>),
           })
-          .on('change', ev => {
+          .on('change', (ev:any) => {
             values[key] = ev.value;
           });
         break;
@@ -55,7 +55,7 @@ export function createConfigPane(
             label: item.name,
             picker: 'inline'
           })
-          .on('change', ev => {
+          .on('change', (ev:any)  => {
             values[key] = ev.value;
           });
         break;
@@ -65,7 +65,7 @@ export function createConfigPane(
           .addBinding(values, key, {
             label: item.name,
           })
-          .on('change', ev => {
+          .on('change', (ev:any)  => {
             values[key] = ev.value;
           });
         break;
@@ -78,7 +78,7 @@ export function createConfigPane(
             max: item.max,
             step: item.step,
           })
-          .on('change', ev => {
+          .on('change', (ev:any)  => {
             values[key] = ev.value;
           });
         break;
