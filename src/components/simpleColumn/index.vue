@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import * as THREE from 'three'
+import bannerLabel from '../common/bannerLabel.vue'
+import underLine from './underLine.vue'
+import MaterialSelector from '../common/MaterialSelector/index.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -9,6 +12,14 @@ const props = withDefaults(
     distribution?: 'uniform' | 'proportional'
     width?: number
     titleSize?: number
+    fontColor?: string
+    materialType?: any
+    metalness?: number
+    roughness?: number
+    clearcoat?: number
+    clearcoatRoughness?: number
+    reflectivity?: number
+    opacity?: number
   }>(),
   {
     data: () => [
@@ -22,6 +33,14 @@ const props = withDefaults(
     distribution: 'proportional', // 布局方式
     width: 4 / 3, // 宽度
     titleSize: 0.8, // 标题大小
+    fontColor: '#ffffff',
+    materialType: 'MeshPhysicalMaterial',
+    metalness: 0.5,
+    roughness: 0.5,
+    clearcoat: 0.2,
+    clearcoatRoughness: 0.1,
+    reflectivity: 0.5,
+    opacity: 1,
   },
 )
 
@@ -107,8 +126,28 @@ watch(
     <TresGroup ref="tgroup" :position-x="centerX">
       <TresGroup v-for="(mesh, index) in meshList" :key="index" :position="[mesh.x, 0.001, 0]">
         <TresMesh :geometry="mesh.geometry" castShadow>
-          <TresMeshStandardMaterial :color="mesh.data.color" transparent />
+          <MaterialSelector
+            :type="materialType"
+            :material-props="{ color: mesh.data.color,
+                               metalness,
+                               roughness,
+                               clearcoat,
+                               clearcoatRoughness,
+                               reflectivity,
+                               opacity }"
+          />
         </TresMesh>
+        <bannerLabel
+          :rotation="[-Math.PI / 2, -Math.PI / 2, -Math.PI / 2]"
+          :text="`${mesh.data.value}${mesh.data.title}`"
+          :fontSize="titleSize"
+          :position="[0.05, 0.01, 0.4]"
+          :isSprite="false"
+          backgroundColor="rgba(255, 255, 255, 0.0)"
+          :fontColor="fontColor"
+          :dpi="10"
+        />
+        <underLine :color="fontColor" :length="0.3" :position="[0, 0.011, 0.24]" :rotation="[-Math.PI / 2, 0, -Math.PI / 2]" />
       </TresGroup>
     </TresGroup>
   </TresGroup>
