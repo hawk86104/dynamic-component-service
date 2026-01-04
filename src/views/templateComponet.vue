@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 16:50:24
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-30 08:02:27
+ * @LastEditTime: 2026-01-04 09:58:08
 -->
 <script setup lang="ts">
 import { defineAsyncComponent, reactive } from 'vue'
@@ -14,7 +14,7 @@ const props = defineProps<{
   componentConfig: any
 }>()
 
-const modules = import.meta.glob('/src/components/*.vue')
+const modules = import.meta.glob('/src/components/**/*.vue')
 const foundKey = Object.keys(modules).find(
   (k: string) => `.${k}` === props.componentConfig?.comFile,
 )

@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 15:59:22
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-29 17:04:55
+ * @LastEditTime: 2026-01-04 09:45:00
 -->
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
@@ -26,6 +26,8 @@ console.log('componentConfig:', componentConfig)
   <TresCanvas clear-color="#333" window-size>
     <TresPerspectiveCamera :position="[5, 5, 5]" />
     <OrbitControls />
+    <TresAmbientLight :intensity="0.5" />
+    <TresDirectionalLight :position="[10, 10, 10]" :intensity="1.5" />
     <templateComponet :componentConfig="componentConfig" />
   </TresCanvas>
 </template>
