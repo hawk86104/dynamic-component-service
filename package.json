@@ -13,11 +13,13 @@
     "lint:fix": "eslint  --fix"
   },
   "dependencies": {
+    "@pangenerator/tweakpane-textarea-plugin": "^2.0.0",
     "@tresjs/cientos": "latest",
     "@tresjs/core": "^5.0.0",
     "@tresjs/leches": "latest",
     "@tresjs/post-processing": "latest",
     "concurrently": "^9.2.1",
+    "json5": "^2.2.3",
     "naive-ui": "^2.43.2",
     "three": "^0.180.0",
     "three-stdlib": "^2.36.0",

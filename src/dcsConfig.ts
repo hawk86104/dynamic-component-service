@@ -4,15 +4,15 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-04 12:22:56
+ * @LastEditTime: 2026-01-04 16:08:58
  */
 const config = {
   name: 'baseSample',
-  version: '1.0.1',
+  version: '1.1.0',
   description: '动态组件服务示例组件库',
   components: [
     {
-      name: '测试空组件',
+      name: '测试组件',
       type: 'testBase',
       comFile: './src/components/testBase.vue',
       previewPath: './preview/testBase.png',
@@ -69,7 +69,14 @@ const config = {
         clearcoat: 0.2,
         clearcoatRoughness: 0.1,
         reflectivity: 0.5,
-        opacity: 1
+        opacity: 1,
+        jsonText: `[
+          { value: 43, title: '%', color: '#5072c4' },
+          { value: 24, title: '%', color: '#92cb79' },
+          { value: 12, title: '%', color: '#fcc660' },
+          { value: 39, title: '%', color: '#f8285b' },
+          { value: 14, title: '%', color: '#ff0ecb' },
+        ]`
       },
       defaultObject3D: {
         position: { x: 0, y: 0.1, z: 0 },
@@ -103,6 +110,7 @@ const config = {
         clearcoatRoughness: { name: '清晰度粗糙度', com: 'Slider', min: 0, max: 1, step: 0.01 },
         reflectivity: { name: '反射率', com: 'Slider', min: 0, max: 1, step: 0.01 },
         opacity: { name: '透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        jsonText: { name: '数据配置', com: 'jsonText' },
       },
     },
   ],

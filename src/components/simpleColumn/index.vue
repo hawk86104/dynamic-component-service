@@ -4,10 +4,13 @@ import * as THREE from 'three'
 import bannerLabel from '../common/bannerLabel.vue'
 import underLine from './underLine.vue'
 import MaterialSelector from '../common/MaterialSelector/index.vue'
+import JSON5 from 'json5'
 
 const props = withDefaults(
   defineProps<{
-    data?: Array<{ value: number, title: string, color: string }>
+    // data?: Array<{ value: number, title: string, color: string }>
+    jsonText?: string
+    jsonTextChangeNumber?: number
     spacing?: number
     distribution?: 'uniform' | 'proportional'
     width?: number
@@ -22,13 +25,21 @@ const props = withDefaults(
     opacity?: number
   }>(),
   {
-    data: () => [
-      { value: 43, title: '%', color: '#5072c4' },
-      { value: 24, title: '%', color: '#92cb79' },
-      { value: 12, title: '%', color: '#fcc660' },
-      { value: 39, title: '%', color: '#f8285b' },
-      { value: 14, title: '%', color: '#70c1dd' },
-    ], // 数据
+    // data: () => [
+    //   { value: 43, title: '%', color: '#5072c4' },
+    //   { value: 24, title: '%', color: '#92cb79' },
+    //   { value: 12, title: '%', color: '#fcc660' },
+    //   { value: 39, title: '%', color: '#f8285b' },
+    //   { value: 14, title: '%', color: '#70c1dd' },
+    // ],
+    jsonText: `[
+      { "value": 43, "title": "%", "color": "#5072c4" },
+      { "value": 24, "title": "%", "color": "#92cb79" },
+      { "value": 12, "title": "%", "color": "#fcc660" },
+      { "value": 39, "title": "%", "color": "#f8285b" },
+      { "value": 14, "title": "%", "color": "#ff0ecb" }
+    ]`,
+    jsonTextChangeNumber: 0,
     spacing: 0, // 间距
     distribution: 'proportional', // 布局方式
     width: 4 / 3, // 宽度
@@ -45,10 +56,13 @@ const props = withDefaults(
 )
 
 const geometryLabelList = [] as any
+const dataParsed = ref<Array<{ value: number, title: string, color: string }>>([])
 const calcGeometry = () => {
   geometryLabelList.splice(0, geometryLabelList.length)
-  const boxtotal = props.data.map(x => x.value).reduce((accum, value) => accum + value)
-  props.data.forEach((item) => {
+  const rawValue = props.jsonText?.trim()
+  dataParsed.value = rawValue ? JSON5.parse(rawValue) : []
+  const boxtotal = dataParsed.value.map(x => x.value).reduce((accum, value) => accum + value)
+  dataParsed.value.forEach((item) => {
     const width = ((item.value / boxtotal) * 4) / 3
 
     const geometry = new THREE.BoxGeometry(width, 0.2, 0.4)
@@ -61,12 +75,12 @@ calcGeometry()
 const calcDistribution = () => {
   let result: Array<any> = []
   if (props.distribution === 'uniform') {
-    const columnwidth = (props.width - props.spacing * (props.data.length + 1)) / props.data.length
-    result = Array.from({ length: props.data.length }).fill(columnwidth)
+    const columnwidth = (props.width - props.spacing * (dataParsed.value.length + 1)) / dataParsed.value.length
+    result = Array.from({ length: dataParsed.value.length }).fill(columnwidth)
   }
   else {
-    const total = props.data.map(x => x.value).reduce((a, v) => a + v)
-    props.data.forEach((item) => {
+    const total = dataParsed.value.map(x => x.value).reduce((a, v) => a + v)
+    dataParsed.value.forEach((item) => {
       result.push((item.value / total) * props.width)
     })
   }
@@ -79,7 +93,7 @@ const reCalcMeshList = () => {
   const columnwidths = calcDistribution()
   let x = 0
 
-  props.data.forEach((data, index) => {
+  dataParsed.value.forEach((data, index) => {
     const halfwidth = (props.spacing + columnwidths[index]) / 2
     x += halfwidth
 
@@ -100,30 +114,22 @@ const reCalcMeshList = () => {
 }
 reCalcMeshList()
 
-const tgroup = ref(null) as any
 const centerX = ref(0)
-const updateCenterX = () => {
-  const box = new THREE.Box3().setFromObject(tgroup.value)
-  centerX.value = -(box.max.x + box.min.x) / 2
-}
-
 onMounted(() => {
-  updateCenterX()
 })
 
 watch(
-  () => [props.titleSize, props.width, props.spacing, props.distribution],
+  () => [props.titleSize, props.width, props.spacing, props.distribution, props.jsonTextChangeNumber],
   () => {
     calcGeometry()
     reCalcMeshList()
-    updateCenterX()
   },
 )
 </script>
 
 <template>
   <TresGroup>
-    <TresGroup ref="tgroup" :position-x="centerX">
+    <TresGroup :position-x="centerX">
       <TresGroup v-for="(mesh, index) in meshList" :key="index" :position="[mesh.x, 0.001, 0]">
         <TresMesh :geometry="mesh.geometry" castShadow>
           <MaterialSelector

@@ -551,6 +551,11 @@
     estree-walker "^3.0.2"
     magic-string "^0.27.0"
 
+"@pangenerator/tweakpane-textarea-plugin@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.npmmirror.com/@pangenerator/tweakpane-textarea-plugin/-/tweakpane-textarea-plugin-2.0.0.tgz#364b0cf78c1072a63ded5a432d39ee8185de9b33"
+  integrity sha512-BERPuuyJYWvtJzXh4wtgYspza0ihigE2m4qs57ERKtWG59+lI2t/2TOXlwz7Xyx/QEIH25uO1g732YCljgKaUw==
+
 "@pkgr/core@^0.1.0":
   version "0.1.2"
   resolved "https://registry.npmmirror.com/@pkgr/core/-/core-0.1.2.tgz#1cf95080bb7072fafaa3cb13b442fab4695c3893"
@@ -2468,6 +2473,11 @@ json-stable-stringify-without-jsonify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/json-stable-stringify-without-jsonify/-/json-stable-stringify-without-jsonify-1.0.1.tgz#9db7b59496ad3f3cfef30a75142d2d930ad72651"
   integrity sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==
+
+json5@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.npmmirror.com/json5/-/json5-2.2.3.tgz#78cd6f1a19bdc12b73db5ad0c61efd66c1e29283"
+  integrity sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==
 
 jsonc-eslint-parser@^2.4.0:
   version "2.4.2"

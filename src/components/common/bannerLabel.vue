@@ -19,7 +19,7 @@ const props = defineProps({
   isSprite: { default: true },
 })
 
-const center = {
+const center: Record<string, number[]> = {
   'left-top': [0, 1],
   'left-center': [0, 0.5],
   'left-bottom': [0, 0],
@@ -140,7 +140,7 @@ watch(
 </script>
 
 <template>
-  <TresSprite v-if="isSprite" :scale="[totalWidth * props.scaleFactor, totalHeight * props.scaleFactor, 1]" :center="center[align] || [0.5, 0.5]">
+  <TresSprite v-if="isSprite" :scale="[totalWidth * props.scaleFactor, totalHeight * props.scaleFactor, 1]" :center="(center[props.align] as any) || [0.5, 0.5]">
     <TresSpriteMaterial :map="texture" transparent depthTest :blending="THREE.NormalBlending" :alphaTest="0.06" />
   </TresSprite>
   <TresGroup v-else :rotation="[Math.PI / 2, 0, 0]">

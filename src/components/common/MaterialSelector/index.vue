@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-10-23 16:22:11
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-04 12:20:45
+ * @LastEditTime: 2026-01-04 16:11:48
 -->
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
@@ -31,7 +31,7 @@ watch(
     if (materialRef.value) {
       try {
         materialRef.value.dispose?.()
-        console.log('已释放旧材质组件')
+        // console.log('已释放旧材质组件')
       }
       catch (e) {
         console.warn('释放材质组件失败:', e)
@@ -44,8 +44,8 @@ watch(
       ...useProps(type),
       // ...props.materialProps,
     }
-    Object.keys(props.materialProps).forEach((key) => {
-      if (key in matProps.value) {
+    Object.keys(props.materialProps as any).forEach((key) => {
+      if (key in matProps.value && props.materialProps) {
         matProps.value[key] = props.materialProps[key]
       }
     })
