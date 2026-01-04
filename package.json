@@ -14,8 +14,8 @@
   },
   "dependencies": {
     "@pangenerator/tweakpane-textarea-plugin": "^2.0.0",
-    "@tresjs/cientos": "latest",
-    "@tresjs/core": "^5.0.0",
+    "@tresjs/cientos": "5.2.1",
+    "@tresjs/core": "5.2.1",
     "@tresjs/leches": "latest",
     "@tresjs/post-processing": "latest",
     "concurrently": "^9.2.1",

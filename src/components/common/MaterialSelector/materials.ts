@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-10-23 16:15:24
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-04 11:22:12
+ * @LastEditTime: 2026-01-04 17:23:35
  */
 // materials.ts
 import type { ColorRepresentation } from 'three'

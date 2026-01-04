@@ -697,10 +697,10 @@
     estraverse "^5.3.0"
     picomatch "^4.0.2"
 
-"@tresjs/cientos@latest":
-  version "5.2.0"
-  resolved "https://registry.npmmirror.com/@tresjs/cientos/-/cientos-5.2.0.tgz#ed728c4809fa498ea4513683dd4e3bd54540b207"
-  integrity sha512-xXjlIXIVwT9YimuVyYSu4Ku5mPBtAJ4p5Pl4JKXs3Gw0xCXKrISKnhrdvf5QZUGxhAG4k+hI0aNkaOE2zrELPQ==
+"@tresjs/cientos@5.2.1":
+  version "5.2.1"
+  resolved "https://registry.npmmirror.com/@tresjs/cientos/-/cientos-5.2.1.tgz#b726087d9110d2f9d96b3cf29d2ac8c8db86bad2"
+  integrity sha512-HBXniDTN1c7rIT3jD7IC2cA+acyYpbghN03LoeauAJxpfaZpoHTFfKroAHwaPVaAFJXfXTYkuAQ2kjpbRrF8GQ==
   dependencies:
     "@vueuse/core" "^13.9.0"
     camera-controls "^2.9.0"
@@ -709,10 +709,10 @@
     three-custom-shader-material "^5.4.0"
     three-stdlib "^2.36.0"
 
-"@tresjs/core@^5.0.0":
-  version "5.2.0"
-  resolved "https://registry.npmmirror.com/@tresjs/core/-/core-5.2.0.tgz#d901899cdc416227a349199a927b0f359ebc2fae"
-  integrity sha512-Q9Wy+4CTDU8l/b9rr/wzN9d/oOI5MExnw59zCmlVrNExXfMkwSDzxdKhTcFG6C/2mWgxOog6WmYAQyAhMXDrxA==
+"@tresjs/core@5.2.1":
+  version "5.2.1"
+  resolved "https://registry.npmmirror.com/@tresjs/core/-/core-5.2.1.tgz#89ad087ef2ce167866414c933d8da894316b7c57"
+  integrity sha512-4oVR5RvqGYzZQMPSSlCSppmddDrkyexACJES35+lQInsQzjp8rDDPo8IVW1tDHX/tiep+z/cpRAysz3UyzVuyw==
   dependencies:
     "@pmndrs/pointer-events" "^6.6.17"
     "@vue/devtools-api" "^7.7.2"
