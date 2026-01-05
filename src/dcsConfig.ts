@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-04 16:08:58
+ * @LastEditTime: 2026-01-05 09:38:32
  */
 const config = {
   name: 'baseSample',
@@ -71,12 +71,12 @@ const config = {
         reflectivity: 0.5,
         opacity: 1,
         jsonText: `[
-          { value: 43, title: '%', color: '#5072c4' },
-          { value: 24, title: '%', color: '#92cb79' },
-          { value: 12, title: '%', color: '#fcc660' },
-          { value: 39, title: '%', color: '#f8285b' },
-          { value: 14, title: '%', color: '#ff0ecb' },
-        ]`
+{ value: 43, title: '%',color:'#5072c4' },
+{ value: 24, title: '%', color:'#92cb79' },
+{ value: 12, title: '%', color:'#fcc660' },
+{ value: 39, title: '%', color:'#f8285b' },
+{ value: 14, title: '%', color:'#ff0ecb' },
+]`
       },
       defaultObject3D: {
         position: { x: 0, y: 0.1, z: 0 },

@@ -33,12 +33,12 @@ const props = withDefaults(
     //   { value: 14, title: '%', color: '#70c1dd' },
     // ],
     jsonText: `[
-      { "value": 43, "title": "%", "color": "#5072c4" },
-      { "value": 24, "title": "%", "color": "#92cb79" },
-      { "value": 12, "title": "%", "color": "#fcc660" },
-      { "value": 39, "title": "%", "color": "#f8285b" },
-      { "value": 14, "title": "%", "color": "#ff0ecb" }
-    ]`,
+{ value: 43, title: '%',color:'#5072c4' },
+{ value: 24, title: '%', color:'#92cb79' },
+{ value: 12, title: '%', color:'#fcc660' },
+{ value: 39, title: '%', color:'#f8285b' },
+{ value: 14, title: '%', color:'#ff0ecb' },
+]`,
     jsonTextChangeNumber: 0,
     spacing: 0, // 间距
     distribution: 'proportional', // 布局方式
