@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --port 5000 --strictPort",
     "serve": "concurrently \"vite build --watch\" \"vite preview --port 5000 --strictPort\"",
     "lint": "eslint ",
     "lint:fix": "eslint  --fix"
