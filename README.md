@@ -3,6 +3,9 @@
 > 基于 **tvt.js** 生态的动态组件发布与加载服务
 > Dynamic Component Service for tvt.js
 
+> 点击下方 👇🏻 预览地址：https://dcser.icegl.cn
+<a style="display:block;width:800px;max-width:100%;" href="https://dcser.icegl.cn"><img src="./previewReadMe.png" alt="tres.js webgl three.js"></a>
+
 📦 项目地址：
 👉 [https://gitee.com/ice-gl/dynamic-component-service](https://gitee.com/ice-gl/dynamic-component-service)
 
