@@ -4,16 +4,18 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2025-12-30 08:47:47
+ * @LastEditTime: 2026-01-12 16:07:01
 -->
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
+  NButton,
   NCard,
   NDivider,
   NEllipsis,
   NGrid,
   NGridItem,
+  NIcon,
   NSpace,
   NTag,
   NText,
@@ -32,6 +34,46 @@ function goPreview(item: any) {
 </script>
 
 <template>
+  <NCard
+    size="small"
+    :bordered="false"
+    style="background: rgba(255, 255, 255, 1); padding: 18px;"
+  >
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <NIcon :size="58">
+        <img style="width: 100%;" src="/logo.png" />
+      </NIcon>
+
+      <div style="flex: 1;">
+        <div style="font-size: 18px; font-weight: 600; margin-bottom: 4px;">
+          Dynamic Component Service for tvt.js
+        </div>
+        <div style="font-size: 14px; opacity: 0.82;">
+          基于 tvt.js 生态的动态组件发布与加载服务，用于构建更灵活的模块化应用体系。
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <NButton
+          type="primary"
+          tag="a"
+          href="https://gitee.com/ice-gl/dynamic-component-service"
+          target="_blank"
+        >
+          开源仓库
+        </NButton>
+
+        <NButton
+          type="info"
+          tag="a"
+          href="https://docs.icegl.cn/docs/three-vue-tres/dynamic-component-service/introduction.html"
+          target="_blank"
+        >
+          文档
+        </NButton>
+      </div>
+    </div>
+  </NCard>
   <NSpace vertical size="large" style="padding: 8px;">
     <!-- 顶部信息 -->
     <NCard>
