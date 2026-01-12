@@ -198,7 +198,30 @@ yarn build + yarn preview（带监听）
 
 ## ⚙️ dcsConfig.ts 配置详解（核心）
 
-`dcsConfig.ts` 是 **整个动态组件服务的核心配置文件**。
+./src 目录下的 `dcsConfig.ts` 是 **整个动态组件服务的核心配置文件** 原则上增加/修改完组件代码后，再更改`dcsConfig.ts`即可发布服务。
+
+---
+
+如下为参考实例：
+```ts
+const config = {
+  name: 'baseSample',
+  version: '1.1.0',
+  description: '动态组件服务示例组件库',
+  components: [
+    {
+      name: '测试组件',
+      type: 'testBase',
+      comFile: './src/components/testBase.vue',
+      previewPath: './preview/testBase.png',
+      default: {},
+      defaultObject3D: {},
+      config: {},
+    },
+	...
+  ]
+}
+```
 
 ---
 
