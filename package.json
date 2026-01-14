@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview --port 5000 --strictPort",
-    "serve": "concurrently \"vite build --watch\" \"vite preview --port 5000 --strictPort\"",
+    "preview": "node server.js",
+    "serve": "concurrently \"vite build --watch\" \"node server.js\"",
     "lint": "eslint ",
     "lint:fix": "eslint  --fix"
   },
@@ -19,6 +19,7 @@
     "@tresjs/leches": "latest",
     "@tresjs/post-processing": "latest",
     "concurrently": "^9.2.1",
+    "express": "^5.2.1",
     "json5": "^2.2.3",
     "naive-ui": "^2.43.2",
     "three": "^0.180.0",
