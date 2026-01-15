@@ -8,7 +8,6 @@ import JSON5 from 'json5'
 
 const props = withDefaults(
   defineProps<{
-    // data?: Array<{ value: number, title: string, color: string }>
     jsonText?: string
     jsonTextChangeNumber?: number
     spacing?: number
@@ -25,13 +24,6 @@ const props = withDefaults(
     opacity?: number
   }>(),
   {
-    // data: () => [
-    //   { value: 43, title: '%', color: '#5072c4' },
-    //   { value: 24, title: '%', color: '#92cb79' },
-    //   { value: 12, title: '%', color: '#fcc660' },
-    //   { value: 39, title: '%', color: '#f8285b' },
-    //   { value: 14, title: '%', color: '#70c1dd' },
-    // ],
     jsonText: `[
 { value: 43, title: '%',color:'#5072c4' },
 { value: 24, title: '%', color:'#92cb79' },
@@ -87,9 +79,9 @@ const calcDistribution = () => {
   return result
 }
 
-const meshList: Array<any> = []
+const meshList = ref([]) as any
 const reCalcMeshList = () => {
-  meshList.splice(0, meshList.length)
+  meshList.value.splice(0, meshList.value.length)
   const columnwidths = calcDistribution()
   let x = 0
 
@@ -108,7 +100,7 @@ const reCalcMeshList = () => {
       }
     }
 
-    meshList.push({ x, y, data, geometry: geometryLabelList[index] })
+    meshList.value.push({ x, y, data, geometry: geometryLabelList[index] })
     x += halfwidth
   })
 }
@@ -134,13 +126,15 @@ watch(
         <TresMesh :geometry="mesh.geometry" castShadow>
           <MaterialSelector
             :type="materialType"
-            :material-props="{ color: mesh.data.color,
-                               metalness,
-                               roughness,
-                               clearcoat,
-                               clearcoatRoughness,
-                               reflectivity,
-                               opacity }"
+            :material-props="{
+              color: mesh.data.color,
+              metalness,
+              roughness,
+              clearcoat,
+              clearcoatRoughness,
+              reflectivity,
+              opacity,
+            }"
           />
         </TresMesh>
         <bannerLabel
@@ -153,7 +147,12 @@ watch(
           :fontColor="fontColor"
           :dpi="10"
         />
-        <underLine :color="fontColor" :length="0.3" :position="[0, 0.011, 0.24]" :rotation="[-Math.PI / 2, 0, -Math.PI / 2]" />
+        <underLine
+          :color="fontColor"
+          :length="0.3"
+          :position="[0, 0.011, 0.24]"
+          :rotation="[-Math.PI / 2, 0, -Math.PI / 2]"
+        />
       </TresGroup>
     </TresGroup>
   </TresGroup>
