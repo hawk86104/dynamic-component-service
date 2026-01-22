@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-26 08:14:02
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-12 16:07:01
+ * @LastEditTime: 2026-01-22 09:56:06
 -->
 <script setup lang="ts">
 import { computed } from 'vue'
@@ -87,9 +87,7 @@ function goPreview(item: any) {
           </NTag>
         </NSpace>
 
-        <NText depth="3">
-          tvt.js - {{ dcsConfig.description }}
-        </NText>
+        <NElement tag="div" v-html="dcsConfig.description" />
 
         <NDivider />
 

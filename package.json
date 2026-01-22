@@ -13,6 +13,7 @@
     "lint:fix": "eslint  --fix"
   },
   "dependencies": {
+    "@dgreenheck/ez-tree": "^1.1.0",
     "@pangenerator/tweakpane-textarea-plugin": "^2.0.0",
     "@tresjs/cientos": "5.2.1",
     "@tresjs/core": "5.2.1",

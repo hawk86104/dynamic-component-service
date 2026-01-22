@@ -4,12 +4,13 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-05 09:38:32
+ * @LastEditTime: 2026-01-22 10:03:22
  */
 const config = {
   name: 'baseSample',
-  version: '1.1.0',
-  description: '动态组件服务示例组件库',
+  version: '1.2.0',
+  description: `tvt.js 动态组件服务示例组件库<br>
+  新增：<a style="color: #5384ff;" href="https://github.com/dgreenheck/ez-tree" target="_blank">开源ez-tree</a>组件，实现高级树模型展示，<a style="color: #03765b;" href="https://www.eztree.dev" target="_blank">配置生成器</a>，SavePreset导出配置`,
   components: [
     {
       name: '测试组件',
@@ -111,6 +112,131 @@ const config = {
         reflectivity: { name: '反射率', com: 'Slider', min: 0, max: 1, step: 0.01 },
         opacity: { name: '透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
         jsonText: { name: '数据配置', com: 'jsonText' },
+      },
+    },
+    {
+      name: '高级树组件',
+      type: 'ezTreeCom',
+      comFile: './src/components/ezTreeCom.vue',
+      previewPath: './preview/ezTreeCom.png',
+      default: {
+        isUpdate: true,
+        jsonText: `{
+  "seed": 36330,
+  "type": "deciduous",
+  "bark": {
+    "type": "oak",
+    "tint": 13552830,
+    "flatShading": false,
+    "textured": true,
+    "textureScale": {
+      "x": 0.5,
+      "y": 5
+    }
+  },
+  "branch": {
+    "levels": 3,
+    "angle": {
+      "1": 48,
+      "2": 75,
+      "3": 60
+    },
+    "children": {
+      "0": 7,
+      "1": 4,
+      "2": 3
+    },
+    "force": {
+      "direction": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "strength": -0.06
+    },
+    "gnarliness": {
+      "0": 0.03,
+      "1": 0.25,
+      "2": 0.2,
+      "3": 0.09
+    },
+    "length": {
+      "0": 43.47,
+      "1": 27.14,
+      "2": 9.51,
+      "3": 4.6
+    },
+    "radius": {
+      "0": 2,
+      "1": 0.63,
+      "2": 0.76,
+      "3": 0.7
+    },
+    "sections": {
+      "0": 12,
+      "1": 8,
+      "2": 6,
+      "3": 4
+    },
+    "segments": {
+      "0": 12,
+      "1": 6,
+      "2": 4,
+      "3": 3
+    },
+    "start": {
+      "1": 0.23,
+      "2": 0.33,
+      "3": 0
+    },
+    "taper": {
+      "0": 0.7,
+      "1": 0.7,
+      "2": 0.7,
+      "3": 0.7
+    },
+    "twist": {
+      "0": 0.09,
+      "1": -0.07,
+      "2": 0,
+      "3": 0
+    }
+  },
+  "leaves": {
+    "type": "ash",
+    "billboard": "double",
+    "angle": 55,
+    "count": 16,
+    "start": 0,
+    "size": 2.67,
+    "sizeVariance": 0.72,
+    "tint": 16777215,
+    "alphaTest": 0.5
+  },
+  "trellis": {
+    "enabled": false,
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": -2
+    },
+    "width": 10,
+    "height": 20,
+    "spacing": 2,
+    "force": {
+      "strength": 0.02,
+      "maxDistance": 3,
+      "falloff": 1
+    },
+    "cylinderRadius": 0.05,
+    "visible": true,
+    "color": 9127187
+  }
+}`},
+      defaultObject3D: {},
+      config: {
+        isUpdate: { name: '摆动', com: 'Switch' },
+        jsonText: { name: 'ez-tree配置', com: 'jsonText' },
       },
     },
   ],
