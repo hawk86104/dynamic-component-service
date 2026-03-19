@@ -2,6 +2,8 @@
 import { useLoop } from '@tresjs/core'
 import { Line2, LineGeometry, LineMaterial } from 'three-stdlib'
 import * as THREE from 'three'
+import wallFragmentShader from '../shader/rectangleShimmerComponent/wall.frag?raw'
+import wallVertexShader from '../shader/rectangleShimmerComponent/wall.vert?raw'
 import {
   computed,
   onBeforeUnmount,
@@ -17,7 +19,6 @@ interface RunningLineSegment {
 
 const props = withDefaults(
   defineProps<{
-    baseColor?: string
     gradientLength?: number
     height?: number
     length?: number
@@ -26,11 +27,12 @@ const props = withDefaults(
     lineWidth?: number
     segmentCount?: number
     wallBottomColor?: string
+    wallBottomOpacity?: number
     wallTopColor?: string
+    wallTopOpacity?: number
     width?: number
   }>(),
   {
-    baseColor: '#081426',
     gradientLength: 1.4,
     height: 1.4,
     length: 4,
@@ -39,7 +41,9 @@ const props = withDefaults(
     lineWidth: 0.08,
     segmentCount: 3,
     wallBottomColor: '#0f3a64',
+    wallBottomOpacity: 1,
     wallTopColor: '#76e4ff',
+    wallTopOpacity: 0.5,
     width: 2.6,
   },
 )
@@ -60,6 +64,8 @@ const safeHeight = computed(() => clampNumber(props.height, 0.2, 10, 1.4))
 const safeLineWidth = computed(() => clampNumber(props.lineWidth, 0.01, 0.8, 0.08))
 const safeLineSpeed = computed(() => clampNumber(props.lineSpeed, 0, 20, 1.25))
 const safeSegmentCount = computed(() => Math.round(clampNumber(props.segmentCount, 1, 12, 3)))
+const safeWallBottomOpacity = computed(() => clampNumber(props.wallBottomOpacity, 0, 1, 1))
+const safeWallTopOpacity = computed(() => clampNumber(props.wallTopOpacity, 0, 1, 0.5))
 const perimeterLength = computed(() => (safeLength.value + safeWidth.value) * 2)
 const safeGradientLength = computed(() => {
   return clampNumber(props.gradientLength, 0.1, perimeterLength.value * 0.9, 1.4)
@@ -67,35 +73,17 @@ const safeGradientLength = computed(() => {
 
 const wallUniforms = {
   uBottomColor: { value: new THREE.Color(props.wallBottomColor) },
+  uBottomOpacity: { value: safeWallBottomOpacity.value },
   uTopColor: { value: new THREE.Color(props.wallTopColor) },
+  uTopOpacity: { value: safeWallTopOpacity.value },
 }
-
-const wallVertexShader = `
-varying vec2 vUv;
-
-void main() {
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`
-
-const wallFragmentShader = `
-uniform vec3 uBottomColor;
-uniform vec3 uTopColor;
-varying vec2 vUv;
-
-void main() {
-  vec3 color = mix(uBottomColor, uTopColor, clamp(vUv.y, 0.0, 1.0));
-  gl_FragColor = vec4(color, 1.0);
-}
-`
 
 const buildPerimeterPoint = (distance: number) => {
   const total = perimeterLength.value
   let cursor = THREE.MathUtils.euclideanModulo(distance, total)
   const halfLength = safeLength.value / 2
   const halfWidth = safeWidth.value / 2
-  const y = 0.025
+  const y = 0.001
 
   if (cursor <= safeLength.value) {
     return new THREE.Vector3(-halfLength + cursor, y, -halfWidth)
@@ -194,10 +182,12 @@ watch(
 )
 
 watch(
-  [() => props.wallBottomColor, () => props.wallTopColor],
-  ([wallBottomColor, wallTopColor]) => {
+  [() => props.wallBottomColor, () => props.wallTopColor, safeWallBottomOpacity, safeWallTopOpacity],
+  ([wallBottomColor, wallTopColor, wallBottomOpacity, wallTopOpacity]) => {
     wallUniforms.uBottomColor.value.set(wallBottomColor)
+    wallUniforms.uBottomOpacity.value = wallBottomOpacity
     wallUniforms.uTopColor.value.set(wallTopColor)
+    wallUniforms.uTopOpacity.value = wallTopOpacity
   },
   { immediate: true },
 )
@@ -215,16 +205,13 @@ onBeforeUnmount(() => {
 
 <template>
   <TresGroup>
-    <TresMesh :rotation="[-Math.PI / 2, 0, 0]">
-      <TresPlaneGeometry :args="[safeLength, safeWidth]" />
-      <TresMeshStandardMaterial :color="props.baseColor" :metalness="0.15" :roughness="0.72" />
-    </TresMesh>
-
     <TresMesh :position="[0, safeHeight / 2, safeWidth / 2]">
       <TresPlaneGeometry :args="[safeLength, safeHeight]" />
       <TresShaderMaterial
+        :depth-write="false"
         :fragment-shader="wallFragmentShader"
         :side="THREE.DoubleSide"
+        :transparent="true"
         :uniforms="wallUniforms"
         :vertex-shader="wallVertexShader"
       />
@@ -233,8 +220,10 @@ onBeforeUnmount(() => {
     <TresMesh :position="[0, safeHeight / 2, -safeWidth / 2]" :rotation="[0, Math.PI, 0]">
       <TresPlaneGeometry :args="[safeLength, safeHeight]" />
       <TresShaderMaterial
+        :depth-write="false"
         :fragment-shader="wallFragmentShader"
         :side="THREE.DoubleSide"
+        :transparent="true"
         :uniforms="wallUniforms"
         :vertex-shader="wallVertexShader"
       />
@@ -243,8 +232,10 @@ onBeforeUnmount(() => {
     <TresMesh :position="[safeLength / 2, safeHeight / 2, 0]" :rotation="[0, -Math.PI / 2, 0]">
       <TresPlaneGeometry :args="[safeWidth, safeHeight]" />
       <TresShaderMaterial
+        :depth-write="false"
         :fragment-shader="wallFragmentShader"
         :side="THREE.DoubleSide"
+        :transparent="true"
         :uniforms="wallUniforms"
         :vertex-shader="wallVertexShader"
       />
@@ -253,8 +244,10 @@ onBeforeUnmount(() => {
     <TresMesh :position="[-safeLength / 2, safeHeight / 2, 0]" :rotation="[0, Math.PI / 2, 0]">
       <TresPlaneGeometry :args="[safeWidth, safeHeight]" />
       <TresShaderMaterial
+        :depth-write="false"
         :fragment-shader="wallFragmentShader"
         :side="THREE.DoubleSide"
+        :transparent="true"
         :uniforms="wallUniforms"
         :vertex-shader="wallVertexShader"
       />

@@ -5,9 +5,10 @@
 ## What Changes
 
 - 新增三维矩形跑光组件，支持设置 `length`、`width`、`height`：
-  - `length` 与 `width` 定义底部矩形尺寸。
+  - `length` 与 `width` 定义底部矩形 footprint 尺寸。
   - `height` 定义矩形向上抬起后四面墙体高度。
-- 四面墙体支持从下到上的颜色渐变（底部深色到顶部浅色），基于 shader 在墙体局部坐标计算渐变。
+- 不渲染独立底板，底部仅保留矩形周边 `Line2` 跑线。
+- 四面墙体支持从下到上的颜色渐变与透明度渐变，基于 shader 在墙体局部坐标计算。
 - 底部矩形四周新增 `Line2` 流动跑线能力，支持以下参数：
   - 线宽 (`lineWidth`)
   - 跑动速度 (`lineSpeed`)
@@ -30,7 +31,7 @@
   - `src/components/` 新增三维组件、墙体渐变 shader、line2 跑线逻辑。
   - `src/views/` 预览入口新增参数化示例。
 - APIs:
-  - 新增组件 props：`length`、`width`、`height`、墙体渐变色参数、line2 跑线参数。
+- 新增组件 props：`length`、`width`、`height`、墙体渐变色与透明度参数、line2 跑线参数。
 - Dependencies:
   - 基于现有 `tresjs` + `three`，不引入 CSS 动画依赖。
 - Systems:

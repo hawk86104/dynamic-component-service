@@ -6,14 +6,19 @@ context: |
   测试要求: 前端 lint 必过
   项目能力: src/components目录下都是使用tresjs方式的三维组件,而不是简单的css和html.不少也需要通过shader的材质方式展示动效
   开发模式: 一套代码,dev实现本地调试、build实现打包【部署直接访问预览和vite-plugin-federation组件发布】、serve实现组件调试
+  宪法规则1: 非必要不得修改通用预览文件 `src/views/previewEntry.vue` 与 `src/views/templateComponet.vue`；组件预览接入、默认参数与调参配置统一通过 `src/dcsConfig.ts` 实现
+  宪法规则2: shader代码必须放在 `src/shader/<组件名>/` 目录下，并按顶点着色器、片元着色器拆分文件管理
 
 rules:
   proposal:
     - 必须写明影响范围与回滚策略
+    - 必须遵守项目宪法规则
   specs:
     - 需求必须包含 Scenario
+    - 必须遵守项目宪法规则
   tasks:
     - 每个任务都要有可验证结果
+    - 必须遵守项目宪法规则
 
 # Project context (optional)
 # This is shown to AI when creating artifacts.

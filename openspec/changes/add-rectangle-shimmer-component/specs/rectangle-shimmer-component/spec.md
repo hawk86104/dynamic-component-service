@@ -5,14 +5,14 @@ The system SHALL provide a 3D rectangle component with configurable `length`, `w
 
 #### Scenario: Render with explicit dimensions
 - **WHEN** a developer sets `length`, `width`, and `height`
-- **THEN** the component MUST render a base rectangle and four raised walls matching those dimensions
+- **THEN** the component MUST render four raised walls and a matching bottom perimeter path using those dimensions
 
 #### Scenario: Render with default dimensions
 - **WHEN** the component is rendered without dimension props
 - **THEN** the component MUST render with default non-zero `length`, `width`, and `height`
 
 ### Requirement: Render wall color gradient from bottom to top
-The four walls MUST render a vertical gradient from darker color at bottom to lighter color at top.
+The four walls MUST render a vertical gradient from bottom to top and support opacity interpolation across that same direction.
 
 #### Scenario: Apply custom wall gradient colors
 - **WHEN** a developer sets wall bottom and top colors
@@ -21,6 +21,10 @@ The four walls MUST render a vertical gradient from darker color at bottom to li
 #### Scenario: Keep gradient direction stable
 - **WHEN** the component dimensions change
 - **THEN** the gradient direction MUST remain bottom-dark to top-light on all four walls
+
+#### Scenario: Apply opacity fade on walls
+- **WHEN** a developer sets wall bottom opacity and wall top opacity
+- **THEN** each wall MUST interpolate transparency from bottom to top while keeping the configured color gradient
 
 ### Requirement: Provide perimeter animated Line2 effect on base rectangle
 The base rectangle perimeter MUST support animated `Line2` flowing segments.
@@ -43,3 +47,10 @@ The implementation MUST be based on tresjs/three rendering in canvas and MUST NO
 #### Scenario: Validate rendering path
 - **WHEN** the component is used in project preview
 - **THEN** all visual effects (walls gradient and perimeter line flow) MUST be produced by three.js materials/geometry in canvas
+
+### Requirement: Store shader source as component-scoped files
+Shader source code MUST be stored under `src/shader/<component-name>/` and separated into vertex and fragment files.
+
+#### Scenario: Organize shader files
+- **WHEN** the rectangle shimmer component introduces wall shaders
+- **THEN** the shader source MUST be read from component-scoped vertex and fragment files instead of inline strings in the Vue component
