@@ -1,0 +1,4 @@
+interface:
+  display_name: "tvtDCService"
+  short_description: "Build TresJS components for this repo"
+  default_prompt: "Use $tvt-dc-service to add or modify a dynamic component in this repository."
