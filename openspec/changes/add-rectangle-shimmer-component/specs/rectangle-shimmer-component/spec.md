@@ -26,6 +26,10 @@ The four walls MUST render a vertical gradient from bottom to top and support op
 - **WHEN** a developer sets wall bottom opacity and wall top opacity
 - **THEN** each wall MUST interpolate transparency from bottom to top while keeping the configured color gradient
 
+#### Scenario: Configure gradient progress percentage
+- **WHEN** a developer sets wall gradient progress between 0 and 100
+- **THEN** the wall color and opacity transition MUST complete within the configured percentage of wall height
+
 ### Requirement: Provide perimeter animated Line2 effect on base rectangle
 The base rectangle perimeter MUST support animated `Line2` flowing segments.
 

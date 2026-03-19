@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-22 10:03:22
+ * @LastEditTime: 2026-03-19 11:44:06
  */
 const config = {
   name: 'baseSample',
@@ -25,19 +25,20 @@ const config = {
       name: '矩形跑光组件',
       type: 'rectangleShimmerComponent',
       comFile: './src/components/rectangleShimmerComponent.vue',
-      previewPath: './preview/testBase.png',
+      previewPath: './preview/rectangleShimmerComponent.png',
       default: {
-        gradientLength: 1.4,
+        gradientLength: 2.6,
         height: 1.4,
         length: 4,
-        lineColor: '#4dd8ff',
-        lineSpeed: 1.25,
-        lineWidth: 0.08,
-        segmentCount: 3,
-        wallBottomColor: '#0f3a64',
-        wallBottomOpacity: 1,
-        wallTopColor: '#76e4ff',
-        wallTopOpacity: 0.35,
+        lineColor: '#ffd166',
+        lineSpeed: 0.95,
+        lineWidth: 0.035,
+        segmentCount: 6,
+        wallBottomColor: '#0d1f8f',
+        wallBottomOpacity: 0.92,
+        wallGradientProgress: 68,
+        wallTopColor: '#57f3ff',
+        wallTopOpacity: 0.18,
         width: 2.6,
       },
       defaultObject3D: {},
@@ -47,6 +48,7 @@ const config = {
         height: { name: '高度', com: 'Slider', min: 0.2, max: 5, step: 0.05 },
         wallBottomColor: { name: '墙体底色', com: 'ColorPicker' },
         wallBottomOpacity: { name: '墙体底部透明', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        wallGradientProgress: { name: '渐变进程%', com: 'Slider', min: 0, max: 100, step: 1 },
         wallTopColor: { name: '墙体顶色', com: 'ColorPicker' },
         wallTopOpacity: { name: '墙体顶部透明', com: 'Slider', min: 0, max: 1, step: 0.01 },
         lineColor: { name: '跑线颜色', com: 'ColorPicker' },

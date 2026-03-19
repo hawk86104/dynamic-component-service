@@ -28,22 +28,24 @@ const props = withDefaults(
     segmentCount?: number
     wallBottomColor?: string
     wallBottomOpacity?: number
+    wallGradientProgress?: number
     wallTopColor?: string
     wallTopOpacity?: number
     width?: number
   }>(),
   {
-    gradientLength: 1.4,
+    gradientLength: 2.6,
     height: 1.4,
     length: 4,
-    lineColor: '#4dd8ff',
-    lineSpeed: 1.25,
-    lineWidth: 0.08,
-    segmentCount: 3,
-    wallBottomColor: '#0f3a64',
-    wallBottomOpacity: 1,
-    wallTopColor: '#76e4ff',
-    wallTopOpacity: 0.5,
+    lineColor: '#ffd166',
+    lineSpeed: 0.95,
+    lineWidth: 0.035,
+    segmentCount: 6,
+    wallBottomColor: '#0d1f8f',
+    wallBottomOpacity: 0.92,
+    wallGradientProgress: 68,
+    wallTopColor: '#57f3ff',
+    wallTopOpacity: 0.18,
     width: 2.6,
   },
 )
@@ -65,6 +67,7 @@ const safeLineWidth = computed(() => clampNumber(props.lineWidth, 0.01, 0.8, 0.0
 const safeLineSpeed = computed(() => clampNumber(props.lineSpeed, 0, 20, 1.25))
 const safeSegmentCount = computed(() => Math.round(clampNumber(props.segmentCount, 1, 12, 3)))
 const safeWallBottomOpacity = computed(() => clampNumber(props.wallBottomOpacity, 0, 1, 1))
+const safeWallGradientProgress = computed(() => clampNumber(props.wallGradientProgress, 0, 100, 100) / 100)
 const safeWallTopOpacity = computed(() => clampNumber(props.wallTopOpacity, 0, 1, 0.5))
 const perimeterLength = computed(() => (safeLength.value + safeWidth.value) * 2)
 const safeGradientLength = computed(() => {
@@ -74,6 +77,7 @@ const safeGradientLength = computed(() => {
 const wallUniforms = {
   uBottomColor: { value: new THREE.Color(props.wallBottomColor) },
   uBottomOpacity: { value: safeWallBottomOpacity.value },
+  uGradientProgress: { value: safeWallGradientProgress.value },
   uTopColor: { value: new THREE.Color(props.wallTopColor) },
   uTopOpacity: { value: safeWallTopOpacity.value },
 }
@@ -182,10 +186,11 @@ watch(
 )
 
 watch(
-  [() => props.wallBottomColor, () => props.wallTopColor, safeWallBottomOpacity, safeWallTopOpacity],
-  ([wallBottomColor, wallTopColor, wallBottomOpacity, wallTopOpacity]) => {
+  [() => props.wallBottomColor, () => props.wallTopColor, safeWallBottomOpacity, safeWallGradientProgress, safeWallTopOpacity],
+  ([wallBottomColor, wallTopColor, wallBottomOpacity, wallGradientProgress, wallTopOpacity]) => {
     wallUniforms.uBottomColor.value.set(wallBottomColor)
     wallUniforms.uBottomOpacity.value = wallBottomOpacity
+    wallUniforms.uGradientProgress.value = wallGradientProgress
     wallUniforms.uTopColor.value.set(wallTopColor)
     wallUniforms.uTopOpacity.value = wallTopOpacity
   },
