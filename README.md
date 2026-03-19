@@ -22,6 +22,22 @@
 
 ---
 
+## 🏁 里程碑
+
+这次项目实践有一个很重要的意义：
+**dynamic-component-service 不再只是一个组件发布容器，而开始成为一个可以通过 AI + OpenSpec 持续演进的组件工程体系。**
+
+这意味着后续新增组件、修改组件、补充能力、调整规则，不再依赖“先想好再手工慢慢改”的单线程方式，而是可以进入一套更稳定的协作闭环：
+
+* **OpenSpec 负责定义变更**
+* **AI 负责实现与联调**
+* **README / config / 规则文件负责沉淀方法论**
+
+从这一步开始，项目的价值不只是“有多少组件”，而是：
+**是否已经具备一套可重复、可积累、可持续放大的组件生产方式。**
+
+---
+
 ## 🎯 设计目的
 
 ### 1️⃣ 解耦商业组件与 tvt.js 基座
@@ -174,6 +190,86 @@ yarn build + yarn preview（带监听）
 
 ---
 
+## 🤖 AI + OpenSpec 协作方式
+
+这部分方法论已经拆到独立文档，避免 README 过长：
+
+👉 [AI_OPENSPEC_WORKFLOW.md](./AI_OPENSPEC_WORKFLOW.md)
+
+文档中包含：
+
+* 推荐协作流程
+* 推荐时间节奏
+* 如何把一次实践沉淀为项目资产
+
+---
+
+## 📜 项目宪法规则
+
+下面这些规则不是针对某一次需求，而是后续基于这个项目继续新增和修改组件时，都应该默认遵守的规则。
+
+### 1. 通用预览层非必要不改
+
+以下文件属于 **通用预览基础设施**：
+
+* `src/views/previewEntry.vue`
+* `src/views/templateComponet.vue`
+
+非必要不要改动。
+
+组件预览接入、默认参数和调参配置，应优先通过：
+
+* `src/dcsConfig.ts`
+
+来完成，而不是把单个组件逻辑侵入公共视图层。
+
+---
+
+### 2. Shader 必须独立管理
+
+所有组件相关 shader，统一放在：
+
+* `src/shader/<组件名>/`
+
+目录下，并至少拆分为：
+
+* 顶点着色器
+* 片元着色器
+
+不要把较长的 shader 代码直接内联在 Vue 组件中。
+
+---
+
+### 3. 组件能力优先保持 three.js / tresjs 语义
+
+`src/components` 下的组件默认是 **three.js / tresjs 三维组件**，
+不是普通 DOM/CSS 组件。
+
+如果一个需求本质上是三维渲染能力，就应优先通过：
+
+* geometry
+* material
+* shader
+* line / mesh / group
+
+这些 three.js 语义来实现。
+
+---
+
+### 4. 新增参数时，同步维护 default 与 config
+
+只加 props 还不够。
+
+如果组件是要进入动态组件服务体系的，那么新增参数时，至少要同步维护：
+
+* 组件默认参数
+* `dcsConfig.ts` 中的 `default`
+* `dcsConfig.ts` 中的 `config`
+
+这样它才能真正进入“可预览、可调参、可发布”的完整链路。
+
+---
+
 ## 📂 项目结构说明
 
 ```text
@@ -184,6 +280,7 @@ yarn build + yarn preview（带监听）
 │   │   ├── common/         # 公共组件
 │   │   └── simpleColumn/   # 示例组件目录（可自定义）
 │   │       └── dynamicRotatingBase.vue
+│   ├── shader/             # 组件 shader 目录（按组件名分目录）
 │   ├── router/             # 路由配置
 │   │   ├── componentList   # 服务说明 & 组件列表
 │   │   └── previewEntry    # 单组件预览调试
@@ -361,5 +458,9 @@ dynamic-component-service 是：
   * 商业项目
   * 插件作者
   * 三维应用开发者
+* 同时也是：
+
+  * 一个可以通过 **AI + OpenSpec 持续演进** 的组件工程体系
+  * 一个可以不断沉淀“规则、结构、方法论”的项目底座
 
 ---
