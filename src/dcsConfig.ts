@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-19 11:44:06
+ * @LastEditTime: 2026-03-19 16:14:51
  */
 const config = {
   name: 'baseSample',
@@ -56,6 +56,41 @@ const config = {
         lineSpeed: { name: '跑线速度', com: 'Slider', min: 0, max: 6, step: 0.05 },
         gradientLength: { name: '渐变长度', com: 'Slider', min: 0.1, max: 8, step: 0.05 },
         segmentCount: { name: '线段数量', com: 'Slider', min: 1, max: 8, step: 1 },
+      },
+    },
+    {
+      name: '流动烟雾组件',
+      type: 'flowingSmokeComponent',
+      comFile: './src/components/flowingSmokeComponent.vue',
+      previewPath: './preview/flowingSmokeComponent.png',
+      default: {
+        color: '#ffffff',
+        density: 0.1,
+        directionX: -0.25,
+        directionY: 1,
+        directionZ: 0,
+        flowRate: 0.06,
+        lifeRange: 3.28,
+        opacity: 0.42,
+        particleSize: 34,
+        spread: 0.45,
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0.15, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        flowRate: { name: '流动速率', com: 'Slider', min: 0.05, max: 6, step: 0.05 },
+        density: { name: '烟雾密度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
+        color: { name: '烟雾颜色', com: 'ColorPicker' },
+        spread: { name: '扩散范围', com: 'Slider', min: 0.05, max: 3, step: 0.05 },
+        opacity: { name: '透明强度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
+        particleSize: { name: '粒子尺寸', com: 'Slider', min: 8, max: 90, step: 1 },
+        lifeRange: { name: '烟雾长度', com: 'Slider', min: 0.5, max: 14, step: 0.1 },
+        directionX: { name: '方向X', com: 'Slider', min: -1, max: 1, step: 0.05 },
+        directionY: { name: '方向Y', com: 'Slider', min: -1, max: 1, step: 0.05 },
+        directionZ: { name: '方向Z', com: 'Slider', min: -1, max: 1, step: 0.05 },
       },
     },
     {
