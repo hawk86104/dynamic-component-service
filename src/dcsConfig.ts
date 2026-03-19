@@ -22,6 +22,39 @@ const config = {
       config: {},
     },
     {
+      name: '矩形跑光组件',
+      type: 'rectangleShimmerComponent',
+      comFile: './src/components/rectangleShimmerComponent.vue',
+      previewPath: './preview/testBase.png',
+      default: {
+        baseColor: '#081426',
+        gradientLength: 1.4,
+        height: 1.4,
+        length: 4,
+        lineColor: '#4dd8ff',
+        lineSpeed: 1.25,
+        lineWidth: 0.08,
+        segmentCount: 3,
+        wallBottomColor: '#0f3a64',
+        wallTopColor: '#76e4ff',
+        width: 2.6,
+      },
+      defaultObject3D: {},
+      config: {
+        length: { name: '长度', com: 'Slider', min: 0.4, max: 10, step: 0.1 },
+        width: { name: '宽度', com: 'Slider', min: 0.4, max: 10, step: 0.1 },
+        height: { name: '高度', com: 'Slider', min: 0.2, max: 5, step: 0.05 },
+        baseColor: { name: '底板颜色', com: 'ColorPicker' },
+        wallBottomColor: { name: '墙体底色', com: 'ColorPicker' },
+        wallTopColor: { name: '墙体顶色', com: 'ColorPicker' },
+        lineColor: { name: '跑线颜色', com: 'ColorPicker' },
+        lineWidth: { name: '线宽', com: 'Slider', min: 0.01, max: 0.3, step: 0.005 },
+        lineSpeed: { name: '跑线速度', com: 'Slider', min: 0, max: 6, step: 0.05 },
+        gradientLength: { name: '渐变长度', com: 'Slider', min: 0.1, max: 8, step: 0.05 },
+        segmentCount: { name: '线段数量', com: 'Slider', min: 1, max: 8, step: 1 },
+      },
+    },
+    {
       name: '动态旋转基座',
       type: 'dynamicRotatingBase',
       comFile: './src/components/dynamicRotatingBase.vue',
@@ -64,7 +97,7 @@ const config = {
         width: 4 / 3, // 宽度
         titleSize: 10, // 标题大小
         fontColor: '#ffffff',
-        materialType: "MeshPhysicalMaterial",
+        materialType: 'MeshPhysicalMaterial',
         metalness: 0.5,
         roughness: 0.5,
         clearcoat: 0.2,
@@ -77,7 +110,7 @@ const config = {
 { value: 12, title: '%', color:'#fcc660' },
 { value: 39, title: '%', color:'#f8285b' },
 { value: 14, title: '%', color:'#ff0ecb' },
-]`
+]`,
       },
       defaultObject3D: {
         position: { x: 0, y: 0.1, z: 0 },
@@ -100,7 +133,7 @@ const config = {
         materialType: {
           name: '材质类型',
           com: 'Select',
-          options: ["MeshBasicMaterial", "MeshLambertMaterial", "MeshPhongMaterial", "MeshStandardMaterial", "MeshPhysicalMaterial", "MeshToonMaterial", "MeshGlassMaterial"].map(item => ({
+          options: ['MeshBasicMaterial', 'MeshLambertMaterial', 'MeshPhongMaterial', 'MeshStandardMaterial', 'MeshPhysicalMaterial', 'MeshToonMaterial', 'MeshGlassMaterial'].map(item => ({
             label: item,
             value: item,
           })),
@@ -232,7 +265,8 @@ const config = {
     "visible": true,
     "color": 9127187
   }
-}`},
+}`,
+      },
       defaultObject3D: {},
       config: {
         isUpdate: { name: '摆动', com: 'Switch' },

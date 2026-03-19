@@ -33,6 +33,10 @@
 - Rationale: 满足业务可调需求，同时避免极端参数导致闪烁或性能波动。
 - Alternative considered: 只暴露少量参数。该方案无法满足明确的配置诉求。
 
+5. 决策：预览集成优先通过 `src/dcsConfig.ts` 提供默认参数和调参项，非必要不修改 `src/views/previewEntry.vue` 与 `src/views/templateComponet.vue`。
+- Rationale: 这两个文件承担的是通用预览框架职责，应保持稳定，避免组件定制逻辑侵入公共视图层。
+- Alternative considered: 为单个组件在预览视图中加入特殊分支。该方案会放大公共预览层的维护成本。
+
 ## Risks / Trade-offs
 
 - [Risk] `segmentCount` 过高导致几何与更新开销上升 → Mitigation: 设置默认值与最大建议值，并在文档中标注性能建议。
