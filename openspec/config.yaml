@@ -4,7 +4,7 @@ context: |
   技术栈: VUE3 + tresjs + TypeScript + three + vite-plugin-federation
   代码风格: 前端 ESLint + Prettier
   测试要求: 前端 lint 必过
-  项目结构: src/components目录下都是使用tresjs方式的三维组件,而不是简单的css和html.不少也需要通过shader的材质方式展示动效
+  项目能力: src/components目录下都是使用tresjs方式的三维组件,而不是简单的css和html.不少也需要通过shader的材质方式展示动效
   开发模式: 一套代码,dev实现本地调试、build实现打包【部署直接访问预览和vite-plugin-federation组件发布】、serve实现组件调试
 
 rules:
