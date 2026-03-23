@@ -1,6 +1,9 @@
-varying vec2 vUv;
+uniform float uHeight;
+
+varying float vHeightProgress;
 
 void main() {
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  float safeHeight = max(uHeight, 0.0001);
+  vHeightProgress = clamp((position.y + safeHeight * 0.5) / safeHeight, 0.0, 1.0);
+  csm_Position = position;
 }

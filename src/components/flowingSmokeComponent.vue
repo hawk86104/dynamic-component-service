@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   computed,
   onBeforeUnmount,
@@ -9,6 +10,8 @@ import {
 } from 'vue'
 import smokeFragmentShader from '../shader/flowingSmokeComponent/smoke.frag?raw'
 import smokeVertexShader from '../shader/flowingSmokeComponent/smoke.vert?raw'
+
+type SmokeCustomMaterial = CustomShaderMaterial<typeof THREE.PointsMaterial>
 
 const props = withDefaults(
   defineProps<{
@@ -41,7 +44,7 @@ const MAX_PARTICLES = 360
 
 const smokePoints = shallowRef<THREE.Points | null>(null)
 const smokeGeometry = shallowRef<THREE.BufferGeometry | null>(null)
-const smokeMaterial = shallowRef<THREE.ShaderMaterial | null>(null)
+const smokeMaterial = shallowRef<SmokeCustomMaterial | null>(null)
 
 const clampNumber = (value: number | undefined, min: number, max: number, fallback: number) => {
   if (!Number.isFinite(value)) {
@@ -81,6 +84,24 @@ const smokeUniforms = {
   uParticleSize: { value: safeParticleSize.value },
   uSpread: { value: safeSpread.value },
   uTime: { value: 0 },
+}
+
+const createSmokeMaterial = (): SmokeCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.PointsMaterial,
+    blending: THREE.NormalBlending,
+    color: 0xFFFFFF,
+    depthTest: true,
+    depthWrite: false,
+    fragmentShader: smokeFragmentShader,
+    silent: true,
+    size: safeParticleSize.value,
+    sizeAttenuation: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: smokeUniforms,
+    vertexShader: smokeVertexShader,
+  })
 }
 
 const disposeSmokeCloud = () => {
@@ -126,15 +147,7 @@ const createSmokeCloud = () => {
   geometry.setAttribute('aSizeFactor', new THREE.BufferAttribute(sizeFactors, 1))
   geometry.setDrawRange(0, visibleParticleCount.value)
 
-  const material = new THREE.ShaderMaterial({
-    blending: THREE.NormalBlending,
-    depthTest: true,
-    depthWrite: false,
-    fragmentShader: smokeFragmentShader,
-    transparent: true,
-    uniforms: smokeUniforms,
-    vertexShader: smokeVertexShader,
-  })
+  const material = createSmokeMaterial()
 
   const points = new THREE.Points(geometry, material)
   points.frustumCulled = false

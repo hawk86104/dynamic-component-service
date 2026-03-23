@@ -4,11 +4,11 @@ uniform float uBottomOpacity;
 uniform float uGradientProgress;
 uniform float uTopOpacity;
 
-varying vec2 vUv;
+varying float vHeightProgress;
 
 void main() {
   float gradientProgress = max(uGradientProgress, 0.0001);
-  float t = clamp(vUv.y / gradientProgress, 0.0, 1.0);
+  float t = clamp(vHeightProgress / gradientProgress, 0.0, 1.0);
   vec3 color = mix(uBottomColor, uTopColor, t);
   float alpha = mix(uBottomOpacity, uTopOpacity, t);
 
@@ -16,5 +16,5 @@ void main() {
     discard;
   }
 
-  gl_FragColor = vec4(color, alpha);
+  csm_DiffuseColor = vec4(color, alpha);
 }

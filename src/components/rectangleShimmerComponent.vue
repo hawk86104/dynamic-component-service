@@ -2,6 +2,7 @@
 import { useLoop } from '@tresjs/core'
 import { Line2, LineGeometry, LineMaterial } from 'three-stdlib'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import wallFragmentShader from '../shader/rectangleShimmerComponent/wall.frag?raw'
 import wallVertexShader from '../shader/rectangleShimmerComponent/wall.vert?raw'
 import {
@@ -16,6 +17,8 @@ interface RunningLineSegment {
   line: Line2
   material: LineMaterial
 }
+
+type WallCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 const props = withDefaults(
   defineProps<{
@@ -74,13 +77,29 @@ const safeGradientLength = computed(() => {
   return clampNumber(props.gradientLength, 0.1, perimeterLength.value * 0.9, 1.4)
 })
 
-const wallUniforms = {
-  uBottomColor: { value: new THREE.Color(props.wallBottomColor) },
-  uBottomOpacity: { value: safeWallBottomOpacity.value },
-  uGradientProgress: { value: safeWallGradientProgress.value },
-  uTopColor: { value: new THREE.Color(props.wallTopColor) },
-  uTopOpacity: { value: safeWallTopOpacity.value },
+const createWallMaterial = (): WallCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    color: 0xFFFFFF,
+    depthWrite: false,
+    fragmentShader: wallFragmentShader,
+    side: THREE.DoubleSide,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: {
+      uBottomColor: { value: new THREE.Color(props.wallBottomColor) },
+      uBottomOpacity: { value: safeWallBottomOpacity.value },
+      uGradientProgress: { value: safeWallGradientProgress.value },
+      uHeight: { value: safeHeight.value },
+      uTopColor: { value: new THREE.Color(props.wallTopColor) },
+      uTopOpacity: { value: safeWallTopOpacity.value },
+    },
+    vertexShader: wallVertexShader,
+  })
 }
+
+const wallMaterials: WallCustomMaterial[] = Array.from({ length: 4 }, () => createWallMaterial())
 
 const buildPerimeterPoint = (distance: number) => {
   const total = perimeterLength.value
@@ -140,6 +159,17 @@ const rebuildLineSegments = () => {
   lineSegments.value = nextSegments
 }
 
+const syncWallMaterials = () => {
+  wallMaterials.forEach((material) => {
+    material.uniforms.uBottomColor.value.set(props.wallBottomColor)
+    material.uniforms.uBottomOpacity.value = safeWallBottomOpacity.value
+    material.uniforms.uGradientProgress.value = safeWallGradientProgress.value
+    material.uniforms.uHeight.value = safeHeight.value
+    material.uniforms.uTopColor.value.set(props.wallTopColor)
+    material.uniforms.uTopOpacity.value = safeWallTopOpacity.value
+  })
+}
+
 const updateLineSegments = (elapsed: number, renderer?: { getSize: (target: THREE.Vector2) => THREE.Vector2 }) => {
   if (!lineSegments.value.length) {
     return
@@ -186,14 +216,8 @@ watch(
 )
 
 watch(
-  [() => props.wallBottomColor, () => props.wallTopColor, safeWallBottomOpacity, safeWallGradientProgress, safeWallTopOpacity],
-  ([wallBottomColor, wallTopColor, wallBottomOpacity, wallGradientProgress, wallTopOpacity]) => {
-    wallUniforms.uBottomColor.value.set(wallBottomColor)
-    wallUniforms.uBottomOpacity.value = wallBottomOpacity
-    wallUniforms.uGradientProgress.value = wallGradientProgress
-    wallUniforms.uTopColor.value.set(wallTopColor)
-    wallUniforms.uTopOpacity.value = wallTopOpacity
-  },
+  [() => props.wallBottomColor, () => props.wallTopColor, safeHeight, safeWallBottomOpacity, safeWallGradientProgress, safeWallTopOpacity],
+  syncWallMaterials,
   { immediate: true },
 )
 
@@ -205,57 +229,30 @@ onBeforeRender(({ elapsed, renderer }) => {
 
 onBeforeUnmount(() => {
   disposeLineSegments()
+  wallMaterials.forEach(material => material.dispose())
 })
 </script>
 
 <template>
   <TresGroup>
-    <TresMesh :position="[0, safeHeight / 2, safeWidth / 2]">
+    <TresMesh :position="[0, safeHeight / 2, safeWidth / 2]" :render-order="6">
       <TresPlaneGeometry :args="[safeLength, safeHeight]" />
-      <TresShaderMaterial
-        :depth-write="false"
-        :fragment-shader="wallFragmentShader"
-        :side="THREE.DoubleSide"
-        :transparent="true"
-        :uniforms="wallUniforms"
-        :vertex-shader="wallVertexShader"
-      />
+      <primitive :object="wallMaterials[0]" attach="material" />
     </TresMesh>
 
-    <TresMesh :position="[0, safeHeight / 2, -safeWidth / 2]" :rotation="[0, Math.PI, 0]">
+    <TresMesh :position="[0, safeHeight / 2, -safeWidth / 2]" :render-order="6" :rotation="[0, Math.PI, 0]">
       <TresPlaneGeometry :args="[safeLength, safeHeight]" />
-      <TresShaderMaterial
-        :depth-write="false"
-        :fragment-shader="wallFragmentShader"
-        :side="THREE.DoubleSide"
-        :transparent="true"
-        :uniforms="wallUniforms"
-        :vertex-shader="wallVertexShader"
-      />
+      <primitive :object="wallMaterials[1]" attach="material" />
     </TresMesh>
 
-    <TresMesh :position="[safeLength / 2, safeHeight / 2, 0]" :rotation="[0, -Math.PI / 2, 0]">
+    <TresMesh :position="[safeLength / 2, safeHeight / 2, 0]" :render-order="6" :rotation="[0, -Math.PI / 2, 0]">
       <TresPlaneGeometry :args="[safeWidth, safeHeight]" />
-      <TresShaderMaterial
-        :depth-write="false"
-        :fragment-shader="wallFragmentShader"
-        :side="THREE.DoubleSide"
-        :transparent="true"
-        :uniforms="wallUniforms"
-        :vertex-shader="wallVertexShader"
-      />
+      <primitive :object="wallMaterials[2]" attach="material" />
     </TresMesh>
 
-    <TresMesh :position="[-safeLength / 2, safeHeight / 2, 0]" :rotation="[0, Math.PI / 2, 0]">
+    <TresMesh :position="[-safeLength / 2, safeHeight / 2, 0]" :render-order="6" :rotation="[0, Math.PI / 2, 0]">
       <TresPlaneGeometry :args="[safeWidth, safeHeight]" />
-      <TresShaderMaterial
-        :depth-write="false"
-        :fragment-shader="wallFragmentShader"
-        :side="THREE.DoubleSide"
-        :transparent="true"
-        :uniforms="wallUniforms"
-        :vertex-shader="wallVertexShader"
-      />
+      <primitive :object="wallMaterials[3]" attach="material" />
     </TresMesh>
 
     <primitive

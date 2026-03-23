@@ -70,5 +70,5 @@ void main() {
   }
 
   vec3 color = mix(uColor * 0.78, uColor * 1.08, clamp(0.95 - vLife * 0.45 + vSeed * 0.08, 0.0, 1.0));
-  gl_FragColor = vec4(color, alpha);
+  csm_DiffuseColor = vec4(color, alpha);
 }

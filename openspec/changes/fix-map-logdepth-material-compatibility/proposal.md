@@ -1,0 +1,40 @@
+## Why
+
+`rectangleShimmerComponent` and `flowingSmokeComponent` currently rely on `ShaderMaterial` / `TresShaderMaterial`.
+When they are rendered inside the GIS editor map scene with `renderer.logarithmicDepthBuffer = true`, the custom shader path does not participate in the built-in material depth pipeline as reliably as the standard material stack, so these effects can be incorrectly occluded by the map layer.
+
+The repository already has a known workaround in downstream usage: wrap custom shader logic with `CustomShaderMaterial` and base it on built-in materials.
+This change brings that compatibility strategy into the component implementations directly so the two components behave correctly in map scenes without requiring editor-side patches.
+
+## What Changes
+
+- Replace the rectangle wall `TresShaderMaterial` implementation with `CustomShaderMaterial` based on `THREE.MeshBasicMaterial`.
+- Replace the flowing smoke `THREE.ShaderMaterial` implementation with `CustomShaderMaterial` based on `THREE.PointsMaterial`.
+- Adapt both shader pairs to use CSM output variables while preserving their existing visual behavior and props surface.
+- Declare `three-custom-shader-material` as a direct project dependency because the source code imports it explicitly.
+- Add an OpenSpec record for the map/log-depth compatibility change, including rollback guidance.
+
+## Capabilities
+
+### Modified Capabilities
+- `rectangle-shimmer-component`: wall rendering becomes compatible with map scenes that enable logarithmic depth buffering.
+- `flowing-smoke-component`: smoke particle rendering becomes compatible with map scenes that enable logarithmic depth buffering.
+
+## Impact
+
+- Affected code:
+  - `src/components/rectangleShimmerComponent.vue`
+  - `src/components/flowingSmokeComponent.vue`
+  - `src/shader/rectangleShimmerComponent/`
+  - `src/shader/flowingSmokeComponent/`
+  - `package.json`
+- APIs:
+  - No public prop changes are required for either component.
+- Dependencies:
+  - `three-custom-shader-material` becomes a direct dependency instead of an implicit transitive dependency.
+- Systems:
+  - Affects three.js / tresjs rendering in preview and downstream GIS map integration.
+- Rollback strategy:
+  - Revert the component material changes first.
+  - Revert the shader CSM output variable changes second.
+  - Remove the direct dependency declaration last if no remaining source file imports it.

@@ -27,7 +27,8 @@
     "three-stdlib": "^2.36.0",
     "tweakpane": "^4.0.5",
     "vue": "^3.5.21",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "three-custom-shader-material": "^5.4.0"
   },
   "devDependencies": {
     "@originjs/vite-plugin-federation": "^1.4.1",

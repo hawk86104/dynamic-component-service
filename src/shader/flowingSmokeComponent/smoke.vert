@@ -56,17 +56,16 @@ void main() {
   float forwardJitter = turbulenceC * (0.02 + easedLife * 0.08) * uLifeRange;
   float plumeWave = sin(uTime * 0.38 + aSeed * 31.0 + easedLife * 6.5) * (0.05 + easedLife * 0.12) * uSpread;
 
-  vec3 transformed = position;
-  transformed += direction * (easedLife * uLifeRange + forwardJitter);
-  transformed += lateral;
-  transformed += tangentA * plumeWave;
-  transformed += vec3(0.0, upwardDrift, 0.0);
+  vec3 particlePosition = position;
+  particlePosition += direction * (easedLife * uLifeRange + forwardJitter);
+  particlePosition += lateral;
+  particlePosition += tangentA * plumeWave;
+  particlePosition += vec3(0.0, upwardDrift, 0.0);
 
-  vec4 modelViewPosition = modelViewMatrix * vec4(transformed, 1.0);
-  gl_Position = projectionMatrix * modelViewPosition;
-
+  vec4 modelViewPosition = modelViewMatrix * vec4(particlePosition, 1.0);
   float perspective = clamp(220.0 / max(1.0, -modelViewPosition.z), 0.0, 220.0);
-  gl_PointSize = uParticleSize * mix(0.65, 1.85, easedLife) * aSizeFactor * perspective;
+  csm_Position = particlePosition;
+  csm_PointSize = uParticleSize * mix(0.65, 1.85, easedLife) * aSizeFactor * perspective;
 
   vLife = easedLife;
   vSeed = aSeed;
