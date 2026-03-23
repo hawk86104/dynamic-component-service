@@ -1,6 +1,6 @@
 ## Context
 
-Both target components already have stable external props and preview integration.
+All target components already have stable external props and preview integration.
 The problem is isolated to how their custom shader materials interact with map scenes that enable logarithmic depth buffering.
 The safest fix is to preserve geometry, animation, and props while changing only the underlying material strategy.
 
@@ -9,6 +9,7 @@ The safest fix is to preserve geometry, animation, and props while changing only
 1. Use `CustomShaderMaterial` instead of raw shader materials.
    - `rectangleShimmerComponent` uses `THREE.MeshBasicMaterial` as the base material because its wall effect is an unlit transparent surface.
    - `flowingSmokeComponent` uses `THREE.PointsMaterial` as the base material because the smoke system is built on `THREE.Points` and needs `csm_PointSize`.
+   - `superEnergyShieldComponent` uses `THREE.MeshBasicMaterial` as the base material because the shield is an additive, unlit shell effect.
 
 2. Keep the current component contracts unchanged.
    - No prop rename, removal, or config panel change is required.
@@ -17,6 +18,7 @@ The safest fix is to preserve geometry, animation, and props while changing only
 3. Rewrite shader outputs to CSM conventions instead of reproducing full built-in shaders.
    - Rectangle wall shaders emit `csm_Position` and `csm_DiffuseColor`.
    - Smoke shaders emit `csm_Position`, `csm_PointSize`, and `csm_DiffuseColor`.
+   - Shield shaders emit `csm_Position` and `csm_DiffuseColor`.
 
 4. Remove UV coupling from the rectangle wall gradient shader.
    - The previous shader used plane UVs.
@@ -32,6 +34,9 @@ The safest fix is to preserve geometry, animation, and props while changing only
 
 - Risk: smoke particle sizing changes when moving away from raw `gl_PointSize`.
   - Mitigation: preserve the original sizing formula and route it through `csm_PointSize`.
+
+- Risk: shield fresnel or hit-wave visuals shift after moving off raw `gl_FragColor`.
+  - Mitigation: keep all varyings, uniforms, and additive blending unchanged and only switch the final fragment output to CSM diffuse color.
 
 - Risk: map compatibility fix changes standalone preview appearance.
   - Mitigation: keep all uniforms, blending, transparency, and animation logic aligned with the original implementation and validate with a project build.

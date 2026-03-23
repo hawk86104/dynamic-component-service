@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   onBeforeUnmount,
   shallowRef,
@@ -10,6 +11,7 @@ import shieldFragmentShader from '../shader/superEnergyShieldComponent/shield.fr
 import shieldVertexShader from '../shader/superEnergyShieldComponent/shield.vert?raw'
 
 type ImpactPointLike = THREE.Vector3 | { x: number, y: number, z: number }
+type ShieldCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 const props = withDefaults(
   defineProps<{
@@ -75,7 +77,7 @@ const MAX_HITS = 6
 const DEFAULT_HIT_TIME = -999
 
 const shieldMesh = shallowRef<THREE.Mesh | null>(null)
-const shieldMaterial = shallowRef<THREE.ShaderMaterial | null>(null)
+const shieldMaterial = shallowRef<ShieldCustomMaterial | null>(null)
 
 let elapsedTime = 0
 let hitIndex = 0
@@ -100,7 +102,16 @@ const createShieldMaterial = () => {
   const hitPositions = Array.from({ length: MAX_HITS }, () => new THREE.Vector3(0, BASE_SHIELD_RADIUS, 0))
   const hitTimes = Array.from({ length: MAX_HITS }, () => DEFAULT_HIT_TIME)
 
-  return new THREE.ShaderMaterial({
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
+    depthWrite: false,
+    fragmentShader: shieldFragmentShader,
+    side: THREE.FrontSide,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
     uniforms: {
       uTime: { value: 0 },
       uColor: { value: new THREE.Color(props.color) },
@@ -134,11 +145,6 @@ const createShieldMaterial = () => {
       uFadeStart: { value: props.fadeStart },
     },
     vertexShader: shieldVertexShader,
-    fragmentShader: shieldFragmentShader,
-    transparent: true,
-    depthWrite: false,
-    side: THREE.FrontSide,
-    blending: THREE.AdditiveBlending,
   })
 }
 

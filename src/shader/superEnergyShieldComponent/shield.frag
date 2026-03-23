@@ -31,9 +31,9 @@ uniform float uHitIntensity;
 uniform float uHitImpactRadius;
 uniform float uFadeStart;
 
-varying vec3 vNormal;
-varying vec3 vViewDir;
-varying vec3 vObjPos;
+varying vec3 vShieldNormal;
+varying vec3 vShieldViewDir;
+varying vec3 vShieldObjPos;
 
 vec3 mod289v3(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
@@ -128,9 +128,9 @@ float cellFlash(vec2 cellId) {
 }
 
 void main() {
-  float fresnel = pow(1.0 - dot(vNormal, vViewDir), uFresnelPower) * uFresnelStrength;
+  float fresnel = pow(1.0 - dot(vShieldNormal, vShieldViewDir), uFresnelPower) * uFresnelStrength;
 
-  vec3 noiseSamplePos = vObjPos * uNoiseScale + vec3(uTime * 0.18, -uTime * 0.13, uTime * 0.11);
+  vec3 noiseSamplePos = vShieldObjPos * uNoiseScale + vec3(uTime * 0.18, -uTime * 0.13, uTime * 0.11);
   float noise = snoise(noiseSamplePos) * 0.5 + 0.5;
   float noiseWidth = max(0.002, uNoiseEdgeWidth);
   float noiseSoftness = mix(0.01, 0.22, uNoiseEdgeSmoothness);
@@ -140,28 +140,28 @@ void main() {
   float noiseEdgeMask = noiseContour * smoothstep(0.08, 0.9, fresnel);
 
   float t = uTime * uFlowSpeed;
-  float fn1 = snoise(vObjPos * uFlowScale + vec3(t, t * 0.6, t * 0.4));
-  float fn2 = snoise(vObjPos * uFlowScale * 2.1 + vec3(-t * 0.5, t * 0.9, t * 0.3));
+  float fn1 = snoise(vShieldObjPos * uFlowScale + vec3(t, t * 0.6, t * 0.4));
+  float fn2 = snoise(vShieldObjPos * uFlowScale * 2.1 + vec3(-t * 0.5, t * 0.9, t * 0.3));
   float flowNoise = (fn1 * 0.6 + fn2 * 0.4) * 0.5 + 0.5;
 
-  vec3 absN = abs(normalize(vObjPos));
+  vec3 absN = abs(normalize(vShieldObjPos));
   float dominance = max(absN.x, max(absN.y, absN.z));
   float hexFade = smoothstep(0.65, 0.85, dominance);
 
   vec2 faceUV;
   if (absN.x >= absN.y && absN.x >= absN.z) {
-    faceUV = vObjPos.yz;
+    faceUV = vShieldObjPos.yz;
   } else if (absN.y >= absN.z) {
-    faceUV = vObjPos.xz;
+    faceUV = vShieldObjPos.xz;
   } else {
-    faceUV = vObjPos.xy;
+    faceUV = vShieldObjPos.xy;
   }
 
   float hex = hexPattern(faceUV) * hexFade;
   vec2 cId = hexCellId(faceUV);
   float flash = cellFlash(cId) * hexFade;
 
-  vec3 normPos = normalize(vObjPos);
+  vec3 normPos = normalize(vShieldObjPos);
   float ringContrib = 0.0;
   float hexHitBoost = 0.0;
 
@@ -196,8 +196,8 @@ void main() {
   shieldColor += uNoiseEdgeColor * noiseEdgeMask * noiseStrength * (0.35 + fresnel * 0.65);
 
   float alpha = clamp(intensity * uOpacity * noiseBreakup + noiseEdgeMask * noiseStrength * 0.45, 0.0, 1.0);
-  float normY = vObjPos.y / 1.8;
+  float normY = vShieldObjPos.y / 1.8;
   alpha *= smoothstep(-1.0, uFadeStart, normY);
 
-  gl_FragColor = vec4(shieldColor, alpha);
+  csm_DiffuseColor = vec4(shieldColor, alpha);
 }

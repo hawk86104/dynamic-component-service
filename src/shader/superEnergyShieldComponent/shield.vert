@@ -1,11 +1,11 @@
-varying vec3 vNormal;
-varying vec3 vViewDir;
-varying vec3 vObjPos;
+varying vec3 vShieldNormal;
+varying vec3 vShieldViewDir;
+varying vec3 vShieldObjPos;
 
 void main() {
-  vObjPos = position;
-  vNormal = normalize(normalMatrix * normal);
+  vShieldObjPos = position;
+  vShieldNormal = normalize(normalMatrix * normal);
   vec4 viewPosition = modelViewMatrix * vec4(position, 1.0);
-  vViewDir = normalize(-viewPosition.xyz);
-  gl_Position = projectionMatrix * viewPosition;
+  vShieldViewDir = normalize(-viewPosition.xyz);
+  csm_Position = position;
 }

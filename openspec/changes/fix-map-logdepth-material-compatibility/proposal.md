@@ -1,6 +1,6 @@
 ## Why
 
-`rectangleShimmerComponent` and `flowingSmokeComponent` currently rely on `ShaderMaterial` / `TresShaderMaterial`.
+`rectangleShimmerComponent`, `flowingSmokeComponent`, and `superEnergyShieldComponent` currently rely on `ShaderMaterial` / `TresShaderMaterial`.
 When they are rendered inside the GIS editor map scene with `renderer.logarithmicDepthBuffer = true`, the custom shader path does not participate in the built-in material depth pipeline as reliably as the standard material stack, so these effects can be incorrectly occluded by the map layer.
 
 The repository already has a known workaround in downstream usage: wrap custom shader logic with `CustomShaderMaterial` and base it on built-in materials.
@@ -10,6 +10,7 @@ This change brings that compatibility strategy into the component implementation
 
 - Replace the rectangle wall `TresShaderMaterial` implementation with `CustomShaderMaterial` based on `THREE.MeshBasicMaterial`.
 - Replace the flowing smoke `THREE.ShaderMaterial` implementation with `CustomShaderMaterial` based on `THREE.PointsMaterial`.
+- Replace the super energy shield `THREE.ShaderMaterial` implementation with `CustomShaderMaterial` based on `THREE.MeshBasicMaterial`.
 - Adapt both shader pairs to use CSM output variables while preserving their existing visual behavior and props surface.
 - Declare `three-custom-shader-material` as a direct project dependency because the source code imports it explicitly.
 - Add an OpenSpec record for the map/log-depth compatibility change, including rollback guidance.
@@ -19,14 +20,17 @@ This change brings that compatibility strategy into the component implementation
 ### Modified Capabilities
 - `rectangle-shimmer-component`: wall rendering becomes compatible with map scenes that enable logarithmic depth buffering.
 - `flowing-smoke-component`: smoke particle rendering becomes compatible with map scenes that enable logarithmic depth buffering.
+- `super-energy-shield-component`: shield shell rendering becomes compatible with map scenes that enable logarithmic depth buffering.
 
 ## Impact
 
 - Affected code:
   - `src/components/rectangleShimmerComponent.vue`
   - `src/components/flowingSmokeComponent.vue`
+  - `src/components/superEnergyShieldComponent.vue`
   - `src/shader/rectangleShimmerComponent/`
   - `src/shader/flowingSmokeComponent/`
+  - `src/shader/superEnergyShieldComponent/`
   - `package.json`
 - APIs:
   - No public prop changes are required for either component.
