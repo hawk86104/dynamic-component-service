@@ -128,18 +128,16 @@ float cellFlash(vec2 cellId) {
 }
 
 void main() {
-  float noise = snoise(vObjPos * uNoiseScale) * 0.5 + 0.5;
-  float revealMask = smoothstep(uReveal - uNoiseEdgeWidth, uReveal, noise);
-  if (revealMask < 0.001) {
-    discard;
-  }
-
-  float innerFade = mix(0.98, 0.15, uNoiseEdgeSmoothness);
-  float edgeLow = smoothstep(uReveal - uNoiseEdgeWidth, uReveal - uNoiseEdgeWidth * innerFade, noise);
-  float edgeHigh = smoothstep(uReveal - uNoiseEdgeWidth * 0.15, uReveal, noise);
-  float revealEdge = edgeLow * (1.0 - edgeHigh);
-
   float fresnel = pow(1.0 - dot(vNormal, vViewDir), uFresnelPower) * uFresnelStrength;
+
+  vec3 noiseSamplePos = vObjPos * uNoiseScale + vec3(uTime * 0.18, -uTime * 0.13, uTime * 0.11);
+  float noise = snoise(noiseSamplePos) * 0.5 + 0.5;
+  float noiseWidth = max(0.002, uNoiseEdgeWidth);
+  float noiseSoftness = mix(0.01, 0.22, uNoiseEdgeSmoothness);
+  float noiseStrength = clamp(uNoiseEdgeIntensity / 10.0, 0.0, 1.0);
+  float noiseContour = 1.0 - smoothstep(noiseWidth, noiseWidth + noiseSoftness, abs(noise - 0.5));
+  float noiseBreakup = mix(1.0, mix(0.72, 1.0, noise), noiseStrength * 0.45);
+  float noiseEdgeMask = noiseContour * smoothstep(0.08, 0.9, fresnel);
 
   float t = uTime * uFlowSpeed;
   float fn1 = snoise(vObjPos * uFlowScale + vec3(t, t * 0.6, t * 0.4));
@@ -195,13 +193,11 @@ void main() {
   vec3 shieldColor = lColor * intensity * 2.0;
   shieldColor += lColor * (flowNoise * fresnel * uFlowIntensity);
   shieldColor += lColor * ringContrib * uHitIntensity;
+  shieldColor += uNoiseEdgeColor * noiseEdgeMask * noiseStrength * (0.35 + fresnel * 0.65);
 
-  vec3 edgeColor = mix(uNoiseEdgeColor, lColor, 1.0 - uLife);
-  vec3 edgeGlow = edgeColor * revealEdge * uNoiseEdgeIntensity;
-
-  float alpha = clamp(intensity * uOpacity * revealMask + revealEdge * uNoiseEdgeIntensity, 0.0, 1.0);
+  float alpha = clamp(intensity * uOpacity * noiseBreakup + noiseEdgeMask * noiseStrength * 0.45, 0.0, 1.0);
   float normY = vObjPos.y / 1.8;
   alpha *= smoothstep(-1.0, uFadeStart, normY);
 
-  gl_FragColor = vec4(shieldColor + edgeGlow, alpha);
+  gl_FragColor = vec4(shieldColor, alpha);
 }
