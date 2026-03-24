@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-19 16:14:51
+ * @LastEditTime: 2026-03-24 18:09:06
  */
 const config = {
   name: 'baseSample',
@@ -377,6 +377,64 @@ const config = {
         hitIntensity: { name: '冲击强度', com: 'Slider', min: 0, max: 8, step: 0.1 },
         hitImpactRadius: { name: '命中区域半径', com: 'Slider', min: 0.1, max: 1.5, step: 0.05 },
         enableSelfHit: { name: '启用自点击冲击', com: 'Switch' },
+      },
+    },
+    {
+      name: '箱式隔间容器',
+      type: 'binsContainerComponent',
+      comFile: './src/components/binsContainer/index.vue',
+      previewPath: './preview/binsContainerComponent.png',
+      default: {
+        width: 320,
+        height: 130,
+        depth: 560,
+        binColor: '#60a5fa',
+        radius: 25,
+        thickness: 5,
+        divideWidth: 0.55,
+        divideDepth: 0.45,
+        outerGap: 2.5,
+        innerGap: 2.5,
+        generationType: 'Recursive',
+        iterations: 1,
+        rows: 2,
+        cols: 2,
+        showOuterBox: true,
+        showInnerBins: true,
+        showMeasurements: true,
+        showIndexNumbers: true,
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0.12, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        width: { name: 'Box Width (mm)', com: 'Slider', min: 60, max: 1200, step: 1 },
+        height: { name: 'Box Height (mm)', com: 'Slider', min: 35, max: 450, step: 1 },
+        depth: { name: 'Box Depth (mm)', com: 'Slider', min: 100, max: 850, step: 1 },
+        binColor: { name: 'Bin Material Color', com: 'ColorPicker' },
+        radius: { name: 'Bin Radius (mm)', com: 'Slider', min: 0, max: 150, step: 1 },
+        thickness: { name: 'Bin Thickness (mm)', com: 'Slider', min: 2, max: 20, step: 0.1 },
+        divideWidth: { name: 'Width Division', com: 'Slider', min: 0.1, max: 0.9, step: 0.01 },
+        divideDepth: { name: 'Depth Division', com: 'Slider', min: 0.1, max: 0.9, step: 0.01 },
+        outerGap: { name: 'Outer Gap (mm)', com: 'Slider', min: 0, max: 20, step: 0.1 },
+        innerGap: { name: 'Inner Gap (mm)', com: 'Slider', min: 0, max: 20, step: 0.1 },
+        generationType: {
+          name: 'Generation Type',
+          com: 'Select',
+          options: ['Recursive', 'Grid'].map(item => ({
+            label: item,
+            value: item,
+          })),
+        },
+        iterations: { name: 'Iterations', com: 'Slider', min: 0, max: 3, step: 1 },
+        rows: { name: 'Rows', com: 'Slider', min: 1, max: 10, step: 1 },
+        cols: { name: 'Columns', com: 'Slider', min: 1, max: 10, step: 1 },
+        showOuterBox: { name: 'Show Outer Box', com: 'Switch' },
+        showInnerBins: { name: 'Show Inner Bins', com: 'Switch' },
+        showMeasurements: { name: 'Show Measurements', com: 'Switch' },
+        showIndexNumbers: { name: 'Show Index Numbers', com: 'Switch' },
       },
     },
   ],
