@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2026-01-14 09:40:09
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-14 10:03:42
+ * @LastEditTime: 2026-03-25 10:20:41
  */
 import express from 'express'
 import { createServer } from 'node:http'
@@ -22,7 +22,7 @@ app.use(express.static(path.resolve('dist')))
 
 const server = createServer(app)
 
-server.listen(5000, 'localhost', () => {
+server.listen(5000, '0.0.0.0', () => {
   // eslint-disable-next-line no-console
   console.log('✅ remote running at http://localhost:5000')
 })
