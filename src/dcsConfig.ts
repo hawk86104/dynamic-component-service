@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-25 11:16:48
+ * @LastEditTime: 2026-03-25 12:00:06
  */
 const config = {
   name: 'baseSample',
@@ -97,7 +97,7 @@ const config = {
       name: '流动液体容器组件',
       type: 'liquidContainerComponent',
       comFile: './src/components/liquidContainerComponent/index.vue',
-      previewPath: './preview/flowingSmokeComponent.png',
+      previewPath: './preview/liquidContainerComponent.png',
       default: {
         shapeType: 'cylinderTank',
         vasePreset: 'roundPot',

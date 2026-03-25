@@ -64,6 +64,7 @@ const surfaceUniforms = createSurfaceUniforms(safeConfig.value, {
 surfaceUniforms.uTime.value = 0
 
 const shellMaterial = new THREE.ShaderMaterial({
+  depthTest: true,
   depthWrite: false,
   fragmentShader: shellFragmentShader,
   side: THREE.DoubleSide,
@@ -95,16 +96,17 @@ const liquidMesh = shallowRef(new THREE.Mesh(new THREE.BufferGeometry(), liquidM
 const surfaceMesh = shallowRef(new THREE.Mesh(new THREE.BufferGeometry(), surfaceMaterial))
 const bubbleState = createBubbleState(bubbleVertexShader, bubbleFragmentShader)
 
-shellMesh.value.renderOrder = 6
+shellMesh.value.renderOrder = 10
 liquidMesh.value.renderOrder = 4
 surfaceMesh.value.renderOrder = 8
 bubbleState.points.renderOrder = 5
-shellMesh.value.renderOrder = 10
 
 const syncMaterialUniforms = (config = safeConfig.value, geometry = currentGeometry.value) => {
   if (!geometry) {
     return
   }
+
+  const opaqueShellMode = config.shellOpacity >= 0.92
 
   shellUniforms.uShellColor.value.set(config.shellColor)
   shellUniforms.uOpacity.value = config.shellOpacity
@@ -112,6 +114,13 @@ const syncMaterialUniforms = (config = safeConfig.value, geometry = currentGeome
   shellUniforms.uClipX.value = config.clipX
   shellUniforms.uClipZ.value = config.clipZ
   shellMesh.value.visible = config.shellOpacity > 0.0001
+  shellMaterial.depthWrite = opaqueShellMode
+  shellMaterial.transparent = !opaqueShellMode
+  shellMaterial.needsUpdate = true
+  shellMesh.value.renderOrder = opaqueShellMode ? 2 : 10
+  liquidMesh.value.renderOrder = opaqueShellMode ? 4 : 4
+  bubbleState.points.renderOrder = opaqueShellMode ? 5 : 5
+  surfaceMesh.value.renderOrder = opaqueShellMode ? 6 : 8
 
   liquidUniforms.uBaseColor.value.set(config.baseColor)
   liquidUniforms.uTopColor.value.set(config.topColor)
