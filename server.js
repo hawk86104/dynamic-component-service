@@ -22,7 +22,7 @@ app.use(express.static(path.resolve('dist')))
 
 const server = createServer(app)
 
-server.listen(5000, '0.0.0.0', () => {
+server.listen(5000, 'localhost', () => {
   // eslint-disable-next-line no-console
   console.log('✅ remote running at http://localhost:5000')
 })
