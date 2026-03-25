@@ -7,5 +7,5 @@ void main() {
   vLocalPosition = position;
   vec4 worldPosition = modelMatrix * vec4(position, 1.0);
   vWorldPosition = worldPosition.xyz;
-  gl_Position = projectionMatrix * viewMatrix * worldPosition;
+  csm_Position = position;
 }

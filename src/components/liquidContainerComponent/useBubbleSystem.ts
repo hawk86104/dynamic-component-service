@@ -1,10 +1,13 @@
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import { MAX_BUBBLES } from './constants'
 import type { ContainerGeometryBundle, SafeLiquidContainerProps } from './types'
 
+type BubbleCustomMaterial = CustomShaderMaterial<typeof THREE.PointsMaterial>
+
 export interface BubbleState {
   geometry: THREE.BufferGeometry
-  material: THREE.ShaderMaterial
+  material: BubbleCustomMaterial
   points: THREE.Points
   positions: Float32Array
   sizes: Float32Array
@@ -34,9 +37,16 @@ export const createBubbleState = (vertexShader: string, fragmentShader: string) 
   geometry.setAttribute('aOpacity', new THREE.BufferAttribute(opacities, 1))
   geometry.setDrawRange(0, 0)
 
-  const material = new THREE.ShaderMaterial({
+  const material = new CustomShaderMaterial({
+    baseMaterial: THREE.PointsMaterial,
+    color: 0xFFFFFF,
+    depthTest: true,
     depthWrite: false,
     fragmentShader,
+    silent: true,
+    size: 1,
+    sizeAttenuation: true,
+    toneMapped: false,
     transparent: true,
     uniforms: {
       uColor: { value: new THREE.Color('#ffffff') },
@@ -137,7 +147,17 @@ export const rebuildBubbleState = (
   state.activeCount = config.bubbleEnabled ? Math.min(config.bubbleCount, MAX_BUBBLES) : 0
   state.geometry.setDrawRange(0, state.activeCount)
   state.material.uniforms.uColor.value.set(config.bubbleColor)
-  state.material.uniforms.uOpacity.value = THREE.MathUtils.clamp(config.opacity * 0.42, 0, 0.42)
+  state.material.uniforms.uOpacity.value = THREE.MathUtils.clamp(config.opacity * 0.34, 0, 0.34)
+
+  const containerReference = Math.max(
+    0.9,
+    Math.min(
+      geometry.liquidHalfExtents.x * 2,
+      geometry.liquidHalfExtents.y * 2,
+      geometry.liquidHalfExtents.z * 2,
+    ),
+  )
+  const sizeScale = THREE.MathUtils.clamp(24 / containerReference, 10, 24)
 
   for (let index = 0; index < MAX_BUBBLES; index += 1) {
     state.seeds[index] = Math.random()
@@ -145,12 +165,12 @@ export const rebuildBubbleState = (
     state.radialSeeds[index] = Math.random()
     state.driftSeeds[index] = Math.random() * 2 - 1
     state.speedFactors[index] = 0.65 + Math.random() * 0.8
-    state.opacities[index] = THREE.MathUtils.lerp(0.08, 0.42, Math.random() ** 1.5)
+    state.opacities[index] = THREE.MathUtils.lerp(0.04, 0.24, Math.random() ** 1.8)
     state.sizes[index] = THREE.MathUtils.lerp(
       config.bubbleSizeMin,
       config.bubbleSizeMax,
-      Math.random(),
-    ) * 128
+      Math.random() ** 2.25,
+    ) * sizeScale
   }
 
   updateBubbleState(state, 0, config, geometry)

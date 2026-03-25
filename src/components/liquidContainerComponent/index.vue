@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   computed,
   onBeforeUnmount,
@@ -20,6 +21,8 @@ import surfaceFragmentShader from '../../shader/liquidContainerComponent/surface
 import surfaceVertexShader from '../../shader/liquidContainerComponent/surface.vert?raw'
 import bubbleFragmentShader from '../../shader/liquidContainerComponent/bubble.frag?raw'
 import bubbleVertexShader from '../../shader/liquidContainerComponent/bubble.vert?raw'
+
+type LiquidMeshCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 const props = withDefaults(defineProps<LiquidContainerProps>(), DEFAULT_LIQUID_CONTAINER_PROPS)
 
@@ -63,33 +66,29 @@ const surfaceUniforms = createSurfaceUniforms(safeConfig.value, {
 })
 surfaceUniforms.uTime.value = 0
 
-const shellMaterial = new THREE.ShaderMaterial({
-  depthTest: true,
-  depthWrite: false,
-  fragmentShader: shellFragmentShader,
-  side: THREE.DoubleSide,
-  transparent: true,
-  uniforms: shellUniforms,
-  vertexShader: shellVertexShader,
-})
+const createMeshCustomMaterial = (
+  vertexShader: string,
+  fragmentShader: string,
+  uniforms: Record<string, THREE.IUniform>,
+): LiquidMeshCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    color: 0xFFFFFF,
+    depthTest: true,
+    depthWrite: false,
+    fragmentShader,
+    side: THREE.DoubleSide,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms,
+    vertexShader,
+  })
+}
 
-const liquidMaterial = new THREE.ShaderMaterial({
-  depthWrite: false,
-  fragmentShader: liquidFragmentShader,
-  side: THREE.DoubleSide,
-  transparent: true,
-  uniforms: liquidUniforms,
-  vertexShader: liquidVertexShader,
-})
-
-const surfaceMaterial = new THREE.ShaderMaterial({
-  depthWrite: false,
-  fragmentShader: surfaceFragmentShader,
-  side: THREE.DoubleSide,
-  transparent: true,
-  uniforms: surfaceUniforms,
-  vertexShader: surfaceVertexShader,
-})
+const shellMaterial = createMeshCustomMaterial(shellVertexShader, shellFragmentShader, shellUniforms)
+const liquidMaterial = createMeshCustomMaterial(liquidVertexShader, liquidFragmentShader, liquidUniforms)
+const surfaceMaterial = createMeshCustomMaterial(surfaceVertexShader, surfaceFragmentShader, surfaceUniforms)
 
 const shellMesh = shallowRef(new THREE.Mesh(new THREE.BufferGeometry(), shellMaterial))
 const liquidMesh = shallowRef(new THREE.Mesh(new THREE.BufferGeometry(), liquidMaterial))

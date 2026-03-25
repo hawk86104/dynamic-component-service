@@ -50,5 +50,5 @@ void main() {
     discard;
   }
 
-  gl_FragColor = vec4(color, min(alpha, 1.0));
+  csm_DiffuseColor = vec4(color, min(alpha, 1.0));
 }

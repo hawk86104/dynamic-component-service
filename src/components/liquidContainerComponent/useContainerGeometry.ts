@@ -45,12 +45,12 @@ export const sanitizeLiquidContainerProps = (props: LiquidContainerProps): SafeL
   const width = clampNumber(props.width, 0.6, 6, DEFAULT_LIQUID_CONTAINER_PROPS.width)
   const height = clampNumber(props.height, 1, 8, DEFAULT_LIQUID_CONTAINER_PROPS.height)
   const radius = clampNumber(props.radius, 0.35, 3.5, DEFAULT_LIQUID_CONTAINER_PROPS.radius)
-  const bubbleSizeMin = clampNumber(props.bubbleSizeMin, 0.008, 0.12, DEFAULT_LIQUID_CONTAINER_PROPS.bubbleSizeMin)
+  const bubbleSizeMin = clampNumber(props.bubbleSizeMin, 0.001, 0.05, DEFAULT_LIQUID_CONTAINER_PROPS.bubbleSizeMin)
   const bubbleSizeMax = clampNumber(
     props.bubbleSizeMax,
-    bubbleSizeMin + 0.004,
-    0.18,
-    Math.max(DEFAULT_LIQUID_CONTAINER_PROPS.bubbleSizeMax, bubbleSizeMin + 0.004),
+    bubbleSizeMin + 0.001,
+    0.06,
+    Math.max(DEFAULT_LIQUID_CONTAINER_PROPS.bubbleSizeMax, bubbleSizeMin + 0.001),
   )
 
   return {

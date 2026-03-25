@@ -18,7 +18,7 @@ float hash12(vec2 value) {
 void main() {
   vUv = uv;
 
-  vec3 transformed = position;
+  vec3 displacedPosition = position;
   float radialFactor = 1.0;
 
   if (uIsCircular > 0.5) {
@@ -33,8 +33,8 @@ void main() {
   float randomRipple = sin((position.x * 1.2 + position.y * 1.6) * (uFrequency * 0.92) + uTime * uSpeed * 0.74 + randomPhase);
   float baseWave = (waveA + waveB) * 0.5;
   float layeredWave = mix(baseWave, (baseWave * 0.56 + waveC * 0.24 + randomRipple * 0.2), clamp(uRandomness, 0.0, 1.0));
-  transformed.z += layeredWave * uAmplitude * radialFactor;
+  displacedPosition.z += layeredWave * uAmplitude * radialFactor;
   vWaveStrength = layeredWave;
 
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+  csm_Position = displacedPosition;
 }
