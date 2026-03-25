@@ -5,7 +5,7 @@ varying vec3 vWorldPosition;
 
 void main() {
   vLocalPosition = position;
-  vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-  vWorldPosition = worldPosition.xyz;
+  vec4 liquidWorldPosition = modelMatrix * vec4(position, 1.0);
+  vWorldPosition = liquidWorldPosition.xyz;
   csm_Position = position;
 }
