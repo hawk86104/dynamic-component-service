@@ -13,6 +13,7 @@ import {
   NCard,
   NDivider,
   NEllipsis,
+  NElement,
   NGrid,
   NGridItem,
   NIcon,

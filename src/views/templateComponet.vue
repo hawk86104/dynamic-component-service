@@ -7,7 +7,7 @@
  * @LastEditTime: 2026-01-04 09:58:08
 -->
 <script setup lang="ts">
-import { defineAsyncComponent, reactive } from 'vue'
+import { defineAsyncComponent, onBeforeUnmount, reactive } from 'vue'
 import { createConfigPane } from './createConfigPane'
 
 const props = defineProps<{
@@ -26,14 +26,22 @@ const foundComponent = loader
     })
   : null
 const attrsData = reactive(props.componentConfig?.default || {})
-const pane = createConfigPane(document.getElementById('pane')!, props.componentConfig.config, attrsData)
-
 const defaultState = reactive({
   showGrid: true,
   showAxes: true,
 })
+const pane = createConfigPane(
+  props.componentConfig?.config || {},
+  attrsData,
+)
+
 pane.addBinding(defaultState, 'showGrid', { label: '显示网格' })
 pane.addBinding(defaultState, 'showAxes', { label: '显示轴' })
+
+onBeforeUnmount(() => {
+  pane?.dispose?.()
+})
+
 let position = [0, 0, 0]
 if (props.componentConfig?.defaultObject3D?.position) {
   position = [

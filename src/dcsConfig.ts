@@ -4,13 +4,12 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-25 12:00:06
+ * @LastEditTime: 2026-03-26 09:29:11
  */
 const config = {
   name: 'baseSample',
-  version: '1.2.0',
-  description: `tvt.js 动态组件服务示例组件库<br>
-  新增：<a style="color: #5384ff;" href="https://github.com/dgreenheck/ez-tree" target="_blank">开源ez-tree</a>组件，实现高级树模型展示，<a style="color: #03765b;" href="https://www.eztree.dev" target="_blank">配置生成器</a>，SavePreset导出配置`,
+  version: '2.0.0',
+  description: `tvt.js 动态组件服务示例组件库`,
   components: [
     {
       name: '测试组件',
@@ -274,6 +273,7 @@ const config = {
       type: 'ezTreeCom',
       comFile: './src/components/ezTreeCom.vue',
       previewPath: './preview/ezTreeCom.png',
+      description: `<a style="color: #5384ff;" href="https://github.com/dgreenheck/ez-tree" target="_blank">开源 ez-tree</a> 组件，实现高级树模型展示，<a style="color: #03765b;" href="https://www.eztree.dev" target="_blank">配置生成器</a>，SavePreset 导出配置。`,
       default: {
         isUpdate: true,
         jsonText: `{
