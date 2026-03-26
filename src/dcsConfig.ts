@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-26 09:29:11
+ * @LastEditTime: 2026-03-26 12:06:27
  */
 const config = {
   name: 'baseSample',
@@ -391,6 +391,11 @@ const config = {
       },
       defaultObject3D: {},
       config: {
+        randomizeAction: {
+          name: 'Randomize Config',
+          com: 'ActionButton',
+          action: 'randomizeTreeConfig',
+        },
         isUpdate: { name: '摆动', com: 'Switch' },
         jsonText: { name: 'ez-tree配置', com: 'jsonText' },
       },

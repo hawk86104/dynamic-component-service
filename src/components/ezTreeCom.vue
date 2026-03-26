@@ -1,15 +1,17 @@
-<!--
- * @Description:
- * @Version: 1.668
- * @Autor: 地虎降天龙
- * @Date: 2025-12-26 08:14:02
- * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-22 09:27:27
--->
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
-import { Tree } from '@dgreenheck/ez-tree'
+import { Tree, TreePreset } from '@dgreenheck/ez-tree'
+import JSON5 from 'json5'
 import { watch } from 'vue'
+
+type TreeConfigObject = Record<string, unknown>
+type TreeConfigInput
+  = | string
+    | TreeConfigObject
+    | {
+      jsonText?: string
+      options?: TreeConfigObject
+    }
 
 const props = withDefaults(
   defineProps<{
@@ -27,34 +29,87 @@ const props = withDefaults(
 const { onBeforeRender } = useLoop()
 
 const tree = new Tree() as any
+const presetNames = Object.keys(TreePreset)
 
 tree.options.seed = 12345
 tree.options.branch.levels = 3
-
 tree.generate()
 
+function getConfigSnapshot() {
+  return {
+    jsonText: JSON.stringify(tree.options, null, 2),
+  }
+}
+
+function parseConfig(input: TreeConfigInput): TreeConfigObject {
+  if (typeof input === 'string') {
+    const rawValue = input.trim()
+    if (!rawValue) {
+      throw new Error('Tree config text is empty.')
+    }
+    return JSON5.parse(rawValue) as TreeConfigObject
+  }
+
+  if (!input || typeof input !== 'object') {
+    throw new Error('Tree config payload must be a JSON string or plain object.')
+  }
+
+  if ('options' in input && input.options && typeof input.options === 'object') {
+    return input.options as TreeConfigObject
+  }
+
+  if ('jsonText' in input && typeof input.jsonText === 'string') {
+    return JSON5.parse(input.jsonText) as TreeConfigObject
+  }
+
+  return input as TreeConfigObject
+}
+
+function applyConfig(input: TreeConfigInput) {
+  tree.loadFromJson(parseConfig(input))
+  return getConfigSnapshot()
+}
+
+function randomizeTreeConfig() {
+  if (presetNames.length) {
+    const presetName = presetNames[Math.floor(Math.random() * presetNames.length)]
+    tree.loadPreset(presetName)
+  }
+
+  tree.options.seed = Math.floor(Math.random() * 65536)
+  tree.generate()
+
+  return getConfigSnapshot()
+}
+
 onBeforeRender(({ elapsed }) => {
-  if (tree) {
-    if (props.isUpdate) { tree.update(elapsed) }
+  if (tree && props.isUpdate) {
+    tree.update(elapsed)
   }
 })
 
 watch(
-  () => [props.jsonTextChangeNumber],
+  () => props.jsonTextChangeNumber,
   () => {
-    if (props.jsonText) {
-      try {
-        const json = JSON.parse(props.jsonText)
-        tree.options = json
-        tree.generate()
-      }
-      catch (e) {
-        console.error('Failed to parse jsonText:', e)
-      }
+    if (!props.jsonText) {
+      return
+    }
+
+    try {
+      applyConfig(props.jsonText)
+    }
+    catch (error) {
+      console.error('Failed to parse jsonText:', error)
     }
   },
   { immediate: true },
 )
+
+defineExpose({
+  getConfig: getConfigSnapshot,
+  applyConfig,
+  randomizeTreeConfig,
+})
 </script>
 
 <template>

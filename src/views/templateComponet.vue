@@ -1,14 +1,6 @@
-<!--
- * @Description:
- * @Version: 1.668
- * @Autor: 地虎降天龙
- * @Date: 2025-12-29 16:50:24
- * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-04 09:58:08
--->
 <script setup lang="ts">
-import { defineAsyncComponent, onBeforeUnmount, reactive } from 'vue'
-import { createConfigPane } from './createConfigPane'
+import { defineAsyncComponent, onBeforeUnmount, reactive, ref } from 'vue'
+import { type ConfigPaneActionContext, createConfigPane } from './createConfigPane'
 
 const props = defineProps<{
   componentConfig: any
@@ -25,21 +17,59 @@ const foundComponent = loader
       suspensible: true,
     })
   : null
+
 const attrsData = reactive(props.componentConfig?.default || {})
+const componentRef = ref<any>(null)
+let pane: any
 const defaultState = reactive({
   showGrid: true,
   showAxes: true,
 })
-const pane = createConfigPane(
+
+function getComponentApi() {
+  const instance = componentRef.value as any
+  return instance?.$?.exposed ?? instance
+}
+
+function patchAttrsData(result: unknown) {
+  if (!result || typeof result !== 'object') {
+    return
+  }
+
+  Object.entries(result as Record<string, unknown>).forEach(([key, value]) => {
+    if (Object.prototype.hasOwnProperty.call(attrsData, key)) {
+      attrsData[key] = value
+    }
+  })
+
+  pane.refresh()
+}
+
+async function handleConfigAction({ actionId }: ConfigPaneActionContext) {
+  const action = getComponentApi()?.[actionId]
+
+  if (typeof action !== 'function') {
+    console.warn(`Action "${actionId}" is not exposed by the current component.`)
+    return
+  }
+
+  patchAttrsData(await action())
+}
+
+pane = createConfigPane(
   props.componentConfig?.config || {},
   attrsData,
+  undefined,
+  {
+    onAction: handleConfigAction,
+  },
 )
 
 pane.addBinding(defaultState, 'showGrid', { label: '显示网格' })
 pane.addBinding(defaultState, 'showAxes', { label: '显示轴' })
 
 onBeforeUnmount(() => {
-  pane?.dispose?.()
+  pane.dispose()
 })
 
 let position = [0, 0, 0]
@@ -73,6 +103,7 @@ if (props.componentConfig?.defaultObject3D?.scale) {
     <component
       :is="foundComponent"
       v-if="foundComponent"
+      ref="componentRef"
       :position="position"
       :rotation="rotation"
       :scale="scale"

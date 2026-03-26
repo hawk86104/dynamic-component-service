@@ -395,7 +395,9 @@ default: {
 
 > 将自动生成 **在线编辑器配置面板**
 
-⚠️ 字段必须与 `default` 一一对应。
+⚠️ 字段通常需要与 `default` 一一对应。
+
+`ActionButton` 属于动作型 metadata，不要求在 `default` 中提供同名字段。
 
 ```ts
 config: {
@@ -424,6 +426,12 @@ config: {
     name: '数据配置',
     com: 'jsonText',
   },
+
+  randomizeAction: {
+    name: '随机树木配置',
+    com: 'ActionButton',
+    action: 'randomizeTreeConfig',
+  },
 }
 ```
 
@@ -438,6 +446,7 @@ config: {
 | `Switch`      | 开关       |
 | `Slider`      | 数值滑动条    |
 | `jsonText`    | JSON 编辑器 |
+| `ActionButton` | 动作按钮     |
 
 ---
 

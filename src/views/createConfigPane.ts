@@ -1,41 +1,40 @@
-/*
- * @Description:
- * @Version: 1.668
- * @Autor: 地虎降天龙
- * @Date: 2025-12-29 17:17:45
- * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-01-22 10:02:56
- */
-import { Pane } from 'tweakpane';
-import * as EssentialsPlugin from '@pangenerator/tweakpane-textarea-plugin';
+import { Pane } from 'tweakpane'
+import * as EssentialsPlugin from '@pangenerator/tweakpane-textarea-plugin'
 import JSON5 from 'json5'
 
 export interface ConfigSchemaItem {
-  name: string;
-  com: 'Select' | 'ColorPicker' | 'Switch' | 'Slider' | 'jsonText';
-  options?: Array<{ label: string; value: any }>;
-  min?: number;
-  max?: number;
-  step?: number;
+  name: string
+  com: 'Select' | 'ColorPicker' | 'Switch' | 'Slider' | 'jsonText' | 'ActionButton'
+  action?: string
+  options?: Array<{ label: string, value: any }>
+  min?: number
+  max?: number
+  step?: number
 }
 
-export type ConfigSchema = Record<string, ConfigSchemaItem>;
+export type ConfigSchema = Record<string, ConfigSchemaItem>
 
-/**
- * 传入配置 schema、默认数据与可选容器
- * 自动生成 tweakpane UI，并返回 pane 实例
- */
+export interface ConfigPaneActionContext {
+  actionId: string
+  values: Record<string, any>
+}
+
+export interface CreateConfigPaneOptions {
+  onAction?: (context: ConfigPaneActionContext) => void | Promise<void>
+}
+
 export function createConfigPane(
   config: ConfigSchema,
   values: Record<string, any>,
   container?: HTMLElement | null,
+  options?: CreateConfigPaneOptions,
 ) {
   const pane = new Pane({
     container: container ?? undefined,
     title: '配置',
   }) as any
 
-  pane.registerPlugin(EssentialsPlugin);
+  pane.registerPlugin(EssentialsPlugin)
 
   Object.entries(config).forEach(([key, item]) => {
     switch (item.com) {
@@ -44,25 +43,25 @@ export function createConfigPane(
           .addBinding(values, key, {
             label: item.name,
             options: item.options?.reduce((acc, cur) => {
-              acc[cur.label] = cur.value;
-              return acc;
+              acc[cur.label] = cur.value
+              return acc
             }, {} as Record<string, any>),
           })
           .on('change', (ev: any) => {
-            values[key] = ev.value;
-          });
-        break;
+            values[key] = ev.value
+          })
+        break
 
       case 'ColorPicker':
         pane
           .addBinding(values, key, {
             label: item.name,
-            picker: 'inline'
+            picker: 'inline',
           })
           .on('change', (ev: any) => {
-            values[key] = ev.value;
-          });
-        break;
+            values[key] = ev.value
+          })
+        break
 
       case 'Switch':
         pane
@@ -70,9 +69,9 @@ export function createConfigPane(
             label: item.name,
           })
           .on('change', (ev: any) => {
-            values[key] = ev.value;
-          });
-        break;
+            values[key] = ev.value
+          })
+        break
 
       case 'Slider':
         pane
@@ -83,42 +82,57 @@ export function createConfigPane(
             step: item.step,
           })
           .on('change', (ev: any) => {
-            values[key] = ev.value;
-          });
-        break;
+            values[key] = ev.value
+          })
+        break
 
-      case 'jsonText':
-        pane.addBinding(values, key, {
+      case 'jsonText': {
+        const textBinding = pane.addBinding(values, key, {
           view: 'textarea',
           label: item.name,
           rows: 8,
           placeholder: '请在此输入 JSON...',
         })
-        values.jsonError = '';
-        values.jsonTextChangeNumber = 0;
-        const errorMessageBinding = pane.addBinding(values, 'jsonError', {
+
+        values.jsonError = ''
+        values.jsonTextChangeNumber = 0
+
+        const errorBinding = pane.addBinding(values, 'jsonError', {
           label: 'JSON错误',
           readonly: true,
-        });
+        })
+
         pane.addButton({ title: '应用JSON数据' }).on('click', () => {
           try {
-            const parsed = JSON5.parse(values[key]);
+            const parsed = JSON5.parse(values[key])
+            values[key] = JSON.stringify(parsed, null, 2)
             values.jsonError = 'JSON 校验成功'
-            errorMessageBinding.refresh();
-            console.log('JSON 校验成功:', parsed);
-            values.jsonTextChangeNumber++;
-          } catch (e: any) {
-            values.jsonError = e.message;
-            errorMessageBinding.refresh();
-            console.warn('JSON 格式错误', e);
+            textBinding.refresh()
+            errorBinding.refresh()
+            values.jsonTextChangeNumber++
           }
-        });
-        break;
+          catch (error: any) {
+            values.jsonError = error.message
+            errorBinding.refresh()
+            console.warn('JSON 格式错误', error)
+          }
+        })
+        break
+      }
+
+      case 'ActionButton':
+        pane.addButton({ title: item.name }).on('click', async () => {
+          await options?.onAction?.({
+            actionId: item.action || key,
+            values,
+          })
+        })
+        break
 
       default:
-        console.warn(`未知组件类型：${item.com}`);
+        console.warn(`Unknown config control: ${item.com}`)
     }
-  });
+  })
 
-  return pane;
+  return pane
 }
