@@ -54,7 +54,9 @@ const props = withDefaults(
 )
 
 const tempResolution = new THREE.Vector2(1, 1)
+const tempWorldScale = new THREE.Vector3(1, 1, 1)
 const lineSegments = shallowRef<RunningLineSegment[]>([])
+const groupRef = shallowRef<THREE.Group | null>(null)
 
 const clampNumber = (value: number | undefined, min: number, max: number, fallback: number) => {
   if (!Number.isFinite(value)) {
@@ -76,6 +78,22 @@ const perimeterLength = computed(() => (safeLength.value + safeWidth.value) * 2)
 const safeGradientLength = computed(() => {
   return clampNumber(props.gradientLength, 0.1, perimeterLength.value * 0.9, 1.4)
 })
+
+const getScaledLineWidth = () => {
+  if (!groupRef.value) {
+    return safeLineWidth.value
+  }
+
+  groupRef.value.updateWorldMatrix(true, false)
+  groupRef.value.getWorldScale(tempWorldScale)
+
+  const horizontalScale = Math.max(
+    (Math.abs(tempWorldScale.x) + Math.abs(tempWorldScale.z)) / 2,
+    0.0001,
+  )
+
+  return safeLineWidth.value * horizontalScale
+}
 
 const createWallMaterial = (): WallCustomMaterial => {
   return new CustomShaderMaterial({
@@ -144,7 +162,7 @@ const rebuildLineSegments = () => {
       color: new THREE.Color(props.lineColor).getHex(),
       depthWrite: false,
       transparent: true,
-      linewidth: safeLineWidth.value,
+      linewidth: getScaledLineWidth(),
       opacity: 1,
       toneMapped: false,
       vertexColors: true,
@@ -182,10 +200,11 @@ const updateLineSegments = (elapsed: number, renderer?: { getSize: (target: THRE
   const segmentSpacing = perimeterLength.value / safeSegmentCount.value
   const lineColor = new THREE.Color(props.lineColor)
   const sampleCount = Math.max(24, Math.ceil(safeGradientLength.value * 18))
+  const scaledLineWidth = getScaledLineWidth()
 
   lineSegments.value.forEach((segment, index) => {
     segment.material.color.set(props.lineColor)
-    segment.material.linewidth = safeLineWidth.value
+    segment.material.linewidth = scaledLineWidth
     segment.material.resolution.copy(tempResolution)
 
     const positions: number[] = []
@@ -234,7 +253,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <TresGroup>
+  <TresGroup ref="groupRef">
     <TresMesh :position="[0, safeHeight / 2, safeWidth / 2]" :render-order="6">
       <TresPlaneGeometry :args="[safeLength, safeHeight]" />
       <primitive :object="wallMaterials[0]" attach="material" />
