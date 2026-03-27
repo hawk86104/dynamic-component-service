@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-26 12:06:27
+ * @LastEditTime: 2026-03-27 09:06:59
  */
 const config = {
   name: 'baseSample',
@@ -392,7 +392,7 @@ const config = {
       defaultObject3D: {},
       config: {
         randomizeAction: {
-          name: 'Randomize Config',
+          name: '随机生成树',
           com: 'ActionButton',
           action: 'randomizeTreeConfig',
         },
