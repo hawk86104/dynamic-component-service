@@ -25,11 +25,53 @@ const defaultState = reactive({
   showGrid: true,
   showAxes: true,
 })
+const stats = ref({
+  fps: 0,
+})
 const copyHelperKeys = new Set(['jsonError', 'jsonTextChangeNumber'])
+let fpsRafId: number | null = null
+let fpsLastTime = 0
+let fpsFrameCount = 0
 
 function getComponentApi() {
   const instance = componentRef.value as any
   return instance?.$?.exposed ?? instance
+}
+
+function updateFps(now: number) {
+  if (!fpsLastTime) {
+    fpsLastTime = now
+  }
+
+  fpsFrameCount += 1
+  const elapsed = now - fpsLastTime
+
+  if (elapsed >= 500) {
+    stats.value.fps = Number(((fpsFrameCount * 1000) / elapsed).toFixed(1))
+    fpsFrameCount = 0
+    fpsLastTime = now
+  }
+
+  fpsRafId = requestAnimationFrame(updateFps)
+}
+
+function startFpsMonitor() {
+  if (typeof window === 'undefined' || fpsRafId !== null) {
+    return
+  }
+
+  fpsLastTime = 0
+  fpsFrameCount = 0
+  fpsRafId = requestAnimationFrame(updateFps)
+}
+
+function stopFpsMonitor() {
+  if (fpsRafId === null || typeof window === 'undefined') {
+    return
+  }
+
+  cancelAnimationFrame(fpsRafId)
+  fpsRafId = null
 }
 
 function getCopyPayload() {
@@ -126,7 +168,24 @@ pane.addButton({ title: '复制当前带参数' }).on('click', () => {
 pane.addBinding(defaultState, 'showGrid', { label: '显示网格' })
 pane.addBinding(defaultState, 'showAxes', { label: '显示轴' })
 
+const statsFolder = pane.addFolder({
+  title: '性能',
+  expanded: true,
+})
+
+statsFolder.addBinding(stats.value, 'fps', {
+  label: 'fps',
+  readonly: true,
+  view: 'graph',
+  min: 0,
+  max: 120,
+  interval: 100,
+})
+
+startFpsMonitor()
+
 onBeforeUnmount(() => {
+  stopFpsMonitor()
   pane.dispose()
 })
 
