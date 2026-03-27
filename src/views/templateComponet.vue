@@ -25,10 +25,65 @@ const defaultState = reactive({
   showGrid: true,
   showAxes: true,
 })
+const copyHelperKeys = new Set(['jsonError', 'jsonTextChangeNumber'])
 
 function getComponentApi() {
   const instance = componentRef.value as any
   return instance?.$?.exposed ?? instance
+}
+
+function getCopyPayload() {
+  const defaultKeys = Object.keys(props.componentConfig?.default || {})
+  const keysToCopy = defaultKeys.length > 0
+    ? defaultKeys
+    : Object.keys(attrsData).filter(key => !copyHelperKeys.has(key))
+
+  return keysToCopy.reduce((result, key) => {
+    result[key] = attrsData[key]
+    return result
+  }, {} as Record<string, any>)
+}
+
+function createCopyText() {
+  return JSON.stringify(getCopyPayload(), null, 2)
+}
+
+async function writeTextToClipboard(text: string) {
+  if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text)
+    return
+  }
+
+  if (typeof document === 'undefined') {
+    throw new Error('Clipboard API is unavailable.')
+  }
+
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', 'true')
+  textarea.style.position = 'fixed'
+  textarea.style.left = '-9999px'
+  textarea.style.top = '0'
+  document.body.appendChild(textarea)
+  textarea.select()
+
+  const copied = document.execCommand('copy')
+  document.body.removeChild(textarea)
+
+  if (!copied) {
+    throw new Error('Fallback copy command failed.')
+  }
+}
+
+async function copyCurrentConfig() {
+  try {
+    await writeTextToClipboard(createCopyText())
+    console.info('Current component config copied to clipboard.')
+  }
+  catch (error) {
+    console.warn('Failed to copy current component config.', error)
+    window.alert('复制失败，请检查当前页面的剪贴板权限后重试。')
+  }
 }
 
 function patchAttrsData(result: unknown) {
@@ -65,6 +120,9 @@ pane = createConfigPane(
   },
 )
 
+pane.addButton({ title: '复制当前带参数' }).on('click', () => {
+  void copyCurrentConfig()
+})
 pane.addBinding(defaultState, 'showGrid', { label: '显示网格' })
 pane.addBinding(defaultState, 'showAxes', { label: '显示轴' })
 

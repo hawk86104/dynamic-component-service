@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-27 09:06:59
+ * @LastEditTime: 2026-03-27 14:38:14
  */
 const config = {
   name: 'baseSample',
@@ -90,6 +90,57 @@ const config = {
         directionX: { name: '方向X', com: 'Slider', min: -1, max: 1, step: 0.05 },
         directionY: { name: '方向Y', com: 'Slider', min: -1, max: 1, step: 0.05 },
         directionZ: { name: '方向Z', com: 'Slider', min: -1, max: 1, step: 0.05 },
+      },
+    },
+    {
+      name: '液体气泡组件',
+      type: 'liquidBubbleComponent',
+      comFile: './src/components/liquidBubbleComponent/index.vue',
+      previewPath: './preview/liquidBubbleComponent.png',
+      description: '静止液体体块内部持续冒泡的效果组件，支持长方体与圆柱体两种形状。',
+      default: {
+        "shapeType": "cylinder",
+        "width": 1.6,
+        "depth": 1.4,
+        "height": 3.2,
+        "radius": 1.07,
+        "liquidColor": "#b93838",
+        "liquidTopColor": "#de9221",
+        "bubbleColor": "#fff8e8",
+        "opacity": 0.5099999999999999,
+        "bubbleCount": 80,
+        "bubbleOpacity": 0.44999999999999996,
+        "bubbleSpeed": 0.1,
+        "bubbleSize": 0.08199999999999999,
+        "bubbleSpread": 0.76
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        shapeType: {
+          name: '形状',
+          com: 'Select',
+          options: [
+            { label: '圆柱体', value: 'cylinder' },
+            { label: '长方体', value: 'box' },
+          ],
+        },
+        width: { name: '长方体宽度', com: 'Slider', min: 0.4, max: 8, step: 0.05 },
+        depth: { name: '长方体深度', com: 'Slider', min: 0.4, max: 8, step: 0.05 },
+        height: { name: '高度', com: 'Slider', min: 0.8, max: 8, step: 0.05 },
+        radius: { name: '圆柱体半径', com: 'Slider', min: 0.2, max: 4, step: 0.05 },
+        liquidColor: { name: '液体底色', com: 'ColorPicker' },
+        liquidTopColor: { name: '液体顶色', com: 'ColorPicker' },
+        bubbleColor: { name: '气泡颜色', com: 'ColorPicker' },
+        opacity: { name: '液体透明度', com: 'Slider', min: 0.08, max: 0.95, step: 0.01 },
+        bubbleCount: { name: '气泡数量', com: 'Slider', min: 0, max: 240, step: 1 },
+        bubbleOpacity: { name: '气泡透明度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
+        bubbleSpeed: { name: '气泡速度', com: 'Slider', min: 0.1, max: 4, step: 0.05 },
+        bubbleSize: { name: '气泡大小', com: 'Slider', min: 0.001, max: 0.3, step: 0.001 },
+        bubbleSpread: { name: '气泡扩散', com: 'Slider', min: 0.02, max: 1.2, step: 0.01 },
       },
     },
     {
