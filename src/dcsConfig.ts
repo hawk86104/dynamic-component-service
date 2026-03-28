@@ -4,18 +4,13 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-28 12:37:10
+ * @LastEditTime: 2026-03-28 13:03:22
  */
 const config = {
   name: 'baseSample',
   version: '2.1.0',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
-    .eco-wrap {
-      border: 1px solid #eee;
-      border-radius: 12px;
-      padding: 14px 16px;
-    }
     .eco-title {
       font-size: 16px;
       margin-bottom: 12px;
@@ -29,7 +24,7 @@ const config = {
     .eco-item {
       text-decoration: none;
       color: #222;
-      padding: 10px 12px;
+      padding: 6px 8px;
       border-radius: 8px;
       border: 1px solid #f0f0f0;
       background: #fafafa;
