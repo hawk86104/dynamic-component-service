@@ -9,6 +9,13 @@
 📦 项目地址：
 👉 [https://gitee.com/ice-gl/dynamic-component-service](https://gitee.com/ice-gl/dynamic-component-service)
 
+## ✨ 持续打通多个生态
+* 🌈 tvt.js 开源基座
+  👉 [https://opensource.icegl.cn/#/plugins/loadDynamicComponent/readConfig](https://opensource.icegl.cn/#/plugins/loadDynamicComponent/readConfig)
+* 🏞️ 区域三维场景编辑器
+  👉 [https://zone3deditor.icegl.cn/#/plugins/zone3Deditor/index](https://zone3deditor.icegl.cn/#/plugins/zone3Deditor/index)
+* 🗺️ GIS地理空间编辑器
+  👉 [https://gisplaneeditor.icegl.cn/#/plugins/gisPlaneEditor/index](https://gisplaneeditor.icegl.cn/#/plugins/gisPlaneEditor/index)
 ---
 
 ## ✨ 项目简介
@@ -167,8 +174,9 @@ yarn preview
 * tvt.js 开源基座
   👉 [https://opensource.icegl.cn/#/plugins/loadDynamicComponent/readConfig](https://opensource.icegl.cn/#/plugins/loadDynamicComponent/readConfig)
 * 区域三维场景编辑器
-  👉 [https://oss.icegl.cn/p/zone3Deditor/#/plugins/zone3Deditor/index](https://oss.icegl.cn/p/zone3Deditor/#/plugins/zone3Deditor/index)
-
+  👉 [https://zone3deditor.icegl.cn/#/plugins/zone3Deditor/index](https://zone3deditor.icegl.cn/#/plugins/zone3Deditor/index)
+* GIS地理空间编辑器
+  👉 [https://gisplaneeditor.icegl.cn/#/plugins/gisPlaneEditor/index](https://gisplaneeditor.icegl.cn/#/plugins/gisPlaneEditor/index)
 用于 **调试 / 编辑 / 开发**。
 
 ---

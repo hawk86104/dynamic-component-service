@@ -4,12 +4,73 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-03-27 14:38:14
+ * @LastEditTime: 2026-03-28 12:37:10
  */
 const config = {
   name: 'baseSample',
-  version: '2.0.0',
-  description: `tvt.js 动态组件服务示例组件库`,
+  version: '2.1.0',
+  description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+  <style>
+    .eco-wrap {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .eco-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .eco-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .eco-item {
+      text-decoration: none;
+      color: #222;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+      background: #fafafa;
+      transition: all 0.2s ease;
+      display: block;
+    }
+    .eco-item:hover {
+      transform: translateY(-2px);
+      border-color: #d0d7ff;
+      background: #f5f7ff;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    }
+    .eco-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .eco-link {
+      font-size: 12px;
+      color: #888;
+      word-break: break-all;
+    }
+  </style>
+  <div class="eco-wrap">
+    <div class="eco-title">✨ 持续打通多个生态</div>
+    <div class="eco-grid">
+      <a class="eco-item" href="https://opensource.icegl.cn/#/plugins/loadDynamicComponent/readConfig" target="_blank">
+        <div class="eco-name">🌈 tvt.js 开源基座</div>
+        <div class="eco-link">opensource.icegl.cn</div>
+      </a>
+      <a class="eco-item" href="https://zone3deditor.icegl.cn/#/plugins/zone3Deditor/index" target="_blank">
+        <div class="eco-name">🏞️ 区域三维场景编辑器</div>
+        <div class="eco-link">zone3deditor.icegl.cn</div>
+      </a>
+      <a class="eco-item" href="https://gisplaneeditor.icegl.cn/#/plugins/gisPlaneEditor/index" target="_blank">
+        <div class="eco-name">🗺️ GIS地理空间编辑器</div>
+        <div class="eco-link">gisplaneeditor.icegl.cn</div>
+      </a>
+    </div>
+  </div>
+</div>`,
   components: [
     {
       name: '测试组件',
