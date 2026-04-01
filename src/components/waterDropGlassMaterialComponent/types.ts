@@ -1,45 +1,59 @@
 export interface WaterDropGlassMaterialProps {
-  alphaMultiply?: number
-  alphaSubtract?: number
-  brightness?: number
+  attenuationDistance?: number
+  clearcoat?: number
+  clearcoatRoughness?: number
   collisionRadius?: number
   collisionRadiusIncrease?: number
+  dropletGlow?: number
+  dropletRoughness?: number
   dropletSizeMax?: number
   dropletSizeMin?: number
   dropletsRate?: number
+  glassColor?: string
   globalTimeScale?: number
+  ior?: number
+  length?: number
   maxDropRadius?: number
+  metalness?: number
   minDropRadius?: number
+  normalStrength?: number
   opacity?: number
   rainAmount?: number
   rainChance?: number
   rainLimit?: number
-  refraction?: number
-  showShadow?: boolean
-  showShine?: boolean
-  size?: number
+  roughness?: number
+  thickness?: number
   trailRate?: number
+  transmission?: number
+  width?: number
 }
 
 export interface SanitizedWaterDropGlassConfig {
-  alphaMultiply: number
-  alphaSubtract: number
-  brightness: number
+  attenuationDistance: number
+  clearcoat: number
+  clearcoatRoughness: number
   collisionRadius: number
   collisionRadiusIncrease: number
+  dropletGlow: number
+  dropletRoughness: number
   dropletSizeMax: number
   dropletSizeMin: number
   dropletsRate: number
+  glassColor: string
   globalTimeScale: number
+  ior: number
+  length: number
   maxDropRadius: number
+  metalness: number
   minDropRadius: number
+  normalStrength: number
   opacity: number
   rainAmount: number
   rainChance: number
   rainLimit: number
-  refraction: number
-  showShadow: boolean
-  showShine: boolean
-  size: number
+  roughness: number
+  thickness: number
   trailRate: number
+  transmission: number
+  width: number
 }

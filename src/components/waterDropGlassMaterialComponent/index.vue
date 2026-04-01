@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   computed,
   onBeforeUnmount,
@@ -13,61 +14,79 @@ import { createRainOnGlassSimulation } from './useRainOnGlass'
 import glassFragmentShader from '../../shader/waterDropGlassMaterialComponent/glass.frag?raw'
 import glassVertexShader from '../../shader/waterDropGlassMaterialComponent/glass.vert?raw'
 
+type WaterDropGlassMaterial = CustomShaderMaterial<typeof THREE.MeshPhysicalMaterial> & THREE.MeshPhysicalMaterial
+
 const props = withDefaults(defineProps<WaterDropGlassMaterialProps>(), DEFAULT_WATER_DROP_GLASS_PROPS)
 
 const safeConfig = computed(() => sanitizeWaterDropGlassProps(props))
 const simulation = shallowRef<ReturnType<typeof createRainOnGlassSimulation> | null>(null)
 
 const glassUniforms = {
-  uAlphaMultiply: { value: safeConfig.value.alphaMultiply },
-  uAlphaSubtract: { value: safeConfig.value.alphaSubtract },
-  uBackgroundMap: { value: null as THREE.Texture | null },
-  uBrightness: { value: safeConfig.value.brightness },
-  uForegroundMap: { value: null as THREE.Texture | null },
-  uMapResolution: { value: new THREE.Vector2(1024, 1024) },
-  uOpacity: { value: safeConfig.value.opacity },
-  uRefraction: { value: safeConfig.value.refraction },
-  uRenderShadow: { value: safeConfig.value.showShadow },
-  uRenderShine: { value: safeConfig.value.showShine },
-  uShineMap: { value: null as THREE.Texture | null },
+  uDropletColor: { value: new THREE.Color('#ffffff') },
+  uDropletGlow: { value: safeConfig.value.dropletGlow },
+  uDropletRoughness: { value: safeConfig.value.dropletRoughness },
   uWaterMap: { value: null as THREE.Texture | null },
 }
 
-const createGlassMaterial = () => {
-  return new THREE.ShaderMaterial({
-    depthTest: true,
-    depthWrite: false,
+const createGlassMaterial = (): WaterDropGlassMaterial => {
+  return new CustomShaderMaterial({
+    attenuationColor: new THREE.Color(safeConfig.value.glassColor),
+    attenuationDistance: safeConfig.value.attenuationDistance,
+    baseMaterial: THREE.MeshPhysicalMaterial,
+    clearcoat: safeConfig.value.clearcoat,
+    clearcoatRoughness: safeConfig.value.clearcoatRoughness,
+    color: new THREE.Color(safeConfig.value.glassColor).getHex(),
     fragmentShader: glassFragmentShader,
-    side: THREE.DoubleSide,
-    toneMapped: false,
+    ior: safeConfig.value.ior,
+    metalness: safeConfig.value.metalness,
+    opacity: safeConfig.value.opacity,
+    roughness: safeConfig.value.roughness,
+    side: THREE.FrontSide,
+    silent: true,
+    thickness: safeConfig.value.thickness,
+    toneMapped: true,
+    transmission: safeConfig.value.transmission,
     transparent: true,
     uniforms: glassUniforms,
     vertexShader: glassVertexShader,
-  })
+  }) as WaterDropGlassMaterial
 }
 
-const glassMaterial = shallowRef(createGlassMaterial())
+const glassMaterial = shallowRef<WaterDropGlassMaterial | null>(createGlassMaterial())
 
 const syncMaterialUniforms = () => {
-  const config = safeConfig.value
-
-  glassUniforms.uAlphaMultiply.value = config.alphaMultiply
-  glassUniforms.uAlphaSubtract.value = config.alphaSubtract
-  glassUniforms.uBrightness.value = config.brightness
-  glassUniforms.uOpacity.value = config.opacity
-  glassUniforms.uRefraction.value = config.refraction
-  glassUniforms.uRenderShadow.value = config.showShadow
-  glassUniforms.uRenderShine.value = config.showShine
-
-  if (simulation.value) {
-    glassUniforms.uBackgroundMap.value = simulation.value.backgroundTexture
-    glassUniforms.uForegroundMap.value = simulation.value.foregroundTexture
-    glassUniforms.uMapResolution.value.copy(simulation.value.resolution)
-    glassUniforms.uShineMap.value = simulation.value.shineTexture
-    glassUniforms.uWaterMap.value = simulation.value.waterTexture
+  if (!glassMaterial.value) {
+    return
   }
 
-  glassMaterial.value.needsUpdate = true
+  const config = safeConfig.value
+  const material = glassMaterial.value
+
+  glassUniforms.uDropletColor.value.set('#ffffff')
+  glassUniforms.uDropletGlow.value = config.dropletGlow
+  glassUniforms.uDropletRoughness.value = config.dropletRoughness
+
+  material.color.set(config.glassColor)
+  material.attenuationColor.set(config.glassColor)
+  material.attenuationDistance = config.attenuationDistance
+  material.clearcoat = config.clearcoat
+  material.clearcoatRoughness = config.clearcoatRoughness
+  material.ior = config.ior
+  material.metalness = config.metalness
+  material.opacity = config.opacity
+  material.roughness = config.roughness
+  material.thickness = config.thickness
+  material.transmission = config.transmission
+  material.normalScale.set(config.normalStrength, config.normalStrength)
+  material.clearcoatNormalScale.set(config.normalStrength, config.normalStrength)
+
+  if (simulation.value) {
+    glassUniforms.uWaterMap.value = simulation.value.waterTexture
+    material.normalMap = simulation.value.normalTexture
+    material.clearcoatNormalMap = simulation.value.normalTexture
+  }
+
+  material.needsUpdate = true
 }
 
 const rebuildSimulation = () => {
@@ -109,14 +128,15 @@ onBeforeRender(({ elapsed }) => {
 onBeforeUnmount(() => {
   simulation.value?.dispose()
   simulation.value = null
-  glassMaterial.value.dispose()
+  glassMaterial.value?.dispose()
+  glassMaterial.value = null
 })
 </script>
 
 <template>
   <TresGroup>
     <TresMesh :render-order="8">
-      <TresPlaneGeometry :args="[safeConfig.size, safeConfig.size, 1, 1]" />
+      <TresBoxGeometry :args="[safeConfig.length, safeConfig.width, safeConfig.thickness, 1, 1, 1]" />
       <primitive
         v-if="glassMaterial"
         :object="glassMaterial"

@@ -47,6 +47,7 @@ interface DropGraphics {
 export interface RainOnGlassSimulation {
   backgroundTexture: THREE.CanvasTexture
   foregroundTexture: THREE.CanvasTexture
+  normalTexture: THREE.CanvasTexture
   resolution: THREE.Vector2
   setConfig: (config: SanitizedWaterDropGlassConfig) => void
   shineTexture: THREE.CanvasTexture
@@ -407,6 +408,7 @@ const generateShineMap = (size: number) => {
 class RainOnGlassSimulationImpl implements RainOnGlassSimulation {
   readonly backgroundTexture: THREE.CanvasTexture
   readonly foregroundTexture: THREE.CanvasTexture
+  readonly normalTexture: THREE.CanvasTexture
   readonly resolution = new THREE.Vector2(TEXTURE_SIZE, TEXTURE_SIZE)
   readonly shineTexture: THREE.CanvasTexture
   readonly waterTexture: THREE.CanvasTexture
@@ -418,6 +420,8 @@ class RainOnGlassSimulationImpl implements RainOnGlassSimulation {
   private dropletsContext = getCanvasContext(this.dropletsCanvas)
   private dropletsCounter = 0
   private readonly backgroundCanvas = generateCityBackground(TEXTURE_SIZE, 10)
+  private readonly normalCanvas = createCanvas(TEXTURE_SIZE, TEXTURE_SIZE)
+  private readonly normalContext = getCanvasContext(this.normalCanvas)
   private options: RainSimulationOptions
   private readonly foregroundCanvas = generateCityBackground(TEXTURE_SIZE, 0)
   private readonly rdCanvas = createCanvas(TEXTURE_SIZE, TEXTURE_SIZE)
@@ -433,11 +437,13 @@ class RainOnGlassSimulationImpl implements RainOnGlassSimulation {
     this.options = this.buildOptions(config)
 
     this.waterTexture = new THREE.CanvasTexture(this.rdCanvas)
+    this.normalTexture = new THREE.CanvasTexture(this.normalCanvas)
     this.foregroundTexture = new THREE.CanvasTexture(this.foregroundCanvas)
     this.backgroundTexture = new THREE.CanvasTexture(this.backgroundCanvas)
     this.shineTexture = new THREE.CanvasTexture(generateShineMap(SHINE_TEXTURE_SIZE))
 
     this.applyTextureSettings(this.waterTexture)
+    this.applyTextureSettings(this.normalTexture)
     this.applyTextureSettings(this.foregroundTexture)
     this.applyTextureSettings(this.backgroundTexture)
     this.applyTextureSettings(this.shineTexture)
@@ -462,11 +468,14 @@ class RainOnGlassSimulationImpl implements RainOnGlassSimulation {
 
     this.rdContext.clearRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE)
     this.updateDrops(timeScale)
+    this.syncNormalTexture()
     this.waterTexture.needsUpdate = true
+    this.normalTexture.needsUpdate = true
   }
 
   dispose() {
     this.waterTexture.dispose()
+    this.normalTexture.dispose()
     this.foregroundTexture.dispose()
     this.backgroundTexture.dispose()
     this.shineTexture.dispose()
@@ -513,7 +522,16 @@ class RainOnGlassSimulationImpl implements RainOnGlassSimulation {
     this.dropletsCounter = 0
     this.textureCleaningIterations = 30
     this.rdContext.clearRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE)
+    this.syncNormalTexture()
     this.waterTexture.needsUpdate = true
+    this.normalTexture.needsUpdate = true
+  }
+
+  private syncNormalTexture() {
+    this.normalContext.globalCompositeOperation = 'source-over'
+    this.normalContext.fillStyle = 'rgb(128, 128, 255)'
+    this.normalContext.fillRect(0, 0, TEXTURE_SIZE, TEXTURE_SIZE)
+    this.normalContext.drawImage(this.rdCanvas, 0, 0, TEXTURE_SIZE, TEXTURE_SIZE)
   }
 
   private deltaR() {

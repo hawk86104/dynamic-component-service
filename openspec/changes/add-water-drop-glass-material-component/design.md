@@ -4,44 +4,44 @@ The reference page `https://github.com/pbakaus/radiant/blob/main/static/rain-on-
 
 - procedural drop alpha and refraction textures
 - a CPU-side raindrop simulation for large drops, trails, micro-droplets, and collisions
-- shader-side composition that refracts a foreground texture over a blurred background
+- shader-side composition that makes those droplets read like wet glass
 
-For this repository, the component should preserve that hybrid behavior while fitting into the existing tresjs / three component pipeline. The result should stay self-contained, live under `src/components/` and `src/shader/`, and be integrated only through `src/dcsConfig.ts`.
+For this repository, the component should preserve the droplet simulation but switch the final visual output to actual scene glass. The result should stay self-contained, live under `src/components/` and `src/shader/`, and be integrated only through `src/dcsConfig.ts`.
 
 ## Goals / Non-Goals
 
 **Goals:**
 
 - Add a new independent component instead of modifying the existing panel or liquid components.
-- Keep the visual identity of the reference through animated droplets, trails, and glass refraction.
-- Preserve the reference-style tuning parameters where they remain useful in the component context.
-- Render on a square plane with a double-sided material, as requested.
-- Keep the implementation self-contained and compatible with the current dynamic component service.
+- Keep the visual identity of the reference through animated droplets, trails, and glass distortion.
+- Preserve the useful rain-system tuning parameters from the reference.
+- Render as a glass volume with adjustable length, width, and thickness so the component reads like a real object in the scene.
+- Use real scene transmission so users can see actual helpers and objects through the glass.
 
 **Non-Goals:**
 
 - Do not recreate the fullscreen HTML page shell from the reference.
 - Do not keep `postMessage`, pointer, mouse, click, or touch-triggered splash behavior.
-- Do not add a scene capture / true screen-space refraction pipeline for the whole preview.
+- Do not add a custom preview-wide refraction pipeline unless the built-in material path proves insufficient.
 - Do not modify generic preview view files unless a blocker is discovered.
 
 ## Decisions
 
-1. Decision: Implement the component as a single `PlaneGeometry` with a custom `ShaderMaterial`.
-   - Rationale: The requested output is a configurable square plane with a double-sided glass material, and the reference effect is fundamentally texture-driven rather than mesh-driven.
-   - Alternative considered: Using a subdivided mesh with vertex displacement. That would add geometry cost without improving the characteristic rain-on-glass read.
+1. Decision: Implement the component as a `BoxGeometry` with adjustable length, width, and thickness.
+   - Rationale: The updated requirement is to read as real glass in the scene, and a thin box better communicates physical thickness while still staying lightweight.
+   - Alternative considered: Keeping a single plane. That would work for the rain overlay, but it would feel less convincing as real glass when viewed from oblique angles.
 
 2. Decision: Port the CPU-side raindrop simulation into a component-scoped helper instead of trying to rewrite everything as a pure fragment shader.
    - Rationale: The reference look depends on large-drop motion, trail spawning, micro-droplet accumulation, and collision merging. Reusing that simulation model preserves the result more faithfully and keeps the public parameters meaningful.
    - Alternative considered: Replacing the simulation with procedural shader noise. That would be simpler, but it would not preserve the reference behavior or parameter semantics.
 
-3. Decision: Keep the background self-contained by generating foreground / background canvases for the shader to refract.
-   - Rationale: This repository does not currently provide a capture pass for refracting the live scene behind a material component. A self-contained backdrop keeps the component portable and visually close to the reference demo.
-   - Alternative considered: Rendering the actual scene into a refraction target. That would be more physically correct, but it would introduce infrastructure work outside the requested component scope.
+3. Decision: Use `MeshPhysicalMaterial` transmission for the final glass response, and feed the rain simulation into a dynamic normal texture plus shader-side roughness / emissive modulation.
+   - Rationale: The preview scene already renders through standard three.js materials, so physical transmission is the most direct path to “see through to the opposite objects” without inventing a fake background.
+   - Alternative considered: Keeping the previous self-generated skyline background. That matched the reference page mood, but it did not satisfy the request for real scene glass.
 
-4. Decision: Expose the key rain-system and shader-composite parameters through props and `src/dcsConfig.ts`.
-   - Rationale: The user explicitly asked to preserve the adjustable settings from the reference, so the component should not collapse the port into only a couple of decorative controls.
-   - Alternative considered: Only exposing `rainAmount` and `refraction`. That would be easier to use, but it would hide the useful rain-system controls that make the port flexible.
+4. Decision: Expose the key rain-system parameters together with physical glass controls through props and `src/dcsConfig.ts`.
+   - Rationale: The final component needs both the reference rain controls and enough material controls to tune real glass behavior in the scene.
+   - Alternative considered: Only exposing rain controls and hardcoding the glass. That would make the component less useful across different scene setups.
 
 5. Decision: Remove all interaction-specific behavior and keep the animation autonomous.
    - Rationale: The component should behave consistently in the service preview without extra event plumbing, and the request explicitly called for a straight component port rather than an interactive page.
@@ -50,10 +50,10 @@ For this repository, the component should preserve that hybrid behavior while fi
 ## Risks / Trade-offs
 
 - Risk: Updating a canvas-backed water map every frame is more expensive than a purely static material.
-  - Mitigation: Keep the plane geometry simple, use a fixed internal simulation resolution, and avoid adding unnecessary extra passes.
+  - Mitigation: Keep the geometry simple, use a fixed internal simulation resolution, and avoid unnecessary extra passes.
 
-- Risk: Because the background is self-generated, the material reads like a stylized glass insert rather than true refraction of arbitrary scene content.
-  - Mitigation: Document that choice in the change, keep the reference-style amber city lighting, and avoid claiming physically correct scene refraction.
+- Risk: Built-in transmission depends on the preview scene and renderer behavior, so some transparent helpers or effects behind the glass may not refract exactly like a dedicated offline renderer.
+  - Mitigation: Keep the implementation on standard three.js physical glass and avoid layering extra transparent tricks behind it in the default preview.
 
 - Risk: Extremely large rain rates or drop counts can make the component visually noisy.
   - Mitigation: Clamp values in the component and expose safe config ranges in `src/dcsConfig.ts`.
@@ -61,8 +61,8 @@ For this repository, the component should preserve that hybrid behavior while fi
 ## Migration Plan
 
 - Create the new OpenSpec change artifacts for the component.
-- Add `src/components/waterDropGlassMaterialComponent/` with props, sanitization, the offscreen rain simulation helper, and the plane component wrapper.
-- Add `src/shader/waterDropGlassMaterialComponent/glass.vert` and `glass.frag`.
+- Add `src/components/waterDropGlassMaterialComponent/` with props, sanitization, the offscreen rain simulation helper, and the glass box component wrapper.
+- Add `src/shader/waterDropGlassMaterialComponent/glass.vert` and `glass.frag` to modulate the physical glass material with rain data.
 - Register the component in `src/dcsConfig.ts` with defaults, default transform, config controls, and preview path.
 - Add a preview asset under `public/preview/`.
 - Run `npm run build` to validate integration.
