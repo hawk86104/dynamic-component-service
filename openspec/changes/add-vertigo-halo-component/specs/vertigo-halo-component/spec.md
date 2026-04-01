@@ -30,6 +30,12 @@ The component MUST use a square plane geometry, default to a ground-friendly ori
 - **WHEN** the animated rings expand toward the outer area of the plane
 - **THEN** they MUST fade out radially before the square outline becomes visible
 
+#### Scenario: Use gradient speed as radial animation direction
+- **WHEN** a developer sets `gradientSpeed` to a positive value
+- **THEN** the rings MUST expand outward faster as the value increases
+- **AND WHEN** `gradientSpeed` is negative
+- **THEN** the rings MUST shrink inward faster as the magnitude increases
+
 #### Scenario: Clamp invalid values
 - **WHEN** a developer passes invalid or extreme numeric values
 - **THEN** the component MUST clamp or fallback to safe values and continue rendering

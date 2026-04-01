@@ -30,7 +30,8 @@ void main() {
   float radius = length(centeredUv);
   float theta = atan(centeredUv.y, centeredUv.x);
   float timeValue = uTime;
-  float gradientPhase = timeValue * uGradientSpeed * 2.4;
+  float gradientPhase = timeValue * uTunnelSpeed * 2.4;
+  float ringDrift = timeValue * uGradientSpeed * 0.9;
   float radialFade = 1.0 - smoothstep(0.76, 0.96, radius);
 
   float depth = 1.0 / (radius + 0.05);
@@ -39,7 +40,7 @@ void main() {
   float thetaRot = theta + rotAngle;
 
   float tunnelU = thetaRot / TAU;
-  float tunnelV = depth - timeValue * uTunnelSpeed;
+  float tunnelV = depth + ringDrift;
 
   float ringCoord = tunnelV * uRingFrequency / TAU;
   float ringPhase = fract(ringCoord);

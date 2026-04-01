@@ -65,7 +65,6 @@ const setMaterialColor = (uniform: THREE.IUniform<THREE.Color>, value: string | 
   }
 }
 
-const safeSize = computed(() => clampNumber(props.size, 0.5, 20, 4))
 const safeOpacity = computed(() => clampNumber(props.opacity, 0.05, 1, 0.92))
 const safeTunnelSpeed = computed(() => clampNumber(props.tunnelSpeed, 0, 1.5, 0.15))
 const safeRotationSpeed = computed(() => clampNumber(props.rotationSpeed, 0, 1.5, 0.35))
@@ -171,7 +170,7 @@ onBeforeUnmount(() => {
 <template>
   <TresGroup>
     <TresMesh :position="[0, 0, 0]" :rotation="[-Math.PI / 2, 0, 0]" :render-order="4">
-      <TresPlaneGeometry :args="[safeSize, safeSize, 1, 1]" />
+      <TresPlaneGeometry :args="[5, 5, 1, 1]" />
       <primitive
         v-if="panelMaterial"
         :object="panelMaterial"

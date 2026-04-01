@@ -731,7 +731,6 @@ const config = {
       comFile: './src/components/vertigoHaloComponent.vue',
       previewPath: './preview/vertigoHaloComponent.svg',
       default: {
-        size: 4,
         voidColor: '#220033',
         baseColor: '#cc1133',
         accentColor: '#ff2244',
@@ -752,7 +751,6 @@ const config = {
         rotation: { x: 0, y: 0, z: 0 },
       },
       config: {
-        size: { name: '方形尺寸', com: 'Slider', min: 0.5, max: 20, step: 0.1 },
         gradientSpeed: { name: '渐变速度', com: 'Slider', min: -1, max: 1, step: 0.01 },
         tunnelSpeed: { name: '隧道推进', com: 'Slider', min: 0, max: 1.5, step: 0.01 },
         rotationSpeed: { name: '旋转漂移', com: 'Slider', min: 0, max: 1.5, step: 0.01 },

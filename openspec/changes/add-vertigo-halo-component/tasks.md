@@ -23,3 +23,4 @@
 
 - [x] 5.1 Fade the visible rings out before the square border becomes visible.
 - [x] 5.2 Add a `gradientSpeed` control with a `-1` to `1` range for reversible gradient flow.
+- [x] 5.3 Make `gradientSpeed` drive the radial ring expansion and shrink direction instead of only changing color flow.
