@@ -576,6 +576,14 @@
   resolved "https://registry.npmmirror.com/@pmndrs/pointer-events/-/pointer-events-6.6.28.tgz#81f3f1136070353138e6cf46f05b153f1d1d2666"
   integrity sha512-kmZlcMsPiTHcotECLFbo6J/qQouX2ZeKNSMRwBWAF/EFesAV1uPwjar6SQDWkDH0fVB1snNbEoWLDLQ84tWOkw==
 
+"@pmndrs/vanilla@1.25.0":
+  version "1.25.0"
+  resolved "https://registry.npmmirror.com/@pmndrs/vanilla/-/vanilla-1.25.0.tgz#8986c5116cc776475c7010070133c6b6059cea26"
+  integrity sha512-Dx3dLndPL5ibjyOCtkFMVYBvVK44xe8zxnVG1mjVOEytfBqNvfF8eMuCJyptZUMgiLl04UjXbytNeyIhIE9Shw==
+  dependencies:
+    glsl-noise "^0.0.0"
+    meshline "^3.3.1"
+
 "@rolldown/pluginutils@1.0.0-beta.53":
   version "1.0.0-beta.53"
   resolved "https://registry.npmmirror.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.53.tgz#c57a5234ae122671aff6fe72e673a7ed90f03f87"
@@ -2474,6 +2482,11 @@ globrex@^0.1.2:
   resolved "https://registry.npmmirror.com/globrex/-/globrex-0.1.2.tgz#dd5d9ec826232730cd6793a5e33a9302985e6098"
   integrity sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==
 
+glsl-noise@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.npmmirror.com/glsl-noise/-/glsl-noise-0.0.0.tgz#367745f3a33382c0eeec4cb54b7e99cfc1d7670b"
+  integrity sha512-b/ZCF6amfAUb7dJM/MxRs7AetQEahYzJ8PtgfrmEdtw6uyGOr+ZSGtgjFm6mfsBkxJ4d2W7kg+Nlqzqvn3Bc0w==
+
 glsl-token-functions@^1.0.1:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/glsl-token-functions/-/glsl-token-functions-1.0.1.tgz#2f1614746b96e14f059a6d62af79b65457f0c9a0"
@@ -2967,6 +2980,11 @@ merge-descriptors@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/merge-descriptors/-/merge-descriptors-2.0.0.tgz#ea922f660635a2249ee565e0449f951e6b603808"
   integrity sha512-Snk314V5ayFLhp3fkUREub6WtjBfPdCPY1Ln8/8munuLuiYhsABgBVWsozAG+MWMbVEvcdcpbi9R7ww22l9Q3g==
+
+meshline@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.npmmirror.com/meshline/-/meshline-3.3.1.tgz#20decfd5cdd25c8469e862ddf0ab1ad167759734"
+  integrity sha512-/TQj+JdZkeSUOl5Mk2J7eLcYTLiQm2IDzmlSvYm7ov15anEcDJ92GHqqazxTSreeNgfnYu24kiEvvv0WlbCdFQ==
 
 meshoptimizer@~0.22.0:
   version "0.22.0"

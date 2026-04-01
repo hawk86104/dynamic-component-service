@@ -15,6 +15,7 @@
   "dependencies": {
     "@dgreenheck/ez-tree": "^1.1.0",
     "@pangenerator/tweakpane-textarea-plugin": "^2.0.0",
+    "@pmndrs/vanilla": "1.25.0",
     "@tresjs/cientos": "5.2.1",
     "@tresjs/core": "5.2.1",
     "@tresjs/leches": "latest",
@@ -24,11 +25,11 @@
     "json5": "^2.2.3",
     "naive-ui": "^2.43.2",
     "three": "^0.180.0",
+    "three-custom-shader-material": "^5.4.0",
     "three-stdlib": "^2.36.0",
     "tweakpane": "^4.0.5",
     "vue": "^3.5.21",
-    "vue-router": "^4.6.4",
-    "three-custom-shader-material": "^5.4.0"
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@originjs/vite-plugin-federation": "^1.4.1",
