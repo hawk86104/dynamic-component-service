@@ -5,7 +5,7 @@ The system SHALL provide a new shader-driven component that renders a floor-read
 
 #### Scenario: Render the component with defaults
 - **WHEN** the new component is rendered with default parameters
-- **THEN** it MUST display a visible chip-floor effect on a circular ground mesh
+- **THEN** it MUST display a visible chip-floor effect on a circular ground footprint
 - **AND** it MUST render through three.js shader logic rather than DOM or CSS effects
 
 ### Requirement: Preserve the reference shader language with minimal adaptation
@@ -37,8 +37,8 @@ The component MUST expose the tunable values from the reference `Architecture`, 
 - **THEN** the visible viewing angle MUST come from the outer tresjs scene camera
 - **AND** the shader MUST NOT create its own internal camera flight view
 
-### Requirement: Use a circular ground mesh with a soft disappearing boundary
-The component MUST sit flat on the ground by default, use a circular geometry, and fade toward transparency before the outer edge becomes visually hard.
+### Requirement: Use a circular ground footprint with a soft disappearing boundary
+The component MUST sit flat on the ground by default, appear as a circular floor surface, and fade toward transparency before the outer edge becomes visually hard.
 
 #### Scenario: Place the component on the floor
 - **WHEN** the service loads the component with its default object transform

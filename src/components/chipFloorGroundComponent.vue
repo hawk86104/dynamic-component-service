@@ -34,6 +34,8 @@ const DEFAULTS = {
 } as const
 
 const INTERNAL_DEFAULTS = {
+  maxGeometrySegments: 480,
+  minGeometrySegments: 240,
   planeSize: 14,
 } as const
 
@@ -107,15 +109,21 @@ const safePatternScale = computed(() => clampNumber(props.patternScale, 0.1, 3, 
 const safeSize = computed(() => clampNumber(props.size, 4, 40, DEFAULTS.size))
 const safeTrailLength = computed(() => clampNumber(props.trailLength, 2, 30, DEFAULTS.trailLength))
 const safeTrailSpeed = computed(() => clampNumber(props.trailSpeed, 0, 10, DEFAULTS.trailSpeed))
+const geometrySegments = computed(() => Math.round(THREE.MathUtils.clamp(
+  safeSize.value * 18 + safePatternScale.value * 60,
+  INTERNAL_DEFAULTS.minGeometrySegments,
+  INTERNAL_DEFAULTS.maxGeometrySegments,
+)))
 
 const createPanelMaterial = (): ChipFloorGroundMaterial => {
   return new CustomShaderMaterial({
+    alphaTest: 0.02,
     baseMaterial: THREE.MeshBasicMaterial,
     color: 0xFFFFFF,
     depthTest: true,
-    depthWrite: false,
+    depthWrite: true,
     fragmentShader: panelFragmentShader,
-    side: THREE.DoubleSide,
+    side: THREE.FrontSide,
     silent: true,
     toneMapped: false,
     transparent: true,
@@ -214,7 +222,7 @@ onBeforeUnmount(() => {
 <template>
   <TresGroup>
     <TresMesh :position="[0, 0, 0]" :rotation="[-Math.PI / 2, 0, 0]" :render-order="4">
-      <TresCircleGeometry :args="[safeSize * 0.5, 192]" />
+      <TresPlaneGeometry :args="[safeSize, safeSize, geometrySegments, geometrySegments]" />
       <primitive
         v-if="panelMaterial"
         :object="panelMaterial"

@@ -20,6 +20,18 @@ uniform float uTrailLength;
 uniform float uTrailSpeed;
 
 varying vec2 vUv;
+varying vec3 vViewBitangent;
+varying vec3 vViewNormal;
+varying vec3 vViewPosition;
+varying vec3 vViewTangent;
+
+vec3 tangentToView(vec3 localNormal) {
+  return normalize(
+    vViewTangent * localNormal.x
+    + vViewBitangent * localNormal.y
+    + vViewNormal * localNormal.z
+  );
+}
 
 float rand2(vec2 value) {
   return fract(sin(dot(value.xy, vec2(12.9898, 78.233))) * 43758.5453);
@@ -28,6 +40,7 @@ float rand2(vec2 value) {
 float getPatternClean(vec2 point) {
   vec2 grid = floor(point);
   vec2 localPoint = fract(point);
+  vec2 localAA = max(fwidth(point) * 1.35, vec2(0.0012));
   vec2 state = grid;
   float lines = 0.0;
 
@@ -46,7 +59,11 @@ float getPatternClean(vec2 point) {
       else {
         state.x -= weight;
       }
-      float lineX = smoothstep(thickness + bevel, thickness, abs(localPoint.x - splitX));
+      float lineX = 1.0 - smoothstep(
+        max(thickness - localAA.x, 0.0),
+        thickness + bevel + localAA.x,
+        abs(localPoint.x - splitX)
+      );
 
       splitY = rand2(state + vec2(1.0, float(i)));
       if (localPoint.y < splitY) {
@@ -55,7 +72,11 @@ float getPatternClean(vec2 point) {
       else {
         state.y -= weight;
       }
-      float lineY = smoothstep(thickness + bevel, thickness, abs(localPoint.y - splitY));
+      float lineY = 1.0 - smoothstep(
+        max(thickness - localAA.y, 0.0),
+        thickness + bevel + localAA.y,
+        abs(localPoint.y - splitY)
+      );
 
       lines = max(lines, max(lineX, lineY));
     }
@@ -65,7 +86,9 @@ float getPatternClean(vec2 point) {
 }
 
 float getHeight(vec2 point) {
-  return getPatternClean(point * uPatternScale) * uExtrusion;
+  float diskRadius = length(point) / max(uPlaneSize * 0.5, 0.0001);
+  float radialLiftMask = 1.0 - smoothstep(0.78, 1.04, diskRadius);
+  return getPatternClean(point * uPatternScale) * uExtrusion * radialLiftMask;
 }
 
 vec3 getNormal(vec2 point) {
@@ -75,7 +98,7 @@ vec3 getNormal(vec2 point) {
   float heightD = getHeight(point - vec2(0.0, epsilon));
   float heightU = getHeight(point + vec2(0.0, epsilon));
 
-  return normalize(vec3(heightL - heightR, epsilon * 2.2, heightD - heightU));
+  return normalize(vec3(heightL - heightR, heightD - heightU, epsilon * 2.2));
 }
 
 void main() {
@@ -85,16 +108,23 @@ void main() {
 
   float chip = getPatternClean(planePos * uPatternScale);
   float gap = 1.0 - chip;
-  float topMask = smoothstep(0.9, 1.0, chip);
-  float trenchMask = smoothstep(0.08, 0.92, gap);
+  float chipAA = max(fwidth(chip) * 1.5, 0.01);
+  float topMask = smoothstep(0.9 - chipAA, 1.0, chip);
+  float trenchMask = smoothstep(0.08 - chipAA, 0.92 + chipAA, gap);
 
-  vec3 normalDirection = getNormal(planePos);
-  vec3 lightDirection = normalize(vec3(0.45, 1.0, 0.35));
-  vec3 viewDirection = vec3(0.0, 1.0, 0.0);
-  vec3 reflectedDirection = reflect(-lightDirection, normalDirection);
+  vec3 localNormal = getNormal(planePos);
+  vec3 normalDirection = tangentToView(localNormal);
+  vec3 lightDirection = normalize(vec3(0.35, 0.88, 0.32));
+  vec3 viewDirection = normalize(-vViewPosition);
+  vec3 halfDirection = normalize(lightDirection + viewDirection);
+  float viewFacing = clamp(dot(normalDirection, viewDirection), 0.0, 1.0);
+  float trenchCoreMask = smoothstep(0.34, 0.92, gap);
+  float trenchFloorMask = trenchCoreMask * smoothstep(0.9, 0.985, localNormal.z);
+  float trenchVisibility = mix(0.62, 1.0, viewFacing);
+  float trenchLightMask = trenchFloorMask * trenchVisibility;
 
   float diffuseLight = max(dot(normalDirection, lightDirection), 0.0);
-  float specular = pow(max(dot(reflectedDirection, viewDirection), 0.0), 28.0) * topMask;
+  float specular = pow(max(dot(normalDirection, halfDirection), 0.0), 28.0) * topMask;
   float ambient = 0.28;
 
   vec3 materialColor = mix(uBaseColor, uTraceColor, topMask);
@@ -103,7 +133,7 @@ void main() {
   vec3 color = materialColor * (ambient + diffuseLight * 0.78);
   color += vec3(1.0) * specular * 0.3;
 
-  float trenchGlow = trenchMask * (0.45 + gap * 0.55);
+  float trenchGlow = trenchLightMask * (0.38 + gap * 0.46);
   color += uGlowColor * trenchGlow * uGlowIntensity * 0.9;
 
   float trailFrequency = uPatternScale * 2.0;
@@ -122,7 +152,7 @@ void main() {
 
   float trailX = pow(pulseX, uTrailLength) * step(0.6, trailRandX);
   float trailY = pow(pulseY, uTrailLength) * step(0.6, trailRandY);
-  float trailMask = max(trailX, trailY) * trenchMask;
+  float trailMask = max(trailX, trailY) * trenchLightMask;
   color += uTrailColor * trailMask * 2.3;
 
   float particleFrequency = uPatternScale * 2.0;
@@ -157,16 +187,17 @@ void main() {
 
   float particleX = smoothstep(dotScale + dotSmooth, dotScale, particleDistX) * step(0.4, particleRandX) * showDotX;
   float particleY = smoothstep(dotScale + dotSmooth, dotScale, particleDistY) * step(0.4, particleRandY) * showDotY;
-  float particleMask = max(particleX, particleY) * trenchMask;
+  float particleMask = max(particleX, particleY) * trenchLightMask;
   color += uParticleColor * particleMask * 3.5;
 
   if (topMask > 0.0) {
     float dotScaleUv = uPatternScale * uDotDensity;
     vec2 dotUv = fract(planePos * dotScaleUv);
     vec2 dotId = floor(planePos * dotScaleUv);
+    vec2 dotAA = max(fwidth(planePos * dotScaleUv) * 1.2, vec2(0.002));
 
-    float dotMaskX = 1.0 - smoothstep(0.15, 0.25, abs(dotUv.x - 0.5));
-    float dotMaskY = 1.0 - smoothstep(0.15, 0.25, abs(dotUv.y - 0.5));
+    float dotMaskX = 1.0 - smoothstep(0.15 - dotAA.x, 0.25 + dotAA.x, abs(dotUv.x - 0.5));
+    float dotMaskY = 1.0 - smoothstep(0.15 - dotAA.y, 0.25 + dotAA.y, abs(dotUv.y - 0.5));
     float dotGridMask = dotMaskX * dotMaskY;
 
     float dotRand = rand2(dotId * 1.337);

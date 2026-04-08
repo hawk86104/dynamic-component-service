@@ -41,9 +41,9 @@ For this repository, the correct translation is not a fullscreen page shell. It 
    - Rationale: The user explicitly prefers a vertical floor material whose view is controlled only by the external scene camera, and the original path was too expensive.
    - Alternative considered: Keeping the old internal path but hiding the controls. This was rejected because it still wastes frame time and preserves the wrong view behavior.
 
-3. Decision: Mount the shader on a `CircleGeometry` rotated flat onto the floor.
-   - Rationale: The user explicitly wants a default floor placement and says a circular plane is sufficient.
-   - Alternative considered: Using a square plane like the original fullscreen quad. This was rejected because the user requested a circular floor footprint.
+3. Decision: Mount the shader on a high-subdivision `PlaneGeometry` rotated flat onto the floor, then keep the visible footprint circular through radial masking and edge fade.
+   - Rationale: The user wants a circular floor surface, but real chip height requires dense vertex displacement across the surface, which `CircleGeometry` cannot provide cleanly enough.
+   - Alternative considered: Using a literal `CircleGeometry`. This was rejected because it does not provide enough interior subdivision for true chip elevation.
 
 4. Decision: Add only a soft radial transparency fade as the main adaptation layer.
    - Rationale: A finite ground mesh needs a graceful boundary. A wide transparent falloff gives a stronger "infinite floor" impression while keeping the shader body intact.

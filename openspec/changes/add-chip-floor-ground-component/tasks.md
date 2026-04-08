@@ -16,7 +16,7 @@
 
 ## 4. Floor Adaptation
 
-- [x] 4.1 Render the component on a circular ground mesh instead of a fullscreen quad.
+- [x] 4.1 Render the component with a circular visible footprint instead of a fullscreen quad.
 - [x] 4.2 Fade the floor edge smoothly so the visible boundary feels softer and larger than the mesh itself.
 
 ## 5. Validation

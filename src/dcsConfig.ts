@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-04-01 10:38:01
+ * @LastEditTime: 2026-04-08 10:48:08
  */
 const config = {
   name: 'baseSample',
@@ -210,26 +210,25 @@ const config = {
       name: '芯片地板',
       type: 'chipFloorGroundComponent',
       comFile: './src/components/chipFloorGroundComponent.vue',
-      previewPath: './preview/chipFloorGroundComponent.svg',
-      description: '基于 CodePen 芯片地面着色器迁移的贴地组件，默认使用大尺寸圆形地面，并在边缘做透明渐隐。',
+      previewPath: './preview/chipFloorGroundComponent.png',
       default: {
-        baseColor: '#404854',
-        chipHeight: 0.0568,
-        dotDensity: 38,
-        dotOpacity: 0.2,
-        glowColor: '#00d0ff',
-        glowIntensity: 1.14,
-        iterations: 2,
-        particleColor: '#ffffff',
-        particleDensity: 15,
-        particleSize: 0.008,
-        particleSpeed: 1.5,
-        patternScale: 0.4843,
-        size: 14,
-        traceColor: '#3a4048',
-        trailColor: '#ffffff',
-        trailLength: 12,
-        trailSpeed: 0.5,
+        "baseColor": "#090909",
+        "chipHeight": 0.034800000000000005,
+        "dotDensity": 20,
+        "dotOpacity": 0.07,
+        "glowColor": "#31bcff",
+        "glowIntensity": 1.1999999999999997,
+        "iterations": 3,
+        "particleColor": "#ff00d9",
+        "particleDensity": 2.2999999999999994,
+        "particleSize": 0.015,
+        "particleSpeed": 0.09999999999999992,
+        "patternScale": 0.5443000000000001,
+        "size": 40,
+        "traceColor": "#000000",
+        "trailColor": "#e6ff00",
+        "trailLength": 30,
+        "trailSpeed": 0.35000000000000003
       },
       defaultObject3D: {
         position: { x: 0, y: 0.02, z: 0 },
