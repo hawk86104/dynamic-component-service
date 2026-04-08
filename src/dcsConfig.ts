@@ -4,11 +4,11 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-04-01 10:38:01
+ * @LastEditTime: 2026-04-08 09:14:28
  */
 const config = {
   name: 'baseSample',
-  version: '2.1.0',
+  version: '2.2.0',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {
@@ -156,7 +156,7 @@ const config = {
       name: '梦幻流体马赛克面板',
       type: 'giltMosaicGroundPanelComponent',
       comFile: './src/components/giltMosaicGroundPanelComponent.vue',
-      previewPath: './preview/giltMosaicGroundPanelComponent.svg',
+      previewPath: './preview/giltMosaicGroundPanelComponent.gif',
       default: {
         animationMode: 1,
         baseColor: '#5e411f',
@@ -245,7 +245,7 @@ const config = {
       name: '液体气泡组件',
       type: 'liquidBubbleComponent',
       comFile: './src/components/liquidBubbleComponent/index.vue',
-      previewPath: './preview/liquidBubbleComponent.png',
+      previewPath: './preview/liquidBubbleComponent.gif',
       description: '静止液体体块内部持续冒泡的效果组件，支持长方体与圆柱体两种形状。',
       default: {
         shapeType: 'cylinder',
@@ -296,7 +296,7 @@ const config = {
       name: '流动液体容器组件',
       type: 'liquidContainerComponent',
       comFile: './src/components/liquidContainerComponent/index.vue',
-      previewPath: './preview/liquidContainerComponent.png',
+      previewPath: './preview/liquidContainerComponent.gif',
       default: {
         shapeType: 'cylinderTank',
         vasePreset: 'roundPot',
@@ -604,7 +604,7 @@ const config = {
       name: '超级能量盾组件',
       type: 'superEnergyShieldComponent',
       comFile: './src/components/superEnergyShieldComponent.vue',
-      previewPath: './preview/superEnergyShieldComponent.png',
+      previewPath: './preview/superEnergyShieldComponent.gif',
       default: {
         color: '#26aeff',
         edgeWidth: 0.06,
@@ -770,7 +770,7 @@ const config = {
       name: '电流纹波面板',
       type: 'currentRipplePanelComponent',
       comFile: './src/components/currentRipplePanelComponent.vue',
-      previewPath: './preview/currentRipplePanelComponent.svg',
+      previewPath: './preview/currentRipplePanelComponent.gif',
       default: {
         baseColor: '#081321',
         currentColor: '#18c8ff',
@@ -811,7 +811,7 @@ const config = {
       name: '月光涟漪水面',
       type: 'moonlitRippleWaterPanelComponent',
       comFile: './src/components/moonlitRippleWaterPanelComponent.vue',
-      previewPath: './preview/moonlitRippleWaterPanelComponent.svg',
+      previewPath: './preview/moonlitRippleWaterPanelComponent.gif',
       default: {
         cameraTilt: 0.15,
         deepColor: '#07131f',
@@ -846,7 +846,7 @@ const config = {
       name: '水滴玻璃材质',
       type: 'waterDropGlassMaterialComponent',
       comFile: './src/components/waterDropGlassMaterialComponent/index.vue',
-      previewPath: './preview/waterDropGlassMaterialComponent.svg',
+      previewPath: './preview/waterDropGlassMaterialComponent.gif',
       default: {
         "attenuationDistance": 3.26,
         "clearcoat": 1,
