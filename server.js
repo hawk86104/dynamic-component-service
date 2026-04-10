@@ -12,13 +12,24 @@ import { createServer } from 'node:http'
 import path from 'node:path'
 
 const app = express()
+const distPath = path.resolve('dist')
+const remoteEntryPath = path.join('assets', 'remoteEntry.js')
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   next()
 })
 
-app.use(express.static(path.resolve('dist')))
+app.use(express.static(distPath, {
+  setHeaders: (res, filePath) => {
+    const normalizedFilePath = path.normalize(filePath)
+    if (normalizedFilePath.endsWith(remoteEntryPath)) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate')
+      res.setHeader('Pragma', 'no-cache')
+      res.setHeader('Expires', '0')
+    }
+  },
+}))
 
 const server = createServer(app)
 
