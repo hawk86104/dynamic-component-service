@@ -6,8 +6,8 @@ uniform float uNoiseSpeed;
 uniform float uFlowIntensity;
 uniform float uWarpStrength;
 
-varying vec3 vNormal;
-varying vec3 vObjPos;
+varying vec3 vOrbNormal;
+varying vec3 vOrbObjPos;
 
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -36,8 +36,8 @@ float fbm(vec2 p) {
 }
 
 void main() {
-  float fresnel = 1.0 - abs(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)));
-  vec2 uv = vObjPos.xy * uNoiseScale;
+  float fresnel = 1.0 - abs(dot(normalize(vOrbNormal), vec3(0.0, 0.0, 1.0)));
+  vec2 uv = vOrbObjPos.xy * uNoiseScale;
   vec2 q = vec2(
     fbm(uv + uTime * uNoiseSpeed),
     fbm(uv + vec2(3.7, 2.1) + uTime * uNoiseSpeed * 0.7)
@@ -50,5 +50,5 @@ void main() {
   float cloud = smoothstep(0.3, 0.75, flow);
   float mask = smoothstep(0.05, 0.4, fresnel) * smoothstep(1.0, 0.35, fresnel);
   float alpha = cloud * mask * uFlowIntensity * uProgress;
-  gl_FragColor = vec4(uColor * alpha, alpha);
+  csm_DiffuseColor = vec4(uColor * alpha, alpha);
 }

@@ -7,13 +7,13 @@ uniform float uBodyFalloff;
 uniform float uCoreFalloff;
 uniform float uCoreBoost;
 
-varying vec3 vNormal;
+varying vec3 vOrbNormal;
 
 void main() {
-  float fresnel = 1.0 - abs(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0)));
+  float fresnel = 1.0 - abs(dot(normalize(vOrbNormal), vec3(0.0, 0.0, 1.0)));
   float body = pow(max(0.0, 1.0 - fresnel), uBodyFalloff);
   float core = pow(max(0.0, 1.0 - fresnel * uCoreFalloff), 4.0);
   vec3 color = mix(uCoreColor, uRimColor, pow(fresnel, uFresnelPower));
   float brightness = (body + core * uCoreBoost) * uEmission * uProgress;
-  gl_FragColor = vec4(color * brightness, brightness);
+  csm_DiffuseColor = vec4(color * brightness, brightness);
 }

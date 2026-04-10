@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   computed,
   onBeforeUnmount,
@@ -9,6 +10,8 @@ import {
 } from 'vue'
 import ringFragmentShader from '../shader/chargedBlastRingsComponent/ring.frag?raw'
 import ringVertexShader from '../shader/chargedBlastRingsComponent/ring.vert?raw'
+
+type RingCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 interface RingParticle {
   active: boolean
@@ -118,21 +121,28 @@ const rootGroup = shallowRef<THREE.Group | null>(null)
 const instancedMesh = shallowRef<THREE.InstancedMesh | null>(null)
 const ringGeometry = shallowRef<THREE.TorusGeometry | null>(null)
 
-const ringMaterial = new THREE.ShaderMaterial({
-  blending: THREE.AdditiveBlending,
-  depthWrite: false,
-  fragmentShader: ringFragmentShader,
-  toneMapped: false,
-  transparent: true,
-  uniforms: {
-    uColorA: { value: new THREE.Color(props.ringColorA) },
-    uColorB: { value: new THREE.Color(props.ringColorB) },
-    uEmission: { value: safeRingEmission.value },
-    uGradientAngle: { value: safeRingGradientAngle.value * DEG2RAD },
-    uTubeRadius: { value: safeRingTubeRatio.value },
-  },
-  vertexShader: ringVertexShader,
-})
+const createRingMaterial = (): RingCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
+    depthWrite: false,
+    fragmentShader: ringFragmentShader,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: {
+      uColorA: { value: new THREE.Color(props.ringColorA) },
+      uColorB: { value: new THREE.Color(props.ringColorB) },
+      uEmission: { value: safeRingEmission.value },
+      uGradientAngle: { value: safeRingGradientAngle.value * DEG2RAD },
+      uTubeRadius: { value: safeRingTubeRatio.value },
+    },
+    vertexShader: ringVertexShader,
+  })
+}
+
+const ringMaterial = createRingMaterial()
 
 const rings = Array.from({ length: MAX_RINGS }, (): RingParticle => ({
   active: false,

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import {
   computed,
@@ -12,6 +13,8 @@ import projectileFragmentShader from '../shader/chargedBlastProjectileComponent/
 import projectileVertexShader from '../shader/chargedBlastProjectileComponent/projectile.vert?raw'
 import trailFragmentShader from '../shader/chargedBlastProjectileComponent/trail.frag?raw'
 import trailVertexShader from '../shader/chargedBlastProjectileComponent/trail.vert?raw'
+
+type ProjectileCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 const props = withDefaults(
   defineProps<{
@@ -125,36 +128,51 @@ const trailMesh = shallowRef<THREE.Mesh | null>(null)
 const projectileGeometry = shallowRef<THREE.BufferGeometry | null>(null)
 const trailGeometry = shallowRef<THREE.CylinderGeometry | null>(null)
 
-const projectileMaterial = new THREE.ShaderMaterial({
-  fragmentShader: projectileFragmentShader,
-  uniforms: {
-    uBandWidth: { value: safeProjBandWidth.value },
-    uColorA: { value: new THREE.Color(props.projColorA) },
-    uColorB: { value: new THREE.Color(props.projColorB) },
-    uColorC: { value: new THREE.Color(props.projColorC) },
-    uFresnelColor: { value: new THREE.Color(props.projFresnelColor) },
-    uFresnelEmission: { value: safeProjFresnelEmit.value },
-    uFresnelPower: { value: safeProjFresnelPower.value },
-    uGradientSpeed: { value: safeProjGradientSpeed.value },
-    uTailY: { value: -safeProjTailLength.value },
-    uTime: { value: 0 },
-    uTipY: { value: safeProjRadius.value },
-  },
-  vertexShader: projectileVertexShader,
-})
+const createProjectileMaterial = (): ProjectileCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    color: 0xFFFFFF,
+    fragmentShader: projectileFragmentShader,
+    silent: true,
+    toneMapped: false,
+    uniforms: {
+      uBandWidth: { value: safeProjBandWidth.value },
+      uColorA: { value: new THREE.Color(props.projColorA) },
+      uColorB: { value: new THREE.Color(props.projColorB) },
+      uColorC: { value: new THREE.Color(props.projColorC) },
+      uFresnelColor: { value: new THREE.Color(props.projFresnelColor) },
+      uFresnelEmission: { value: safeProjFresnelEmit.value },
+      uFresnelPower: { value: safeProjFresnelPower.value },
+      uGradientSpeed: { value: safeProjGradientSpeed.value },
+      uTailY: { value: -safeProjTailLength.value },
+      uTime: { value: 0 },
+      uTipY: { value: safeProjRadius.value },
+    },
+    vertexShader: projectileVertexShader,
+  })
+}
 
-const trailMaterial = new THREE.ShaderMaterial({
-  depthWrite: false,
-  fragmentShader: trailFragmentShader,
-  side: THREE.DoubleSide,
-  transparent: true,
-  uniforms: {
-    uColor: { value: new THREE.Color(props.trailColor) },
-    uEdgeSoftness: { value: safeTrailEdgeSoftness.value },
-    uOpacity: { value: safeTrailOpacity.value },
-  },
-  vertexShader: trailVertexShader,
-})
+const createTrailMaterial = (): ProjectileCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    color: 0xFFFFFF,
+    depthWrite: false,
+    fragmentShader: trailFragmentShader,
+    side: THREE.DoubleSide,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: {
+      uColor: { value: new THREE.Color(props.trailColor) },
+      uEdgeSoftness: { value: safeTrailEdgeSoftness.value },
+      uOpacity: { value: safeTrailOpacity.value },
+    },
+    vertexShader: trailVertexShader,
+  })
+}
+
+const projectileMaterial = createProjectileMaterial()
+const trailMaterial = createTrailMaterial()
 
 const upAxis = new THREE.Vector3(0, 1, 0)
 const orientation = new THREE.Quaternion()

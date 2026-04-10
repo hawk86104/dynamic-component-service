@@ -1,8 +1,8 @@
-varying vec2 vUv;
-varying vec3 vNormal;
+varying vec2 vBlastUv;
+varying vec3 vBlastNormal;
 
 void main() {
-  vUv = uv;
-  vNormal = normalize(normalMatrix * normal);
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  vBlastUv = uv;
+  vBlastNormal = normalize(normalMatrix * normal);
+  csm_Position = position;
 }

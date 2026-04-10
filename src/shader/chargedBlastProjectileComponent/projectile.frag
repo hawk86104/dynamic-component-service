@@ -10,11 +10,11 @@ uniform float uTailY;
 uniform float uTime;
 uniform float uTipY;
 
-varying float vPosY;
-varying vec3 vNormal;
+varying float vBlastPosY;
+varying vec3 vBlastNormal;
 
 void main() {
-  float travel = (uTipY - vPosY) / max(0.001, uTipY - uTailY);
+  float travel = (uTipY - vBlastPosY) / max(0.001, uTipY - uTailY);
   float scrolled = fract(travel - uTime * uGradientSpeed);
 
   float wave = sin(scrolled * 3.14159265);
@@ -23,8 +23,8 @@ void main() {
   float stageTwo = clamp(blend * 2.0 - 1.0, 0.0, 1.0);
   vec3 color = mix(mix(uColorA, uColorC, stageOne), uColorB, stageTwo);
 
-  float fresnel = pow(1.0 - abs(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0))), uFresnelPower);
+  float fresnel = pow(1.0 - abs(dot(normalize(vBlastNormal), vec3(0.0, 0.0, 1.0))), uFresnelPower);
   color += uFresnelColor * fresnel * uFresnelEmission;
 
-  gl_FragColor = vec4(color, 1.0);
+  csm_DiffuseColor = vec4(color, 1.0);
 }

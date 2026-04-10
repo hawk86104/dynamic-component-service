@@ -21,8 +21,19 @@
 - [x] 4.1 Add `three-custom-shader-material` as a direct dependency. (Verifiable: application source imports the package without relying on an undeclared dependency)
 - [x] 4.2 Record the change in `openspec/changes/` with proposal, design, spec, and tasks artifacts. (Verifiable: the new change folder contains the required files)
 
-## 5. Validation
+## 5. Charged Blast Map Compatibility
 
-- [x] 5.1 Run a project build and fix any regressions introduced by the material swap. (Verifiable: `npm run build` succeeds)
-- [x] 5.2 Run lint for the touched scope if the repository setup supports it. (Verifiable: lint completes for the modified files or a repo limitation is documented)
-- [ ] 5.3 Verify all target components in a map scene with `logarithmicDepthBuffer` enabled. (Verifiable: rectangle walls, smoke, and shield are no longer incorrectly occluded by the map layer)
+- [x] 5.1 Replace the charged orb gather shell materials with `CustomShaderMaterial` based on `THREE.MeshBasicMaterial`. (Verifiable: orb shell layers no longer use raw `ShaderMaterial`)
+- [x] 5.2 Adapt the charged orb gather shaders to CSM output variables while preserving glow, fresnel, and noise-flow behavior. (Verifiable: orb shell appearance still follows existing controls after the material swap)
+- [x] 5.3 Replace the charged blast projectile, trail, and ring materials with `CustomShaderMaterial` based on `THREE.MeshBasicMaterial`. (Verifiable: projectile, trail, and ring visuals no longer use raw `ShaderMaterial`)
+- [x] 5.4 Adapt the charged blast projectile, trail, and ring shaders to CSM output variables while preserving release motion and timing behavior. (Verifiable: burst rings, projectile flight, and trail appearance still respond to the current props after the material swap)
+- [x] 5.5 Preserve the current charged blast component prop surface and composed release-component contract. (Verifiable: no `dcsConfig` or public prop changes are required for the map-compatibility fix)
+
+## 6. Validation
+
+- [x] 6.1 Run a project build and capture any current repo or environment blockers encountered after the material swap. (Verifiable: build output is reviewed and the current blocker is documented if the build does not complete)
+- [x] 6.2 Run lint for the touched scope if the repository setup supports it. (Verifiable: lint completes for the modified files or a repo limitation is documented)
+- [ ] 6.3 Verify all target components in a map scene with `logarithmicDepthBuffer` enabled. (Verifiable: rectangle walls, smoke, shield, charge orb, charged blast rings, and charged blast projectile are no longer incorrectly occluded by the map layer)
+
+Validation note:
+`npm run build` reached `vite build` after `vue-tsc`, then stopped in the current environment with `memory allocation of 4483080 bytes failed`.

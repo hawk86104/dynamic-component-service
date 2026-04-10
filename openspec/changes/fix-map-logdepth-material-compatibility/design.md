@@ -10,6 +10,7 @@ The safest fix is to preserve geometry, animation, and props while changing only
    - `rectangleShimmerComponent` uses `THREE.MeshBasicMaterial` as the base material because its wall effect is an unlit transparent surface.
    - `flowingSmokeComponent` uses `THREE.PointsMaterial` as the base material because the smoke system is built on `THREE.Points` and needs `csm_PointSize`.
    - `superEnergyShieldComponent` uses `THREE.MeshBasicMaterial` as the base material because the shield is an additive, unlit shell effect.
+   - `chargeOrbGatherComponent`, `chargedBlastRingsComponent`, and `chargedBlastProjectileComponent` use `THREE.MeshBasicMaterial` as the base material because they are emissive mesh effects and need to stay compatible with the renderer's built-in depth/log-depth path.
 
 2. Keep the current component contracts unchanged.
    - No prop rename, removal, or config panel change is required.
@@ -19,6 +20,7 @@ The safest fix is to preserve geometry, animation, and props while changing only
    - Rectangle wall shaders emit `csm_Position` and `csm_DiffuseColor`.
    - Smoke shaders emit `csm_Position`, `csm_PointSize`, and `csm_DiffuseColor`.
    - Shield shaders emit `csm_Position` and `csm_DiffuseColor`.
+   - Charged blast orb, ring, projectile, and trail shaders emit `csm_Position` and `csm_DiffuseColor`.
 
 4. Remove UV coupling from the rectangle wall gradient shader.
    - The previous shader used plane UVs.
@@ -38,6 +40,9 @@ The safest fix is to preserve geometry, animation, and props while changing only
 - Risk: shield fresnel or hit-wave visuals shift after moving off raw `gl_FragColor`.
   - Mitigation: keep all varyings, uniforms, and additive blending unchanged and only switch the final fragment output to CSM diffuse color.
 
+- Risk: charged blast instancing or release motion breaks after moving off raw shader materials.
+  - Mitigation: keep the current geometry generation, group transforms, and uniforms unchanged while only swapping the material wrapper and final shader outputs.
+
 - Risk: map compatibility fix changes standalone preview appearance.
   - Mitigation: keep all uniforms, blending, transparency, and animation logic aligned with the original implementation and validate with a project build.
 
@@ -45,4 +50,4 @@ The safest fix is to preserve geometry, animation, and props while changing only
 
 - Run a project build to confirm shader compilation and TypeScript integration.
 - Run lint for the touched files if the repository lint setup allows targeted validation.
-- In a map-enabled scene, confirm both components remain visible above the map layer when the renderer enables `logarithmicDepthBuffer`.
+- In a map-enabled scene, confirm all target components remain visible above the map layer when the renderer enables `logarithmicDepthBuffer`.

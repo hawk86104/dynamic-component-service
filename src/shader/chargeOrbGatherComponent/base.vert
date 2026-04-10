@@ -1,8 +1,8 @@
-varying vec3 vNormal;
-varying vec3 vObjPos;
+varying vec3 vOrbNormal;
+varying vec3 vOrbObjPos;
 
 void main() {
-  vNormal = normalize(normalMatrix * normal);
-  vObjPos = position;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  vOrbNormal = normalize(normalMatrix * normal);
+  vOrbObjPos = position;
+  csm_Position = position;
 }

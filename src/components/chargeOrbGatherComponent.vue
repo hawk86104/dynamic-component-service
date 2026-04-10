@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   computed,
   onBeforeUnmount,
@@ -11,6 +12,8 @@ import baseVertexShader from '../shader/chargeOrbGatherComponent/base.vert?raw'
 import fresnelFragmentShader from '../shader/chargeOrbGatherComponent/fresnel.frag?raw'
 import glowFragmentShader from '../shader/chargeOrbGatherComponent/glow.frag?raw'
 import noiseFragmentShader from '../shader/chargeOrbGatherComponent/noise.frag?raw'
+
+type OrbCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 interface Particle {
   active: boolean
@@ -144,59 +147,81 @@ const particleMesh = shallowRef<THREE.InstancedMesh | null>(null)
 const sphereGeometry = new THREE.SphereGeometry(1, 32, 32)
 const capsuleGeometry = new THREE.CapsuleGeometry(0.5, 1, 4, 8)
 
-const glowMaterial = new THREE.ShaderMaterial({
-  blending: THREE.AdditiveBlending,
-  depthTest: true,
-  depthWrite: false,
-  fragmentShader: glowFragmentShader,
-  transparent: true,
-  uniforms: {
-    uColorInner: { value: new THREE.Color(props.glowColorInner) },
-    uColorOuter: { value: new THREE.Color(props.glowColorOuter) },
-    uEdgeSoftness: { value: safeGlowEdgeSoftness.value },
-    uEmission: { value: safeGlowEmission.value },
-    uFalloffPower: { value: safeGlowFalloffPower.value },
-    uProgress: { value: 0 },
-  },
-  vertexShader: baseVertexShader,
-})
+const createGlowMaterial = (): OrbCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
+    depthTest: true,
+    depthWrite: false,
+    fragmentShader: glowFragmentShader,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: {
+      uColorInner: { value: new THREE.Color(props.glowColorInner) },
+      uColorOuter: { value: new THREE.Color(props.glowColorOuter) },
+      uEdgeSoftness: { value: safeGlowEdgeSoftness.value },
+      uEmission: { value: safeGlowEmission.value },
+      uFalloffPower: { value: safeGlowFalloffPower.value },
+      uProgress: { value: 0 },
+    },
+    vertexShader: baseVertexShader,
+  })
+}
 
-const fresnelMaterial = new THREE.ShaderMaterial({
-  blending: THREE.AdditiveBlending,
-  depthTest: true,
-  depthWrite: false,
-  fragmentShader: fresnelFragmentShader,
-  transparent: true,
-  uniforms: {
-    uBodyFalloff: { value: safeBodyFalloff.value },
-    uCoreBoost: { value: safeCoreBoost.value },
-    uCoreColor: { value: new THREE.Color(props.orbCoreColor) },
-    uCoreFalloff: { value: safeCoreFalloff.value },
-    uEmission: { value: safeFresnelEmission.value },
-    uFresnelPower: { value: safeFresnelPower.value },
-    uProgress: { value: 0 },
-    uRimColor: { value: new THREE.Color(props.orbRimColor) },
-  },
-  vertexShader: baseVertexShader,
-})
+const createFresnelMaterial = (): OrbCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
+    depthTest: true,
+    depthWrite: false,
+    fragmentShader: fresnelFragmentShader,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: {
+      uBodyFalloff: { value: safeBodyFalloff.value },
+      uCoreBoost: { value: safeCoreBoost.value },
+      uCoreColor: { value: new THREE.Color(props.orbCoreColor) },
+      uCoreFalloff: { value: safeCoreFalloff.value },
+      uEmission: { value: safeFresnelEmission.value },
+      uFresnelPower: { value: safeFresnelPower.value },
+      uProgress: { value: 0 },
+      uRimColor: { value: new THREE.Color(props.orbRimColor) },
+    },
+    vertexShader: baseVertexShader,
+  })
+}
 
-const noiseMaterial = new THREE.ShaderMaterial({
-  blending: THREE.AdditiveBlending,
-  depthTest: true,
-  depthWrite: false,
-  fragmentShader: noiseFragmentShader,
-  transparent: true,
-  uniforms: {
-    uColor: { value: new THREE.Color(props.noiseColor) },
-    uFlowIntensity: { value: safeFlowIntensity.value },
-    uNoiseScale: { value: safeNoiseScale.value },
-    uNoiseSpeed: { value: safeNoiseSpeed.value },
-    uProgress: { value: 0 },
-    uTime: { value: 0 },
-    uWarpStrength: { value: safeWarpStrength.value },
-  },
-  vertexShader: baseVertexShader,
-})
+const createNoiseMaterial = (): OrbCustomMaterial => {
+  return new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
+    blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
+    depthTest: true,
+    depthWrite: false,
+    fragmentShader: noiseFragmentShader,
+    silent: true,
+    toneMapped: false,
+    transparent: true,
+    uniforms: {
+      uColor: { value: new THREE.Color(props.noiseColor) },
+      uFlowIntensity: { value: safeFlowIntensity.value },
+      uNoiseScale: { value: safeNoiseScale.value },
+      uNoiseSpeed: { value: safeNoiseSpeed.value },
+      uProgress: { value: 0 },
+      uTime: { value: 0 },
+      uWarpStrength: { value: safeWarpStrength.value },
+    },
+    vertexShader: baseVertexShader,
+  })
+}
+
+const glowMaterial = createGlowMaterial()
+const fresnelMaterial = createFresnelMaterial()
+const noiseMaterial = createNoiseMaterial()
 
 const particlesMaterial = new THREE.MeshBasicMaterial({
   blending: THREE.AdditiveBlending,
