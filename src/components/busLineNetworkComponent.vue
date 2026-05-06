@@ -105,9 +105,11 @@ const lineItems = shallowRef<BusLineItem[]>([])
 const sourceRoutes = shallowRef<BusRoute[]>([])
 const sourceBounds = shallowRef<GeoBounds | null>(null)
 const tempResolution = new THREE.Vector2(1, 1)
+const tempWorldScale = new THREE.Vector3(1, 1, 1)
 
 let abortController: AbortController | null = null
 let loadToken = 0
+let syncedLineWidth = -1
 let syncedResolutionHeight = -1
 let syncedResolutionWidth = -1
 
@@ -335,6 +337,34 @@ const createLineItem = (positions: number[], bucket: number, phase: number) => {
   }
 }
 
+const getLineWidthWorldScale = () => {
+  if (!rootGroup.value) {
+    return 1
+  }
+
+  rootGroup.value.updateWorldMatrix(true, false)
+  rootGroup.value.getWorldScale(tempWorldScale)
+
+  const horizontalScale = (Math.abs(tempWorldScale.x) + Math.abs(tempWorldScale.z)) / 2
+
+  return clampNumber(horizontalScale, 0.0001, 1000000, 1)
+}
+
+const getScaledLineWidth = () => safeEffectiveLineWidth.value * getLineWidthWorldScale()
+
+const syncLineWidth = (force = false) => {
+  const lineWidth = getScaledLineWidth()
+
+  if (!force && Math.abs(lineWidth - syncedLineWidth) < 0.000001) {
+    return
+  }
+
+  syncedLineWidth = lineWidth
+  lineItems.value.forEach((item) => {
+    item.material.linewidth = lineWidth
+  })
+}
+
 const syncLineResolution = () => {
   if (tempResolution.x === syncedResolutionWidth && tempResolution.y === syncedResolutionHeight) {
     return
@@ -393,7 +423,7 @@ const rebuildLineNetwork = () => {
 
 const syncLineMaterials = (elapsed = 0, syncStatic = true) => {
   const palette = COLOR_THEMES[safeColorTheme.value]
-  const lineWidth = safeEffectiveLineWidth.value
+  const lineWidth = getScaledLineWidth()
   const pulseSpeed = safePulseSpeed.value
   const pulseIntensity = safePulseIntensity.value
 
@@ -499,6 +529,7 @@ const { onBeforeRender } = useLoop()
 onBeforeRender(({ elapsed, renderer }) => {
   renderer.getSize(tempResolution)
   syncLineResolution()
+  syncLineWidth()
 
   if (shouldAnimatePulse.value) {
     syncLineMaterials(elapsed, false)
