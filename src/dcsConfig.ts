@@ -4,11 +4,11 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-04-08 10:50:26
+ * @LastEditTime: 2026-05-06 10:58:09
  */
 const config = {
   name: 'baseSample',
-  version: '2.2.0',
+  version: '2.2.1',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {
@@ -714,6 +714,73 @@ const config = {
         hitIntensity: { name: '冲击强度', com: 'Slider', min: 0, max: 8, step: 0.1 },
         hitImpactRadius: { name: '命中区域半径', com: 'Slider', min: 0.1, max: 1.5, step: 0.05 },
         enableSelfHit: { name: '启用自点击冲击', com: 'Switch' },
+      },
+    },
+    {
+      name: '光速护盾展开组件',
+      type: 'lightSpeedShieldDeployComponent',
+      comFile: './src/components/lightSpeedShieldDeployComponent.vue',
+      previewPath: './preview/lightSpeedShieldDeployComponent.jpg',
+      default: {
+        autoAnimate: true,
+        collapseDuration: 0.35,
+        coreColor: '#69f6ff',
+        coreIntensity: 2.2,
+        coreRadiusRatio: 0.58,
+        deployDuration: 0.86,
+        deployProgress: 1,
+        deployToken: 0,
+        fresnelStrength: 1.9,
+        hexColor: '#2e91ff',
+        hexOpacity: 0.86,
+        hexScale: 5.7,
+        hexWidth: 0.075,
+        holdDuration: 1.15,
+        hotColor: '#e7ffff',
+        noiseScale: 2.1,
+        noiseSpeed: 0.62,
+        opacity: 0.78,
+        pulseIntensity: 0.8,
+        pulseSpeed: 1.15,
+        radius: 1.8,
+        rimColor: '#baf7ff',
+        shellColor: '#48c8ff',
+        startScale: 0.32,
+        sweepIntensity: 1.55,
+        sweepWidth: 0.18,
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 1.8, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        autoAnimate: { name: '自动循环展开', com: 'Switch' },
+        triggerDeploy: { name: '重播展开', com: 'ActionButton', action: 'triggerDeployAction' },
+        deployProgress: { name: '手动展开进度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        deployDuration: { name: '展开时长', com: 'Slider', min: 0.12, max: 5, step: 0.01 },
+        holdDuration: { name: '保持时长', com: 'Slider', min: 0, max: 6, step: 0.05 },
+        collapseDuration: { name: '收回时长', com: 'Slider', min: 0.08, max: 3, step: 0.01 },
+        radius: { name: '护盾半径', com: 'Slider', min: 0.2, max: 8, step: 0.05 },
+        coreRadiusRatio: { name: '内核尺寸比例', com: 'Slider', min: 0.1, max: 0.95, step: 0.01 },
+        startScale: { name: '初始收束比例', com: 'Slider', min: 0.02, max: 1, step: 0.01 },
+        opacity: { name: '整体透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        shellColor: { name: '外壳颜色', com: 'ColorPicker' },
+        hexColor: { name: '六边形颜色', com: 'ColorPicker' },
+        rimColor: { name: '边缘辉光颜色', com: 'ColorPicker' },
+        coreColor: { name: '内核颜色', com: 'ColorPicker' },
+        hotColor: { name: '内核高光颜色', com: 'ColorPicker' },
+        hexScale: { name: '六边形密度', com: 'Slider', min: 1, max: 18, step: 0.1 },
+        hexWidth: { name: '六边形边宽', com: 'Slider', min: 0.01, max: 0.2, step: 0.005 },
+        hexOpacity: { name: '六边形强度', com: 'Slider', min: 0, max: 2, step: 0.01 },
+        fresnelStrength: { name: '菲涅尔强度', com: 'Slider', min: 0, max: 6, step: 0.05 },
+        sweepWidth: { name: '展开扫光宽度', com: 'Slider', min: 0.02, max: 0.8, step: 0.01 },
+        sweepIntensity: { name: '展开扫光强度', com: 'Slider', min: 0, max: 5, step: 0.05 },
+        noiseScale: { name: '流动噪声尺度', com: 'Slider', min: 0.1, max: 10, step: 0.1 },
+        noiseSpeed: { name: '流动噪声速度', com: 'Slider', min: 0, max: 4, step: 0.01 },
+        pulseSpeed: { name: '脉冲速度', com: 'Slider', min: 0, max: 5, step: 0.01 },
+        pulseIntensity: { name: '脉冲强度', com: 'Slider', min: 0, max: 3, step: 0.01 },
+        coreIntensity: { name: '内核发光强度', com: 'Slider', min: 0, max: 8, step: 0.05 },
       },
     },
     {
