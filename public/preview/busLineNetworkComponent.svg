@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="Bus line network preview">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="70%">
+      <stop offset="0" stop-color="#123726"/>
+      <stop offset="0.55" stop-color="#071b1a"/>
+      <stop offset="1" stop-color="#020807"/>
+    </radialGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g opacity="0.32" stroke="#8df7b2" stroke-width="1">
+    <path d="M86 244 156 205 219 220 292 176 373 190 461 146 562 169" fill="none"/>
+    <path d="M104 148 171 167 239 138 312 151 381 112 470 119 541 90" fill="none"/>
+    <path d="M151 288 199 240 264 248 326 214 408 226 492 184" fill="none"/>
+    <path d="M121 84 205 115 281 97 360 125 448 97 532 128" fill="none"/>
+  </g>
+  <g filter="url(#glow)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M78 218 138 184 194 193 246 160 313 172 374 134 443 148 520 108 584 121" stroke="#f7fcf5" stroke-width="4.5"/>
+    <path d="M93 256 158 234 226 250 298 216 351 232 425 197 497 210 572 174" stroke="#a1d99b" stroke-width="4"/>
+    <path d="M117 120 186 151 255 121 325 138 397 95 480 103 553 73" stroke="#41ab5d" stroke-width="4.25"/>
+    <path d="M173 305 221 263 286 273 351 238 431 249 512 207" stroke="#74c476" stroke-width="3.6"/>
+    <path d="M68 174 128 171 188 139 252 153 321 117 387 129 457 92 581 88" stroke="#e5f5e0" stroke-width="3.9"/>
+    <path d="M206 62 253 94 311 74 365 104 427 76 489 91 565 58" stroke="#006d2c" stroke-width="3.3"/>
+  </g>
+  <g fill="#f7fcf5" opacity="0.95">
+    <circle cx="78" cy="218" r="4"/>
+    <circle cx="246" cy="160" r="3.5"/>
+    <circle cx="443" cy="148" r="3.5"/>
+    <circle cx="584" cy="121" r="4"/>
+    <circle cx="117" cy="120" r="3.5"/>
+    <circle cx="397" cy="95" r="3.5"/>
+    <circle cx="512" cy="207" r="3.5"/>
+  </g>
+  <g opacity="0.18" stroke="#ffffff" stroke-width="1">
+    <path d="M68 314h504"/>
+    <path d="M68 314 119 289"/>
+    <path d="M572 314 521 289"/>
+  </g>
+</svg>
