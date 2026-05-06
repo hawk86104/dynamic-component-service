@@ -4,6 +4,7 @@ import { LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib'
 import * as THREE from 'three'
 import {
   computed,
+  getCurrentInstance,
   onBeforeUnmount,
   shallowRef,
   watch,
@@ -37,6 +38,25 @@ interface BusRoute {
   coordinates: RawCoordinate[]
 }
 
+interface GeoPosition {
+  height: number
+  lat: number
+  lon: number
+}
+
+interface GeoPositionTarget {
+  geoPosition?: GeoPosition
+  uuid?: string
+}
+
+interface GisPlaneEditorMeshEntry {
+  object3D?: GeoPositionTarget
+}
+
+interface GisPlaneEditorMeshListState {
+  emxlist?: Record<string, GisPlaneEditorMeshEntry>
+}
+
 interface BusLineItem {
   bucket: number
   geometry: LineSegmentsGeometry
@@ -45,12 +65,16 @@ interface BusLineItem {
   phase: number
 }
 
+declare global {
+  interface Window {
+    gisPlaneEditorExtendMeshList?: GisPlaneEditorMeshListState
+    gisPlaneEditor_extendMeshes_group?: unknown
+  }
+}
+
 const props = withDefaults(
   defineProps<{
-    autoCenter?: boolean
     baseHeight?: number
-    centerLat?: number
-    centerLng?: number
     colorTheme?: ColorTheme
     dataUrl?: string
     dataUrlDraft?: string
@@ -64,12 +88,10 @@ const props = withDefaults(
     pointSampleStep?: number
     pulseIntensity?: number
     pulseSpeed?: number
+    uuid?: string
   }>(),
   {
-    autoCenter: true,
     baseHeight: 0.06,
-    centerLat: 39.800803,
-    centerLng: 116.34344,
     colorTheme: 'green',
     dataUrl: './data/bj-bus.json',
     dataUrlDraft: './data/bj-bus.json',
@@ -86,13 +108,23 @@ const props = withDefaults(
   },
 )
 
+const componentInstance = getCurrentInstance()
+
 const DEFAULT_DATA_URL = './data/bj-bus.json'
 const EARTH_RADIUS = 6378137
 const DEG_TO_RAD = Math.PI / 180
 const MAX_MERCATOR_LAT = 85.05112878
 const MAX_EFFECTIVE_LINE_WIDTH = 0.45
+const CAMERA_FAR_PADDING = 100
+const CAMERA_FAR_PADDING_RATIO = 1.25
+const LINE_WORLD_RAY_LENGTH = '1e12'
+const LINE_WORLD_RAY_TOKEN = 'normalize( worldPos.xyz ) * 1e5'
 const PULSE_PHASE_BUCKETS = 6
 const ROUTE_LIMIT = 2000
+const DEFAULT_CENTER = {
+  lat: 39.800803,
+  lng: 116.34344,
+}
 
 const COLOR_THEMES: Record<ColorTheme, string[]> = {
   cyan: ['#083344', '#075985', '#0369a1', '#0284c7', '#0ea5e9', '#38bdf8', '#7dd3fc', '#bae6fd', '#f0f9ff'],
@@ -106,15 +138,27 @@ const sourceRoutes = shallowRef<BusRoute[]>([])
 const sourceBounds = shallowRef<GeoBounds | null>(null)
 const tempResolution = new THREE.Vector2(1, 1)
 const tempWorldScale = new THREE.Vector3(1, 1, 1)
+const tempCameraPosition = new THREE.Vector3()
+const tempLineSphere = new THREE.Sphere()
+const tempNetworkSphere = new THREE.Sphere()
 
 let abortController: AbortController | null = null
 let loadToken = 0
+let syncedCamera: THREE.OrthographicCamera | THREE.PerspectiveCamera | null = null
+let syncedCameraFar = -1
 let syncedLineWidth = -1
 let syncedResolutionHeight = -1
 let syncedResolutionWidth = -1
 
 if (rootGroup.value) {
   rootGroup.value.name = 'bus-line-network-component'
+  rootGroup.value.frustumCulled = false
+}
+
+const syncRootGroupUuid = () => {
+  if (rootGroup.value && props.uuid) {
+    rootGroup.value.uuid = props.uuid
+  }
 }
 
 const clampNumber = (value: number | undefined, min: number, max: number, fallback: number) => {
@@ -125,10 +169,7 @@ const clampNumber = (value: number | undefined, min: number, max: number, fallba
   return THREE.MathUtils.clamp(value as number, min, max)
 }
 
-const safeAutoCenter = computed(() => props.autoCenter !== false)
 const safeBaseHeight = computed(() => clampNumber(props.baseHeight, 0, 2, 0.06))
-const safeCenterLat = computed(() => clampNumber(props.centerLat, -MAX_MERCATOR_LAT, MAX_MERCATOR_LAT, 39.800803))
-const safeCenterLng = computed(() => clampNumber(props.centerLng, -180, 180, 116.34344))
 const safeColorTheme = computed<ColorTheme>(() => {
   return props.colorTheme && props.colorTheme in COLOR_THEMES ? props.colorTheme : 'green'
 })
@@ -226,17 +267,234 @@ const projectMercator = (lng: number, lat: number) => {
 }
 
 const resolveCenter = () => {
-  if (safeAutoCenter.value && sourceBounds.value) {
+  if (sourceBounds.value) {
     return {
       lat: (sourceBounds.value.minLat + sourceBounds.value.maxLat) / 2,
       lng: (sourceBounds.value.minLng + sourceBounds.value.maxLng) / 2,
     }
   }
 
-  return {
-    lat: safeCenterLat.value,
-    lng: safeCenterLng.value,
+  return DEFAULT_CENTER
+}
+
+const getBusLineNativeGeoPosition = (): GeoPosition => {
+  if (!sourceBounds.value) {
+    throw new TypeError('公交线网原始坐标尚未准备完成，请稍后再试')
   }
+
+  const lon = (sourceBounds.value.minLng + sourceBounds.value.maxLng) / 2
+  const lat = (sourceBounds.value.minLat + sourceBounds.value.maxLat) / 2
+
+  if (!Number.isFinite(lon) || !Number.isFinite(lat)) {
+    throw new TypeError('公交线网原始坐标解析失败')
+  }
+
+  return {
+    height: 0,
+    lat: Number(lat.toFixed(6)),
+    lon: Number(lon.toFixed(6)),
+  }
+}
+
+const toRecord = (value: unknown): Record<string, unknown> | null => {
+  return value && typeof value === 'object' ? value as Record<string, unknown> : null
+}
+
+const unwrapRefLike = (value: unknown): unknown => {
+  const record = toRecord(value)
+
+  if (record && 'value' in record) {
+    return record.value
+  }
+
+  return value
+}
+
+const getComponentInstanceSources = (instance: unknown): unknown[] => {
+  const record = toRecord(instance)
+
+  if (!record) {
+    return []
+  }
+
+  return [
+    record.exposed,
+    record.proxy,
+    record.setupState,
+    record.ctx,
+  ]
+}
+
+const getComponentInstanceParent = (instance: unknown): unknown => {
+  return toRecord(instance)?.parent ?? null
+}
+
+const getMeshListFromSource = (source: unknown): Record<string, GisPlaneEditorMeshEntry> | null => {
+  const record = toRecord(unwrapRefLike(source))
+
+  if (!record) {
+    return null
+  }
+
+  const directEmxlist = toRecord(unwrapRefLike(record.emxlist))
+
+  if (directEmxlist) {
+    return directEmxlist as Record<string, GisPlaneEditorMeshEntry>
+  }
+
+  const storeState = toRecord(unwrapRefLike(record.gisPlaneEditorExtendMeshList))
+  const storeEmxlist = toRecord(unwrapRefLike(storeState?.emxlist))
+
+  if (storeEmxlist) {
+    return storeEmxlist as Record<string, GisPlaneEditorMeshEntry>
+  }
+
+  const piniaState = toRecord(unwrapRefLike(toRecord(record.state)?.value))
+  const piniaStore = toRecord(unwrapRefLike(piniaState?.gisPlaneEditorExtendMeshList))
+  const piniaEmxlist = toRecord(unwrapRefLike(piniaStore?.emxlist))
+
+  if (piniaEmxlist) {
+    return piniaEmxlist as Record<string, GisPlaneEditorMeshEntry>
+  }
+
+  return null
+}
+
+const getMeshListFromComponentChain = (): Record<string, GisPlaneEditorMeshEntry> | null => {
+  let current: unknown = componentInstance
+
+  while (current) {
+    for (const source of getComponentInstanceSources(current)) {
+      const directMeshList = getMeshListFromSource(source)
+
+      if (directMeshList) {
+        return directMeshList
+      }
+
+      const record = toRecord(source)
+
+      if (!record) {
+        continue
+      }
+
+      for (const key of ['curExtendMeshList', 'extendMeshList', 'extendMeshListStore']) {
+        const nestedMeshList = getMeshListFromSource(record[key])
+
+        if (nestedMeshList) {
+          return nestedMeshList
+        }
+      }
+    }
+
+    current = getComponentInstanceParent(current)
+  }
+
+  return null
+}
+
+const getGeoPositionTargetFromSource = (
+  source: unknown,
+  uuid: string,
+  seen: WeakSet<object> = new WeakSet<object>(),
+): GeoPositionTarget | null => {
+  const record = toRecord(unwrapRefLike(source))
+
+  if (!record) {
+    return null
+  }
+
+  if (seen.has(record)) {
+    return null
+  }
+
+  seen.add(record)
+
+  const object3D = toRecord(unwrapRefLike(record.object3D))
+
+  if (object3D?.uuid === uuid && toRecord(object3D.geoPosition)) {
+    return object3D as GeoPositionTarget
+  }
+
+  if (record.uuid === uuid && toRecord(record.geoPosition)) {
+    return record as GeoPositionTarget
+  }
+
+  for (const value of Object.values(record)) {
+    const target: GeoPositionTarget | null = getGeoPositionTargetFromSource(value, uuid, seen)
+
+    if (target) {
+      return target
+    }
+  }
+
+  return null
+}
+
+const getGeoPositionTargetFromComponentChain = (uuid: string): GeoPositionTarget | null => {
+  let current: unknown = componentInstance
+
+  while (current) {
+    for (const source of getComponentInstanceSources(current)) {
+      const target = getGeoPositionTargetFromSource(source, uuid)
+
+      if (target) {
+        return target
+      }
+    }
+
+    current = getComponentInstanceParent(current)
+  }
+
+  return null
+}
+
+const getWindowEditorMeshList = (): Record<string, GisPlaneEditorMeshEntry> | null => {
+  const componentMeshList = getMeshListFromComponentChain()
+
+  if (componentMeshList) {
+    return componentMeshList
+  }
+
+  return typeof window !== 'undefined' ? window.gisPlaneEditorExtendMeshList?.emxlist ?? null : null
+}
+
+const getGisPlaneEditorGeoPositionTarget = (): GeoPositionTarget | null => {
+  const uuid = props.uuid?.trim()
+
+  if (uuid) {
+    const emxlist = getWindowEditorMeshList()
+    const storeTarget = emxlist?.[uuid]?.object3D
+
+    if (storeTarget) {
+      return storeTarget
+    }
+
+    const componentTarget = getGeoPositionTargetFromComponentChain(uuid)
+
+    if (componentTarget) {
+      return componentTarget
+    }
+  }
+
+  const emxlist = getWindowEditorMeshList()
+
+  if (!emxlist) {
+    return null
+  }
+
+  let current = rootGroup.value?.parent ?? null
+
+  while (current) {
+    const mesh = emxlist[current.uuid]
+
+    if (mesh?.object3D) {
+      return mesh.object3D
+    }
+
+    current = current.parent
+  }
+
+  return null
 }
 
 const disposeLineItems = () => {
@@ -305,13 +563,99 @@ const appendRouteSegments = (segments: number[], positions: number[]) => {
   }
 }
 
+const expandWorldLineMaterialRange = (material: LineMaterial) => {
+  if (!material.fragmentShader.includes(LINE_WORLD_RAY_TOKEN)) {
+    return
+  }
+
+  material.fragmentShader = material.fragmentShader.replace(
+    LINE_WORLD_RAY_TOKEN,
+    `normalize( worldPos.xyz ) * ${LINE_WORLD_RAY_LENGTH}`,
+  )
+  material.needsUpdate = true
+}
+
+const isRangeCamera = (camera: THREE.Camera | undefined): camera is THREE.OrthographicCamera | THREE.PerspectiveCamera => {
+  return camera instanceof THREE.OrthographicCamera || camera instanceof THREE.PerspectiveCamera
+}
+
+const getLineNetworkWorldSphere = () => {
+  if (!rootGroup.value || !lineItems.value.length) {
+    return null
+  }
+
+  rootGroup.value.updateWorldMatrix(true, true)
+  tempNetworkSphere.makeEmpty()
+
+  lineItems.value.forEach(({ geometry, line, material }) => {
+    if (!geometry.boundingSphere) {
+      geometry.computeBoundingSphere()
+    }
+
+    if (!geometry.boundingSphere) {
+      return
+    }
+
+    tempLineSphere.copy(geometry.boundingSphere).applyMatrix4(line.matrixWorld)
+    tempLineSphere.radius += material.linewidth * 0.5
+
+    if (
+      !Number.isFinite(tempLineSphere.center.x)
+      || !Number.isFinite(tempLineSphere.center.y)
+      || !Number.isFinite(tempLineSphere.center.z)
+      || !Number.isFinite(tempLineSphere.radius)
+    ) {
+      return
+    }
+
+    tempNetworkSphere.union(tempLineSphere)
+  })
+
+  return tempNetworkSphere.isEmpty() ? null : tempNetworkSphere
+}
+
+const syncCameraFarClip = (camera: THREE.Camera | undefined) => {
+  if (!isRangeCamera(camera)) {
+    return
+  }
+
+  const worldSphere = getLineNetworkWorldSphere()
+
+  if (!worldSphere) {
+    return
+  }
+
+  camera.getWorldPosition(tempCameraPosition)
+
+  const requiredFar = Math.max(
+    camera.far,
+    (tempCameraPosition.distanceTo(worldSphere.center) + worldSphere.radius + CAMERA_FAR_PADDING) * CAMERA_FAR_PADDING_RATIO,
+  )
+
+  if (
+    camera === syncedCamera
+    && Math.abs(requiredFar - syncedCameraFar) < 1
+    && camera.far >= requiredFar
+  ) {
+    return
+  }
+
+  syncedCamera = camera
+  syncedCameraFar = requiredFar
+
+  if (camera.far < requiredFar) {
+    camera.far = requiredFar
+    camera.updateProjectionMatrix()
+  }
+}
+
 const createLineItem = (positions: number[], bucket: number, phase: number) => {
   const palette = COLOR_THEMES[safeColorTheme.value]
   const color = new THREE.Color(palette[bucket % palette.length])
   const geometry = new LineSegmentsGeometry()
   const material = new LineMaterial({
     color: color.getHex(),
-    depthTest: true,
+    depthTest: false,
     depthWrite: false,
     linewidth: safeEffectiveLineWidth.value,
     opacity: safeOpacity.value,
@@ -321,6 +665,7 @@ const createLineItem = (positions: number[], bucket: number, phase: number) => {
   })
 
   geometry.setPositions(positions)
+  expandWorldLineMaterialRange(material)
   material.resolution.copy(tempResolution)
 
   const line = new LineSegments2(geometry, material)
@@ -375,6 +720,27 @@ const syncLineResolution = () => {
   lineItems.value.forEach(item => item.material.resolution.copy(tempResolution))
 }
 
+const syncLineMaterials = (elapsed = 0, syncStatic = true) => {
+  const palette = COLOR_THEMES[safeColorTheme.value]
+  const lineWidth = getScaledLineWidth()
+  const pulseSpeed = safePulseSpeed.value
+  const pulseIntensity = safePulseIntensity.value
+
+  lineItems.value.forEach((item) => {
+    const pulse = pulseSpeed > 0
+      ? 1 - pulseIntensity + pulseIntensity * (Math.sin(elapsed * pulseSpeed + item.phase) * 0.5 + 0.5)
+      : 1
+
+    if (syncStatic) {
+      item.material.color.set(palette[item.bucket % palette.length])
+      item.material.linewidth = lineWidth
+      item.material.resolution.copy(tempResolution)
+    }
+
+    item.material.opacity = THREE.MathUtils.clamp(safeOpacity.value * pulse, 0, 1)
+  })
+}
+
 const rebuildLineNetwork = () => {
   disposeLineItems()
 
@@ -419,27 +785,6 @@ const rebuildLineNetwork = () => {
 
   lineItems.value = nextItems
   syncLineMaterials()
-}
-
-const syncLineMaterials = (elapsed = 0, syncStatic = true) => {
-  const palette = COLOR_THEMES[safeColorTheme.value]
-  const lineWidth = getScaledLineWidth()
-  const pulseSpeed = safePulseSpeed.value
-  const pulseIntensity = safePulseIntensity.value
-
-  lineItems.value.forEach((item) => {
-    const pulse = pulseSpeed > 0
-      ? 1 - pulseIntensity + pulseIntensity * (Math.sin(elapsed * pulseSpeed + item.phase) * 0.5 + 0.5)
-      : 1
-
-    if (syncStatic) {
-      item.material.color.set(palette[item.bucket % palette.length])
-      item.material.linewidth = lineWidth
-      item.material.resolution.copy(tempResolution)
-    }
-
-    item.material.opacity = THREE.MathUtils.clamp(safeOpacity.value * pulse, 0, 1)
-  })
 }
 
 const loadGeoJson = async (url = safeDataUrl.value) => {
@@ -493,16 +838,33 @@ const applyDataUrlAction = () => {
   }
 }
 
+const applyNativeGeoPosition = () => {
+  const target = getGisPlaneEditorGeoPositionTarget()
+
+  if (!target) {
+    return
+  }
+
+  const geoPosition = getBusLineNativeGeoPosition()
+
+  if (!target.geoPosition) {
+    target.geoPosition = { height: 0, lat: 0, lon: 0 }
+  }
+
+  Object.assign(target.geoPosition, geoPosition)
+
+  return geoPosition
+}
+
 watch(safeDataUrl, () => {
   void loadGeoJson()
 }, { immediate: true })
 
+watch(() => props.uuid, syncRootGroupUuid, { immediate: true })
+
 watch(
   [
-    safeAutoCenter,
     safeBaseHeight,
-    safeCenterLat,
-    safeCenterLng,
     safeHeightGroups,
     safeHeightStep,
     safeMapScale,
@@ -526,8 +888,9 @@ watch(
 
 const { onBeforeRender } = useLoop()
 
-onBeforeRender(({ elapsed, renderer }) => {
+onBeforeRender(({ camera, elapsed, renderer }) => {
   renderer.getSize(tempResolution)
+  syncCameraFarClip(camera.value)
   syncLineResolution()
   syncLineWidth()
 
@@ -540,6 +903,8 @@ onBeforeUnmount(() => {
   loadToken += 1
   abortController?.abort()
   abortController = null
+  syncedCamera = null
+  syncedCameraFar = -1
   disposeLineItems()
   rootGroup.value?.removeFromParent()
   rootGroup.value = null
@@ -547,6 +912,7 @@ onBeforeUnmount(() => {
 
 defineExpose({
   applyDataUrlAction,
+  applyNativeGeoPosition,
 })
 </script>
 
