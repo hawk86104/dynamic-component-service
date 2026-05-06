@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-06 15:12:29
+ * @LastEditTime: 2026-05-06 16:20:27
  */
 const config = {
   name: 'baseSample',
@@ -1147,7 +1147,8 @@ const config = {
         dataUrlDraft: 'https://dcser.icegl.cn/data/bj-bus.json',
         heightGroups: 9,
         heightStep: 0.055,
-        lineWidth: 0.012,
+        lineWidth: 0.01,
+        lineWidthScale: 1,
         mapScale: 0.00003,
         maxRoutes: 1222,
         opacity: 0.82,
@@ -1173,6 +1174,7 @@ const config = {
         baseHeight: { name: '基础高度', com: 'Slider', min: 0, max: 0.5, step: 0.005 },
         heightStep: { name: '分层高度', com: 'Slider', min: 0, max: 0.2, step: 0.005 },
         lineWidth: { name: '线宽', com: 'Slider', min: 0.001, max: 0.05, step: 0.001 },
+        lineWidthScale: { name: '线宽倍数', com: 'Slider', min: 1, max: 30, step: 1 },
         opacity: { name: '透明度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
         colorTheme: {
           name: '配色',

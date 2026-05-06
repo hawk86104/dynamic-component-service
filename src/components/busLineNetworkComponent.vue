@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useLoop } from '@tresjs/core'
-import { Line2, LineGeometry, LineMaterial } from 'three-stdlib'
+import { LineMaterial, LineSegments2, LineSegmentsGeometry } from 'three-stdlib'
 import * as THREE from 'three'
 import {
   computed,
@@ -39,8 +39,8 @@ interface BusRoute {
 
 interface BusLineItem {
   bucket: number
-  geometry: LineGeometry
-  line: Line2
+  geometry: LineSegmentsGeometry
+  line: LineSegments2
   material: LineMaterial
   phase: number
 }
@@ -57,6 +57,7 @@ const props = withDefaults(
     heightGroups?: number
     heightStep?: number
     lineWidth?: number
+    lineWidthScale?: number
     mapScale?: number
     maxRoutes?: number
     opacity?: number
@@ -74,7 +75,8 @@ const props = withDefaults(
     dataUrlDraft: './data/bj-bus.json',
     heightGroups: 9,
     heightStep: 0.055,
-    lineWidth: 0.012,
+    lineWidth: 0.01,
+    lineWidthScale: 1,
     mapScale: 0.00003,
     maxRoutes: 1222,
     opacity: 0.82,
@@ -88,6 +90,8 @@ const DEFAULT_DATA_URL = './data/bj-bus.json'
 const EARTH_RADIUS = 6378137
 const DEG_TO_RAD = Math.PI / 180
 const MAX_MERCATOR_LAT = 85.05112878
+const MAX_EFFECTIVE_LINE_WIDTH = 0.45
+const PULSE_PHASE_BUCKETS = 6
 const ROUTE_LIMIT = 2000
 
 const COLOR_THEMES: Record<ColorTheme, string[]> = {
@@ -104,6 +108,8 @@ const tempResolution = new THREE.Vector2(1, 1)
 
 let abortController: AbortController | null = null
 let loadToken = 0
+let syncedResolutionHeight = -1
+let syncedResolutionWidth = -1
 
 if (rootGroup.value) {
   rootGroup.value.name = 'bus-line-network-component'
@@ -129,13 +135,18 @@ const normalizeDataUrl = (value: string | undefined) => value?.trim() || DEFAULT
 const safeDataUrl = computed(() => normalizeDataUrl(props.dataUrl))
 const safeHeightGroups = computed(() => Math.round(clampNumber(props.heightGroups, 1, 12, 9)))
 const safeHeightStep = computed(() => clampNumber(props.heightStep, 0, 0.5, 0.055))
-const safeLineWidth = computed(() => clampNumber(props.lineWidth, 0.001, 0.08, 0.012))
+const safeLineWidth = computed(() => clampNumber(props.lineWidth, 0.001, 0.05, 0.012))
+const safeLineWidthScale = computed(() => clampNumber(props.lineWidthScale, 1, 30, 1))
+const safeEffectiveLineWidth = computed(() => {
+  return clampNumber(safeLineWidth.value * safeLineWidthScale.value, 0.001, MAX_EFFECTIVE_LINE_WIDTH, 0.012)
+})
 const safeMapScale = computed(() => clampNumber(props.mapScale, 0.000005, 0.0002, 0.00003))
 const safeMaxRoutes = computed(() => Math.round(clampNumber(props.maxRoutes, 1, ROUTE_LIMIT, 1222)))
 const safeOpacity = computed(() => clampNumber(props.opacity, 0, 1, 0.82))
 const safePointSampleStep = computed(() => Math.round(clampNumber(props.pointSampleStep, 1, 12, 2)))
 const safePulseIntensity = computed(() => clampNumber(props.pulseIntensity, 0, 1, 0.28))
 const safePulseSpeed = computed(() => clampNumber(props.pulseSpeed, 0, 6, 0.55))
+const shouldAnimatePulse = computed(() => safePulseSpeed.value > 0 && safePulseIntensity.value > 0)
 
 const createEmptyBounds = (): GeoBounds => ({
   maxLat: -Infinity,
@@ -279,16 +290,28 @@ const buildRoutePositions = (
   return positions
 }
 
-const createLineItem = (positions: number[], routeIndex: number) => {
-  const bucket = routeIndex % safeHeightGroups.value
+const appendRouteSegments = (segments: number[], positions: number[]) => {
+  for (let index = 0; index <= positions.length - 6; index += 3) {
+    segments.push(
+      positions[index],
+      positions[index + 1],
+      positions[index + 2],
+      positions[index + 3],
+      positions[index + 4],
+      positions[index + 5],
+    )
+  }
+}
+
+const createLineItem = (positions: number[], bucket: number, phase: number) => {
   const palette = COLOR_THEMES[safeColorTheme.value]
   const color = new THREE.Color(palette[bucket % palette.length])
-  const geometry = new LineGeometry()
+  const geometry = new LineSegmentsGeometry()
   const material = new LineMaterial({
     color: color.getHex(),
     depthTest: true,
     depthWrite: false,
-    linewidth: safeLineWidth.value,
+    linewidth: safeEffectiveLineWidth.value,
     opacity: safeOpacity.value,
     toneMapped: false,
     transparent: true,
@@ -298,8 +321,7 @@ const createLineItem = (positions: number[], routeIndex: number) => {
   geometry.setPositions(positions)
   material.resolution.copy(tempResolution)
 
-  const line = new Line2(geometry, material)
-  line.computeLineDistances()
+  const line = new LineSegments2(geometry, material)
   line.frustumCulled = false
   line.renderOrder = 8
   rootGroup.value?.add(line)
@@ -309,8 +331,18 @@ const createLineItem = (positions: number[], routeIndex: number) => {
     geometry,
     line,
     material,
-    phase: routeIndex * 0.37,
+    phase,
   }
+}
+
+const syncLineResolution = () => {
+  if (tempResolution.x === syncedResolutionWidth && tempResolution.y === syncedResolutionHeight) {
+    return
+  }
+
+  syncedResolutionWidth = tempResolution.x
+  syncedResolutionHeight = tempResolution.y
+  lineItems.value.forEach(item => item.material.resolution.copy(tempResolution))
 }
 
 const rebuildLineNetwork = () => {
@@ -323,10 +355,17 @@ const rebuildLineNetwork = () => {
   const centerLngLat = resolveCenter()
   const projectedCenter = projectMercator(centerLngLat.lng, centerLngLat.lat)
   const routeCount = Math.min(sourceRoutes.value.length, safeMaxRoutes.value)
+  const heightGroupCount = safeHeightGroups.value
+  const groupedSegments = Array.from(
+    { length: heightGroupCount * PULSE_PHASE_BUCKETS },
+    () => [] as number[],
+  )
   const nextItems: BusLineItem[] = []
 
   for (let routeIndex = 0; routeIndex < routeCount; routeIndex += 1) {
-    const bucket = routeIndex % safeHeightGroups.value
+    const bucket = routeIndex % heightGroupCount
+    const phaseBucket = Math.floor(routeIndex / heightGroupCount) % PULSE_PHASE_BUCKETS
+    const groupIndex = bucket * PULSE_PHASE_BUCKETS + phaseBucket
     const height = safeBaseHeight.value + bucket * safeHeightStep.value
     const positions = buildRoutePositions(sourceRoutes.value[routeIndex].coordinates, projectedCenter, height)
 
@@ -334,27 +373,42 @@ const rebuildLineNetwork = () => {
       continue
     }
 
-    nextItems.push(createLineItem(positions, routeIndex))
+    appendRouteSegments(groupedSegments[groupIndex], positions)
   }
 
+  groupedSegments.forEach((positions, groupIndex) => {
+    if (positions.length < 6) {
+      return
+    }
+
+    const bucket = Math.floor(groupIndex / PULSE_PHASE_BUCKETS)
+    const phaseBucket = groupIndex % PULSE_PHASE_BUCKETS
+
+    nextItems.push(createLineItem(positions, bucket, bucket * 0.19 + phaseBucket * 0.73))
+  })
+
   lineItems.value = nextItems
+  syncLineMaterials()
 }
 
-const syncLineMaterials = (elapsed = 0) => {
+const syncLineMaterials = (elapsed = 0, syncStatic = true) => {
   const palette = COLOR_THEMES[safeColorTheme.value]
+  const lineWidth = safeEffectiveLineWidth.value
   const pulseSpeed = safePulseSpeed.value
   const pulseIntensity = safePulseIntensity.value
 
   lineItems.value.forEach((item) => {
-    const color = palette[item.bucket % palette.length]
     const pulse = pulseSpeed > 0
       ? 1 - pulseIntensity + pulseIntensity * (Math.sin(elapsed * pulseSpeed + item.phase) * 0.5 + 0.5)
       : 1
 
-    item.material.color.set(color)
-    item.material.linewidth = safeLineWidth.value
+    if (syncStatic) {
+      item.material.color.set(palette[item.bucket % palette.length])
+      item.material.linewidth = lineWidth
+      item.material.resolution.copy(tempResolution)
+    }
+
     item.material.opacity = THREE.MathUtils.clamp(safeOpacity.value * pulse, 0, 1)
-    item.material.resolution.copy(tempResolution)
   })
 }
 
@@ -431,7 +485,7 @@ watch(
 watch(
   [
     safeColorTheme,
-    safeLineWidth,
+    safeEffectiveLineWidth,
     safeOpacity,
     safePulseIntensity,
     safePulseSpeed,
@@ -444,7 +498,11 @@ const { onBeforeRender } = useLoop()
 
 onBeforeRender(({ elapsed, renderer }) => {
   renderer.getSize(tempResolution)
-  syncLineMaterials(elapsed)
+  syncLineResolution()
+
+  if (shouldAnimatePulse.value) {
+    syncLineMaterials(elapsed, false)
+  }
 })
 
 onBeforeUnmount(() => {
