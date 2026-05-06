@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-06 10:58:09
+ * @LastEditTime: 2026-05-06 15:12:29
  */
 const config = {
   name: 'baseSample',
@@ -1143,8 +1143,8 @@ const config = {
         centerLat: 39.800803,
         centerLng: 116.34344,
         colorTheme: 'green',
-        dataUrl: './data/bj-bus.json',
-        dataUrlDraft: './data/bj-bus.json',
+        dataUrl: 'https://dcser.icegl.cn/data/bj-bus.json',
+        dataUrlDraft: 'https://dcser.icegl.cn/data/bj-bus.json',
         heightGroups: 9,
         heightStep: 0.055,
         lineWidth: 0.012,
