@@ -208,7 +208,7 @@ const createPassMaterial = (
   })
 }
 
-const createResources = (activeRenderer: THREE.WebGLRenderer): FluidResources => {
+const createResources = (activeRenderer: any): FluidResources => {
   const layout = createAtlasLayout(safeSimulationResolution.value)
   const advectMaterial = createPassMaterial(layout, advectFragmentShader, {
     uBuoyancy: { value: safeBuoyancy.value },
@@ -372,7 +372,7 @@ const clearTarget = (target: THREE.WebGLRenderTarget, activeRenderer: THREE.WebG
   activeRenderer.clear(true, false, false)
 }
 
-function clearFluidTargets(resources: FluidResources, activeRenderer: THREE.WebGLRenderer) {
+function clearFluidTargets(resources: FluidResources, activeRenderer: any) {
   withRendererState(activeRenderer, () => {
     clearTarget(resources.fluidA, activeRenderer)
     clearTarget(resources.fluidB, activeRenderer)
@@ -447,7 +447,7 @@ const simulateFluid = (
   resources: FluidResources,
   dt: number,
   elapsed: number,
-  activeRenderer: THREE.WebGLRenderer,
+  activeRenderer: any,
 ) => {
   syncResourceUniforms(resources)
 
