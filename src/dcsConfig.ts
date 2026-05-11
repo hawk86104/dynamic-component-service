@@ -4,11 +4,11 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-09 09:50:12
+ * @LastEditTime: 2026-05-11 13:41:16
  */
 const config = {
   name: 'baseSample',
-  version: '2.2.1',
+  version: '2.2.2',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {
@@ -1261,6 +1261,39 @@ const config = {
         },
         pulseSpeed: { name: '脉冲速度', com: 'Slider', min: 0, max: 6, step: 0.05 },
         pulseIntensity: { name: '脉冲强度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+      },
+    },
+    {
+      name: '光晕线',
+      type: 'polylineGlowComponent',
+      comFile: './src/components/polylineGlowComponent.vue',
+      previewPath: './preview/polylineGlowComponent.svg',
+      description: '参考 Mars3D PolylineGlow 发光线 (ex_4_1_1)：基于 GeoJSON 数据源渲染，支持确认生成与原始定位。',
+      default: {
+        color: '#FF4500',
+        dataUrl: 'https://data.mars3d.cn/file/geojson/wuhan-line3.json',
+        dataUrlDraft: 'https://data.mars3d.cn/file/geojson/wuhan-line3.json',
+        glowColor: '#FFD27A',
+        glowPower: 0.1,
+        opacity: 0.9,
+        width: 0.05,
+        widthScale: 1,
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0.02, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        dataUrlDraft: { name: '数据源URL', com: 'Text' },
+        applyDataUrl: { name: '确认生成', com: 'ActionButton', action: 'applyDataUrlAction' },
+        applyNativeGeoPosition: { name: '原始定位', com: 'ActionButton', action: 'applyNativeGeoPosition' },
+        width: { name: '线宽', com: 'Slider', min: 0.001, max: 1, step: 0.001 },
+        widthScale: { name: '线宽倍数', com: 'Slider', min: 0.1, max: 30, step: 0.1 },
+        glowPower: { name: '发光强度', com: 'Slider', min: 0.01, max: 1, step: 0.01 },
+        opacity: { name: '透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        color: { name: '线本体颜色', com: 'ColorPicker' },
+        glowColor: { name: '反光颜色', com: 'ColorPicker' },
       },
     },
     {
