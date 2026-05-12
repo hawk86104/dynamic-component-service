@@ -36,7 +36,7 @@ const props = withDefaults(
   },
 )
 
-const VIDEO_URL = './video/vlg.mp4'
+const VIDEO_URL = 'https://dcser.icegl.cn/video/vlg.mp4'
 
 const clamp = (v: number | undefined, min: number, max: number, fallback: number) =>
   Number.isFinite(v) ? THREE.MathUtils.clamp(v as number, min, max) : fallback
