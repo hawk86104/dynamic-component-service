@@ -52,8 +52,8 @@ const props = withDefaults(
   }>(),
   {
     color: '#FF4500',
-    dataUrl: 'https://data.mars3d.cn/file/geojson/wuhan-line3.json',
-    dataUrlDraft: 'https://data.mars3d.cn/file/geojson/wuhan-line3.json',
+    dataUrl: './data/wuhan-line3.json',
+    dataUrlDraft: './data/wuhan-line3.json',
     glowColor: '#FF4500',
     glowPower: 0.1,
     opacity: 0.9,
@@ -63,7 +63,7 @@ const props = withDefaults(
 )
 
 // —— 内部常量: 将 GeoJSON 投影到 tresjs 场景所需, 非 Mars3D 属性, 不开放配置 ——
-const DEFAULT_DATA_URL = 'https://data.mars3d.cn/file/geojson/wuhan-line3.json'
+const DEFAULT_DATA_URL = './data/wuhan-line3.json'
 const EARTH_RADIUS = 6378137
 const DEG_TO_RAD = Math.PI / 180
 const MAX_MERCATOR_LAT = 85.05112878

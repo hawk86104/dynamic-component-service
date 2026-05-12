@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-11 13:41:16
+ * @LastEditTime: 2026-05-12 17:08:35
  */
 const config = {
   name: 'baseSample',
@@ -1271,8 +1271,8 @@ const config = {
       description: '参考 Mars3D PolylineGlow 发光线 (ex_4_1_1)：基于 GeoJSON 数据源渲染，支持确认生成与原始定位。',
       default: {
         color: '#FF4500',
-        dataUrl: 'https://data.mars3d.cn/file/geojson/wuhan-line3.json',
-        dataUrlDraft: 'https://data.mars3d.cn/file/geojson/wuhan-line3.json',
+        dataUrl: './data/wuhan-line3.json',
+        dataUrlDraft: './data/wuhan-line3.json',
         glowColor: '#FFD27A',
         glowPower: 0.1,
         opacity: 0.9,
