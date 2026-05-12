@@ -1,11 +1,9 @@
 <script setup lang="ts">
 // 视频 2D 投射组件
 // 参考 Mars3D Video2D: http://mars3d.cn/editor-vue.html?key=ex_6_12_4&id=graphic/video/video2D
-// 仅投射示例视频: https://data.mars3d.cn/file/video/duimian.mp4
+// 仅投射示例视频: https://opensource.icegl.cn/plugins/visualArts/video/vlg.mp4
 import * as THREE from 'three'
 import { onBeforeUnmount, shallowRef, watch } from 'vue'
-
-const VIDEO_URL = 'https://data.mars3d.cn/file/video/duimian.mp4'
 
 const props = withDefaults(
   defineProps<{
@@ -37,6 +35,8 @@ const props = withDefaults(
     videoTint: '#ffffff',
   },
 )
+
+const VIDEO_URL = './video/vlg.mp4'
 
 const clamp = (v: number | undefined, min: number, max: number, fallback: number) =>
   Number.isFinite(v) ? THREE.MathUtils.clamp(v as number, min, max) : fallback
@@ -114,14 +114,54 @@ const rebuildFrustum = () => {
   const z = -dist
 
   const pos = new Float32Array([
-    0, 0, 0, -halfW, -halfH, z,
-    0, 0, 0,  halfW, -halfH, z,
-    0, 0, 0,  halfW,  halfH, z,
-    0, 0, 0, -halfW,  halfH, z,
-    -halfW, -halfH, z,  halfW, -halfH, z,
-     halfW, -halfH, z,  halfW,  halfH, z,
-     halfW,  halfH, z, -halfW,  halfH, z,
-    -halfW,  halfH, z, -halfW, -halfH, z,
+    0,
+    0,
+    0,
+    -halfW,
+    -halfH,
+    z,
+    0,
+    0,
+    0,
+    halfW,
+    -halfH,
+    z,
+    0,
+    0,
+    0,
+    halfW,
+    halfH,
+    z,
+    0,
+    0,
+    0,
+    -halfW,
+    halfH,
+    z,
+    -halfW,
+    -halfH,
+    z,
+    halfW,
+    -halfH,
+    z,
+    halfW,
+    -halfH,
+    z,
+    halfW,
+    halfH,
+    z,
+    halfW,
+    halfH,
+    z,
+    -halfW,
+    halfH,
+    z,
+    -halfW,
+    halfH,
+    z,
+    -halfW,
+    -halfH,
+    z,
   ])
   frustumGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3))
   frustumGeo.computeBoundingSphere()
