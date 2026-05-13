@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-12 17:08:35
+ * @LastEditTime: 2026-05-13 10:44:05
  */
 const config = {
   name: 'baseSample',
@@ -1535,22 +1535,22 @@ const config = {
       default: {
         "modelUrl": "https://oss.icegl.cn/p/modelServer/models/3%E8%88%B9/models/游轮C.glb",
         "modelUrlDraft": "https://oss.icegl.cn/p/modelServer/models/3%E8%88%B9/models/游轮C.glb",
-        "outlineDensity": 0.08000000000000003,
+        "outlineDensity": 0.08,
         "particleSpeed": 1.5,
         "trailLength": 2.5,
         "windAzimuth": -90,
-        "windElevation": -17,
+        "windElevation": 0,
         "particleDensity": 0.62,
         "trailDensity": 0.05,
         "colorScheme": "ice",
-        "particleSize": 0.10000000000000003,
+        "particleSize": 0.1,
         "particleSizeMultiplier": 0.05,
         "opacity": 1,
-        "turbulence": 0.05000000000000003,
+        "turbulence": 0.05,
         "showModel": true,
         "modelOpacity": 1,
-        "offsetX": -1.3877787807814457e-17,
-        "offsetY": -0.45,
+        "offsetX": -1.3,
+        "offsetY": 0,
         "offsetZ": 0
       },
       defaultObject3D: {
