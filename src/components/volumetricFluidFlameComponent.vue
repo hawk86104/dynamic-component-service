@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoop, useTres } from '@tresjs/core'
 import * as THREE from 'three'
+import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import {
   computed,
   onBeforeUnmount,
@@ -19,6 +20,8 @@ import volumeFragmentShader from '../shader/volumetricFluidFlameComponent/volume
 import volumeVertexShader from '../shader/volumetricFluidFlameComponent/volume.vert?raw'
 
 type UniformMap = NonNullable<THREE.ShaderMaterialParameters['uniforms']>
+type VolumeCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
+type GroundCustomMaterial = CustomShaderMaterial<typeof THREE.MeshBasicMaterial>
 
 interface AtlasLayout {
   atlasSize: number
@@ -34,7 +37,7 @@ interface FluidResources {
   fluidB: THREE.WebGLRenderTarget
   gradientSubtractMaterial: THREE.ShaderMaterial
   groundGeometry: THREE.PlaneGeometry
-  groundMaterial: THREE.ShaderMaterial
+  groundMaterial: GroundCustomMaterial
   groundMesh: THREE.Mesh
   jacobiMaterial: THREE.ShaderMaterial
   layout: AtlasLayout
@@ -45,7 +48,7 @@ interface FluidResources {
   pressureA: THREE.WebGLRenderTarget
   pressureB: THREE.WebGLRenderTarget
   volumeGeometry: THREE.BoxGeometry
-  volumeMaterial: THREE.ShaderMaterial
+  volumeMaterial: VolumeCustomMaterial
   volumeMesh: THREE.Mesh
 }
 
@@ -236,12 +239,15 @@ const createResources = (activeRenderer: any): FluidResources => {
     uFluid: { value: null },
     uPressure: { value: null },
   })
-  const volumeMaterial = new THREE.ShaderMaterial({
+  const volumeMaterial = new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
     blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
     depthTest: true,
     depthWrite: false,
     fragmentShader: injectAtlasCommon(volumeFragmentShader),
     side: THREE.DoubleSide,
+    silent: true,
     toneMapped: false,
     transparent: true,
     uniforms: {
@@ -260,13 +266,16 @@ const createResources = (activeRenderer: any): FluidResources => {
       uRayMarchSteps: { value: safeRayMarchSteps.value },
     },
     vertexShader: volumeVertexShader,
-  })
-  const groundMaterial = new THREE.ShaderMaterial({
+  }) as VolumeCustomMaterial
+  const groundMaterial = new CustomShaderMaterial({
+    baseMaterial: THREE.MeshBasicMaterial,
     blending: THREE.AdditiveBlending,
+    color: 0xFFFFFF,
     depthTest: true,
     depthWrite: false,
     fragmentShader: groundFragmentShader,
     side: THREE.DoubleSide,
+    silent: true,
     toneMapped: false,
     transparent: true,
     uniforms: {
@@ -275,7 +284,7 @@ const createResources = (activeRenderer: any): FluidResources => {
       uGroundOpacity: { value: safeGroundOpacity.value },
     },
     vertexShader: groundVertexShader,
-  })
+  }) as GroundCustomMaterial
   const passGeometry = new THREE.PlaneGeometry(2, 2)
   const passMesh = new THREE.Mesh(passGeometry, advectMaterial)
   const passScene = new THREE.Scene()

@@ -237,5 +237,5 @@ void main() {
   accumulated = accumulated / (accumulated + vec3(0.9));
   accumulated = pow(accumulated, vec3(1.05));
 
-  gl_FragColor = vec4(accumulated, 1.0 - transmittance);
+  csm_DiffuseColor = vec4(accumulated, 1.0 - transmittance);
 }

@@ -32,5 +32,5 @@ void main() {
   vec3 color = vec3(grid * fade * 0.075) + glowColorForMode() * glow * fade;
   float alpha = max(grid * fade * 0.075, glow * fade) * uGroundOpacity;
 
-  gl_FragColor = vec4(color, alpha);
+  csm_DiffuseColor = vec4(color, alpha);
 }

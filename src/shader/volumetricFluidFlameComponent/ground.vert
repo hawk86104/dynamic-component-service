@@ -4,7 +4,5 @@ uniform float uGroundSize;
 
 void main() {
   vGroundPos = position.xy * uGroundSize;
-
-  vec4 worldPosition = modelMatrix * vec4(position, 1.0);
-  gl_Position = projectionMatrix * viewMatrix * worldPosition;
+  csm_Position = position;
 }

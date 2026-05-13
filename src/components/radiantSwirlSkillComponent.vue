@@ -205,7 +205,7 @@ onBeforeUnmount(() => {
     <TresMesh
       ref="meshRef"
       :position="[0, safeCenterY, 0]"
-      :render-order="4"
+      :render-order="8"
     >
       <TresCylinderGeometry :args="[safeHalfSize, safeHalfSize, safeRadius, 64, 1, false]" />
       <primitive
