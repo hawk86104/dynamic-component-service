@@ -11,6 +11,7 @@ uniform float uParticleSpeed;
 uniform float uTrailLength;
 uniform float uParticleSize;
 uniform float uTurbulence;
+uniform float uWorldScale;
 
 varying float vLife;
 varying float vSeed;
@@ -61,9 +62,11 @@ void main() {
   vec3 particlePosition = position + windDir * distance + lateral;
 
   vec4 modelViewPosition = modelViewMatrix * vec4(particlePosition, 1.0);
+  // uWorldScale 用于补偿父级 world scale（例如 gisPlaneEditor 里 scaleFactor=200 的父级）
+  // 父级放大会让相机空间 -mvZ 同比变大，pointSize 因此变成亚像素而被 fragment discard
   float perspective = clamp(220.0 / max(1.0, -modelViewPosition.z), 0.0, 220.0);
   csm_Position = particlePosition;
-  csm_PointSize = uParticleSize * mix(1.35, 0.35, eased) * aSizeFactor * perspective;
+  csm_PointSize = uParticleSize * uWorldScale * mix(1.35, 0.35, eased) * aSizeFactor * perspective;
 
   vLife = eased;
   vSeed = aSeed;

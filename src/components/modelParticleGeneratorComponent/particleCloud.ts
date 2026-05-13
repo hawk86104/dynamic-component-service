@@ -17,6 +17,7 @@ export interface ParticleUniforms {
   uColorA: { value: THREE.Color }
   uColorB: { value: THREE.Color }
   uColorC: { value: THREE.Color }
+  uWorldScale: { value: number }
 }
 
 export interface BuildCloudOptions {
@@ -34,9 +35,23 @@ interface SamplingMesh {
 }
 
 // 从 GLB 场景里收集所有 Mesh，按 bounding box 估算相对面积
-export function collectSamplingMeshes(root: THREE.Object3D): SamplingMesh[] {
+// referenceSpace: 可选的参考坐标系（通常是挂载 Points 的 rootGroup）。
+// 传入时会把顶点烘到 reference 的 local 空间，避免渲染时 rootGroup 的 world
+// 矩阵被应用两次——这个双重变换在带缩放的父级（例如 GIS 里的 200x scale）
+// 下会把粒子推到视野外，在平移父级下会表现成「移动物体后重建粒子就产生偏移」。
+export function collectSamplingMeshes(
+  root: THREE.Object3D,
+  referenceSpace?: THREE.Object3D | null,
+): SamplingMesh[] {
   const meshes: SamplingMesh[] = []
   root.updateMatrixWorld(true)
+
+  const referenceMatrixInverse = (() => {
+    if (!referenceSpace) return null
+    referenceSpace.updateWorldMatrix(true, false)
+    return new THREE.Matrix4().copy(referenceSpace.matrixWorld).invert()
+  })()
+  const tempMatrix = new THREE.Matrix4()
 
   root.traverse((obj) => {
     const maybeMesh = obj as THREE.Mesh
@@ -45,7 +60,13 @@ export function collectSamplingMeshes(root: THREE.Object3D): SamplingMesh[] {
     }
 
     const cloned = maybeMesh.geometry.clone()
-    cloned.applyMatrix4(maybeMesh.matrixWorld)
+    if (referenceMatrixInverse) {
+      tempMatrix.multiplyMatrices(referenceMatrixInverse, maybeMesh.matrixWorld)
+      cloned.applyMatrix4(tempMatrix)
+    }
+    else {
+      cloned.applyMatrix4(maybeMesh.matrixWorld)
+    }
     cloned.computeBoundingBox()
 
     const size = new THREE.Vector3()
@@ -87,6 +108,8 @@ export function createParticleUniforms(params: {
     uColorA: { value: params.colorA },
     uColorB: { value: params.colorB },
     uColorC: { value: params.colorC },
+    // 根据父级 world scale 实时覆盖，小尺度默认为 1（与修改前等价）
+    uWorldScale: { value: 1 },
   }
 }
 

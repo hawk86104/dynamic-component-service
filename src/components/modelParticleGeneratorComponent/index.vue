@@ -111,7 +111,14 @@ const rebuildCloud = () => {
   disposeCurrentCloud()
   if (!loadedGltfScene.value) return
 
-  const samplingMeshes = collectSamplingMeshes(loadedGltfScene.value)
+  // 把顶点烘到 rootGroup 的 local 空间，这样渲染时 rootGroup.worldMatrix 只会
+  // 被应用一次；否则在带缩放或被移动过的父级下会出现「双重变换」：粒子飞出视野
+  // （GIS 下 scaleFactor=200 导致完全不可见）或与模型产生可见的位置偏移（移动
+  // 物体后重建粒子）。
+  const samplingMeshes = collectSamplingMeshes(
+    loadedGltfScene.value,
+    rootGroup.value as unknown as THREE.Object3D,
+  )
   const cloud = buildParticleCloud(samplingMeshes, particleUniforms, {
     outlineDensity: clampNumber(props.outlineDensity, 0.05, 1, 0.55),
     particleDensity: clampNumber(props.particleDensity, 0.05, 1, 0.6),
@@ -164,8 +171,10 @@ const loadFromUrl = async (url: string) => {
 const applyModelUrlAction = () => {
   const url = (props.modelUrlDraft ?? props.modelUrl ?? '').trim()
 
-  // 同 URL 再点一次，允许重新加载一次（例如模型发生了更新）
-  if (url && url === loadedUrl.value) {
+  // 当新 url 与 props.modelUrl 相同时，返回值不会引起 prop 变化，watcher
+  // 也就不会触发 —— 这覆盖了「同 URL 重新生成」和「清除后再次点确认生成」
+  // 两种场景，都需要手动触发加载
+  if (url && url === (props.modelUrl ?? '').trim()) {
     void loadFromUrl(url)
   }
 
@@ -258,8 +267,18 @@ watch(
 watch(() => [props.offsetX, props.offsetY, props.offsetZ], () => applyParticleOffset())
 
 const { onBeforeRender } = useLoop()
+const tmpWorldScale = new THREE.Vector3()
 onBeforeRender(({ elapsed }) => {
   particleUniforms.uTime.value = elapsed
+
+  // 补偿父级 world scale（例如 gisPlaneEditor 里 scaleFactor=200 的父级）
+  // 父级放大 N 倍会让相机空间 -mvZ 同比变大，shader 里的 perspective = 220/-mvZ
+  // 随之变成 1/N，粒子 pointSize 退化成亚像素并被 fragment 里的 discard 丢掉。
+  // 所以这里读取父级 world scale，在 shader 里反向乘回去。
+  rootGroup.value.updateWorldMatrix(true, false)
+  rootGroup.value.getWorldScale(tmpWorldScale)
+  const worldScale = Math.max(tmpWorldScale.x, tmpWorldScale.y, tmpWorldScale.z)
+  particleUniforms.uWorldScale.value = worldScale > 0 ? worldScale : 1
 })
 
 onBeforeUnmount(() => {
