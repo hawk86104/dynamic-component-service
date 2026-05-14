@@ -1,0 +1,52 @@
+<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="420" fill="#111827"/>
+  <ellipse cx="320" cy="310" rx="220" ry="52" fill="#020617" opacity="0.55"/>
+  <path d="M320 198 L514 226 C491 296 406 344 302 334 L320 198Z" fill="#22d3ee"/>
+  <path d="M320 198 L302 334 C213 326 145 280 126 218 L320 198Z" fill="#a855f7"/>
+  <path d="M320 198 L126 218 C138 155 216 104 316 94 L320 198Z" fill="#f97316"/>
+  <path d="M320 198 L316 94 C397 86 469 113 502 162 L320 198Z" fill="#ef286b"/>
+  <path d="M320 198 L502 162 C516 181 520 202 514 226 L320 198Z" fill="#2eff6a"/>
+  <path d="M126 218 C145 280 213 326 302 334 L302 364 C205 355 130 305 108 236 L126 218Z" fill="#4c1d95"/>
+  <path d="M302 334 C406 344 491 296 514 226 L514 256 C490 334 399 386 302 364 L302 334Z" fill="#0e7490"/>
+  <path d="M514 226 C520 202 516 181 502 162 L502 192 C517 211 520 235 514 256 L514 226Z" fill="#166534"/>
+  <path d="M502 162 C469 113 397 86 316 94 L316 124 C392 116 459 140 502 192 L502 162Z" fill="#831843"/>
+  <path d="M316 94 C216 104 138 155 126 218 L108 236 C122 164 208 108 316 124 L316 94Z" fill="#9a3412"/>
+  <path d="M320 198 L514 226 C491 296 406 344 302 334 L320 198Z" fill="url(#cyan)" opacity="0.82"/>
+  <path d="M320 198 L302 334 C213 326 145 280 126 218 L320 198Z" fill="url(#violet)" opacity="0.82"/>
+  <path d="M320 198 L126 218 C138 155 216 104 316 94 L320 198Z" fill="url(#orange)" opacity="0.82"/>
+  <path d="M320 198 L316 94 C397 86 469 113 502 162 L320 198Z" fill="url(#pink)" opacity="0.82"/>
+  <path d="M320 198 L502 162 C516 181 520 202 514 226 L320 198Z" fill="url(#green)" opacity="0.82"/>
+  <circle cx="320" cy="198" r="10" fill="#f8fafc" opacity="0.65"/>
+  <g opacity="0.92">
+    <rect x="64" y="46" width="178" height="54" rx="16" fill="#f8fafc"/>
+    <rect x="78" y="84" width="136" height="5" rx="2.5" fill="#f97316"/>
+    <text x="153" y="70" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#111827">Market Share</text>
+  </g>
+  <g opacity="0.92">
+    <rect x="422" y="300" width="136" height="48" rx="14" fill="#f8fafc"/>
+    <rect x="438" y="333" width="104" height="5" rx="2.5" fill="#22d3ee"/>
+    <text x="490" y="322" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="700" fill="#111827">30.0%</text>
+  </g>
+  <defs>
+    <linearGradient id="cyan" x1="366" y1="198" x2="404" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#d4f8ff"/>
+      <stop offset="1" stop-color="#083848"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="220" y1="184" x2="248" y2="334" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#eed2ff"/>
+      <stop offset="1" stop-color="#200850"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="222" y1="100" x2="190" y2="244" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffe0c0"/>
+      <stop offset="1" stop-color="#3d1800"/>
+    </linearGradient>
+    <linearGradient id="pink" x1="410" y1="92" x2="398" y2="202" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffd0df"/>
+      <stop offset="1" stop-color="#4a0018"/>
+    </linearGradient>
+    <linearGradient id="green" x1="506" y1="166" x2="470" y2="232" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c9ffd6"/>
+      <stop offset="1" stop-color="#0a3d18"/>
+    </linearGradient>
+  </defs>
+</svg>

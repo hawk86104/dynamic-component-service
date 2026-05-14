@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-13 10:44:05
+ * @LastEditTime: 2026-05-14 10:34:20
  */
 const config = {
   name: 'baseSample',
@@ -533,6 +533,90 @@ const config = {
         videoLoop: { name: '视频重复', com: 'Switch' },
         rotationZ: { name: '自转速度', com: 'Slider', min: -0.1, max: 0.1, step: 0.01 },
         opacity: { name: '透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+      },
+    },
+    {
+      name: '艺术三维饼图',
+      type: 'PieChartArt',
+      comFile: './src/components/PieChartArt/index.vue',
+      previewPath: './preview/PieChartArt.svg',
+      description: 'WebGL 版 3D 艺术饼图，默认使用 Market Share 数据；应用 JSON 后会直接重建新图形。',
+      default: {
+        jsonText: `{
+          "title": "Market Share",
+          "unit": "%",
+          "slices": [
+            { "label": "Apple", "value": 30 },
+            { "label": "Samsung", "value": 22 },
+            { "label": "Xiaomi", "value": 10 },
+            { "label": "OPPO", "value": 20 },
+            { "label": "vivo", "value": 18 }
+          ]
+        }`,
+        "height": 1.25,
+        "radius": 3.1,
+        "innerRadius": 1.9500000000000004,
+        "gap": 0.12999999999999998,
+        "bevel": 0.3,
+        "sideSegments": 84,
+        "bevelSegments": 5,
+        "smoothShading": true,
+        "creaseAngle": 84,
+        "labelFontSize": 3,
+        "gradientDirection": "vertical",
+        "gradientFromY": 0,
+        "gradientToY": 1,
+        "gradientCurve": 0.29000000000000004,
+        "colorScheme": "candy",
+        "roughness": 0.34,
+        "metalness": 0,
+        "envMapIntensity": 2.7399999999999998,
+        "jsonError": "",
+        "jsonTextChangeNumber": 0
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0.02, z: 0 },
+        scale: { x: 0.75, y: 0.75, z: 0.75 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        jsonText: { name: '表数据 JSON', com: 'jsonText' },
+        height: { name: 'Chart 高度', com: 'Slider', min: 0.25, max: 6, step: 0.05 },
+        radius: { name: 'Chart 半径', com: 'Slider', min: 0.8, max: 12, step: 0.05 },
+        innerRadius: { name: 'Chart 内半径', com: 'Slider', min: 0, max: 10, step: 0.05 },
+        gap: { name: 'Chart 间隙', com: 'Slider', min: 0, max: 0.22, step: 0.005 },
+        bevel: { name: 'Chart 倒角', com: 'Slider', min: 0, max: 0.6, step: 0.01 },
+        sideSegments: { name: 'Chart 侧边分段', com: 'Slider', min: 8, max: 256, step: 4 },
+        bevelSegments: { name: 'Chart 倒角分段', com: 'Slider', min: 1, max: 8, step: 1 },
+        smoothShading: { name: 'Chart 平滑着色', com: 'Switch' },
+        creaseAngle: { name: 'Chart 折痕角度', com: 'Slider', min: 0, max: 180, step: 1 },
+        labelFontSize: { name: 'Chart 标签字号', com: 'Slider', min: 0.8, max: 4, step: 0.05 },
+        gradientDirection: {
+          name: 'Gradient 方向',
+          com: 'Select',
+          options: [
+            { label: 'Vertical (Y)', value: 'vertical' },
+            { label: 'Radial', value: 'radial' },
+            { label: 'Angular', value: 'angular' },
+          ],
+        },
+        gradientFromY: { name: 'Gradient From Y', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        gradientToY: { name: 'Gradient To Y', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        gradientCurve: { name: 'Gradient Curve', com: 'Slider', min: 0.1, max: 3, step: 0.01 },
+        colorScheme: {
+          name: 'Gradient 色系',
+          com: 'Select',
+          options: [
+            { label: 'Market Neon', value: 'marketNeon' },
+            { label: 'Aurora', value: 'aurora' },
+            { label: 'Sunset', value: 'sunset' },
+            { label: 'Jewel', value: 'jewel' },
+            { label: 'Candy', value: 'candy' },
+          ],
+        },
+        roughness: { name: 'Material Roughness', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        metalness: { name: 'Material Metalness', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        envMapIntensity: { name: 'Material Env Intensity', com: 'Slider', min: 0, max: 3, step: 0.01 },
       },
     },
     {
