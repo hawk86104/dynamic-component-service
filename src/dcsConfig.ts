@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-14 10:34:20
+ * @LastEditTime: 2026-05-19 17:37:43
  */
 const config = {
   name: 'baseSample',
@@ -288,6 +288,44 @@ const config = {
         directionX: { name: '方向X', com: 'Slider', min: -1, max: 1, step: 0.05 },
         directionY: { name: '方向Y', com: 'Slider', min: -1, max: 1, step: 0.05 },
         directionZ: { name: '方向Z', com: 'Slider', min: -1, max: 1, step: 0.05 },
+      },
+    },
+    {
+      name: '喷火组件',
+      type: 'flameJetComponent',
+      comFile: './src/components/flameJetComponent.vue',
+      previewPath: './preview/flameJetComponent.gif',
+      description: '基于 fragment shader 的喷火效果组件，沿 +X 方向喷射，支持长度、扰动、颜色梯度等参数调节。',
+      default: {
+        coreColor: '#ffc738',
+        crossPlane: true,
+        intensity: 1.55,
+        jetSpeed: 1.7,
+        length: 6,
+        midColor: '#ff660d',
+        noiseScale: 1,
+        outerColor: '#d80f04',
+        taperPower: 1.2,
+        turbulence: 1,
+        width: 2.2,
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0.6, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        length: { name: '火焰长度', com: 'Slider', min: 0.5, max: 30, step: 0.1 },
+        width: { name: '火焰宽度', com: 'Slider', min: 0.2, max: 12, step: 0.1 },
+        jetSpeed: { name: '喷射速度', com: 'Slider', min: 0, max: 8, step: 0.05 },
+        turbulence: { name: '扰动强度', com: 'Slider', min: 0, max: 3, step: 0.05 },
+        noiseScale: { name: '噪声密度', com: 'Slider', min: 0.1, max: 4, step: 0.05 },
+        taperPower: { name: '收尖程度', com: 'Slider', min: 0.2, max: 5, step: 0.05 },
+        intensity: { name: '辉光强度', com: 'Slider', min: 0.1, max: 4, step: 0.05 },
+        crossPlane: { name: '十字面片', com: 'Switch' },
+        coreColor: { name: '焰心色', com: 'ColorPicker' },
+        midColor: { name: '焰中色', com: 'ColorPicker' },
+        outerColor: { name: '焰边色', com: 'ColorPicker' },
       },
     },
     {
