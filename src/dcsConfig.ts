@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-19 17:37:43
+ * @LastEditTime: 2026-05-22 12:24:29
  */
 const config = {
   name: 'baseSample',
@@ -655,6 +655,42 @@ const config = {
         roughness: { name: 'Material Roughness', com: 'Slider', min: 0, max: 1, step: 0.01 },
         metalness: { name: 'Material Metalness', com: 'Slider', min: 0, max: 1, step: 0.01 },
         envMapIntensity: { name: 'Material Env Intensity', com: 'Slider', min: 0, max: 3, step: 0.01 },
+      },
+    },
+    {
+      name: '圆形动态粒子图表',
+      type: 'circularParticleChartComponent',
+      comFile: './src/components/circularParticleChartComponent.vue',
+      previewPath: './preview/circularParticleChartComponent.png',
+      description: '自发光圆形粒子图表，带可反向的扫描动效和中心标题/单位文字；不依赖灯光、环境贴图或场景镜面。',
+      default: {
+        "particleSize": 8.3,
+        "particleColor": "#fc33ff",
+        "scanSpeed": 0.36,
+        "titleText": "圆形",
+        "titleSize": 45,
+        "unitText": "粒子图表",
+        "unitSize": 19,
+        "textColor": "#ffffff",
+        "line2": 0.015,
+        "lineColor": "#004940"
+      },
+      defaultObject3D: {
+        position: { x: 0, y: 0.04, z: 0 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        particleSize: { name: '粒子大小', com: 'Slider', min: 1, max: 28, step: 0.1 },
+        particleColor: { name: '粒子颜色', com: 'ColorPicker' },
+        scanSpeed: { name: '扫描速度', com: 'Slider', min: -1, max: 1, step: 0.01 },
+        titleText: { name: '标题文字', com: 'Text' },
+        titleSize: { name: '标题大小', com: 'Slider', min: 10, max: 96, step: 1 },
+        unitText: { name: '单位文字', com: 'Text' },
+        unitSize: { name: '单位大小', com: 'Slider', min: 8, max: 64, step: 1 },
+        textColor: { name: '文字颜色', com: 'ColorPicker' },
+        line2: { name: 'line2', com: 'Slider', min: 0.006, max: 0.18, step: 0.001 },
+        lineColor: { name: '边框线颜色', com: 'ColorPicker' },
       },
     },
     {
