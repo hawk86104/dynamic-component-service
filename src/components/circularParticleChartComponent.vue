@@ -59,7 +59,7 @@ const INNER_RADIUS_RATIO = 0.24
 const points = shallowRef<THREE.Points | null>(null)
 const pointGeometry = shallowRef<THREE.BufferGeometry | null>(null)
 const pointMaterial = shallowRef<THREE.ShaderMaterial | null>(null)
-const reticleGroup = shallowRef<THREE.Group | null>(null)
+const reticleGroup = shallowRef<any>(null)
 const sweepMaterial = shallowRef<THREE.ShaderMaterial | null>(null)
 const titleMesh = shallowRef<THREE.Mesh | null>(null)
 const unitMesh = shallowRef<THREE.Mesh | null>(null)
@@ -381,7 +381,7 @@ const syncColors = () => {
     return
   }
 
-  reticleGroup.value.traverse((child) => {
+  reticleGroup.value.traverse((child: any) => {
     const material = (child as THREE.Mesh).material as THREE.MeshBasicMaterial | undefined
     if (material?.color) {
       setColor(material.color, safeLineColor.value, DEFAULTS.lineColor)
