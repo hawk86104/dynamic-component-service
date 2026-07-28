@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">GNM 参数化人头组件</title>
+  <desc id="desc">深色网格背景中的参数化三维人头线框预览</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="44%" r="72%">
+      <stop offset="0" stop-color="#26334b"/>
+      <stop offset="0.55" stop-color="#111827"/>
+      <stop offset="1" stop-color="#070b13"/>
+    </radialGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd4bd"/>
+      <stop offset="0.52" stop-color="#d9a183"/>
+      <stop offset="1" stop-color="#8e5948"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5be7ff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#5be7ff"/>
+      <stop offset="1" stop-color="#ae7bff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0V28" fill="none" stroke="#8bb7d8" stroke-opacity="0.08"/>
+    </pattern>
+    <clipPath id="headClip">
+      <path d="M330 62c-68 0-111 45-112 116-1 43 14 88 42 116 13 13 26 21 43 27 8 3 14 13 16 26h61c2-13 8-23 16-26 17-6 30-14 43-27 28-28 43-73 42-116-1-71-44-116-111-116z"/>
+    </clipPath>
+  </defs>
+
+  <rect width="640" height="360" rx="20" fill="url(#bg)"/>
+  <rect width="640" height="360" rx="20" fill="url(#grid)"/>
+  <circle cx="350" cy="186" r="137" fill="none" stroke="#5be7ff" stroke-opacity="0.16"/>
+  <circle cx="350" cy="186" r="111" fill="none" stroke="#ae7bff" stroke-opacity="0.13" stroke-dasharray="5 9"/>
+
+  <path d="M330 62c-68 0-111 45-112 116-1 43 14 88 42 116 13 13 26 21 43 27 8 3 14 13 16 26h61c2-13 8-23 16-26 17-6 30-14 43-27 28-28 43-73 42-116-1-71-44-116-111-116z" fill="url(#skin)" stroke="#ffdfcd" stroke-width="2.5"/>
+
+  <g clip-path="url(#headClip)" fill="none" stroke="#6a3e36" stroke-opacity="0.34" stroke-width="1">
+    <path d="M214 121c78 29 177 30 273 1M207 156c86 25 187 25 282 0M205 192c91 20 194 20 290-1M211 228c88 16 185 16 277-2M225 265c80 13 163 11 245-3M252 301c61 7 123 4 183-5"/>
+    <path d="M265 49c-12 97-10 199 11 283M308 48c-5 98-2 204 9 299M350 45v305M392 48c5 98 2 204-9 299M435 52c12 96 10 196-11 280"/>
+    <path d="M218 177l48-21 43 19 41-20 44 20 45-19 42 22M232 222l54-21 64 20 64-21 54 22M259 274l46-20 45 16 45-16 46 20"/>
+  </g>
+
+  <path d="M272 176c16-13 39-13 55 0-17 15-39 15-55 0zm101 0c16-13 39-13 55 0-17 15-39 15-55 0z" fill="#f5f3eb" stroke="#5f3d35" stroke-width="2"/>
+  <ellipse cx="302" cy="176" rx="10" ry="12" fill="#5d4630"/>
+  <ellipse cx="398" cy="176" rx="10" ry="12" fill="#5d4630"/>
+  <circle cx="302" cy="176" r="4.5" fill="#0e0e11"/>
+  <circle cx="398" cy="176" r="4.5" fill="#0e0e11"/>
+  <path d="M350 178c-8 25-10 44-2 50 8 6 18 3 24-2" fill="none" stroke="#70483d" stroke-width="3" stroke-linecap="round"/>
+  <path d="M310 257c24 14 56 14 80 0-20 29-60 29-80 0z" fill="#9d554f" stroke="#653b37" stroke-width="2"/>
+
+  <path d="M242 313h216" stroke="url(#rim)" stroke-width="3" filter="url(#glow)"/>
+  <g font-family="Inter,Arial,sans-serif" fill="#eef7ff">
+    <text x="34" y="54" font-size="25" font-weight="700" letter-spacing="1">GNM HEAD</text>
+    <text x="35" y="78" font-size="12" fill="#96b2ca" letter-spacing="2">PARAMETRIC COMPONENT</text>
+  </g>
+  <g font-family="Inter,Arial,sans-serif" font-size="11" fill="#91a9c0">
+    <text x="35" y="300">253 IDENTITY</text>
+    <text x="35" y="320">383 EXPRESSION</text>
+    <text x="35" y="340">17,821 VERTICES</text>
+  </g>
+  <g transform="translate(532 36)" fill="none" stroke="#5be7ff" stroke-width="2" filter="url(#glow)">
+    <path d="M0 10h54M44 0l10 10-10 10"/>
+  </g>
+</svg>

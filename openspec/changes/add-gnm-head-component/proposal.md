@@ -7,9 +7,10 @@ The reusable capability is the generated head mesh itself: load the published GN
 ## What Changes
 
 - Add a new `gnmHeadComponent` derived from the Apache-2.0 `google/xrblocks` GNM browser implementation.
-- Load the GNM head container from `https://opensource.cdn.icegl.cn/bin/gnm/gnm_head_web.bin` only after the component is mounted and its configurable delay has elapsed.
+- Render a lightweight component-local Three.js loading placeholder immediately, then load the GNM head container from `https://opensource.cdn.icegl.cn/bin/gnm/gnm_head_web.bin` after mount without blocking dynamic component import.
 - Render the neutral head as soon as the main container is ready, then load `gnm_samplers_web.bin` separately so the smaller semantic sampler does not delay first render.
-- Expose compact identity, expression, pose, material, visibility, seed, and loading controls as flat Vue props and `src/dcsConfig.ts` entries.
+- Expose compact identity, expression, pose, material, visibility, and seed controls as flat Vue props and `src/dcsConfig.ts` entries, with default identity strength `0.58` and expression strength `0.68`.
+- Keep skin always present and expose skin-only opacity instead of whole-head opacity or a separate skin-visibility switch.
 - Cancel in-flight requests and ignore stale asynchronous results when URLs change or the component unmounts.
 - Keep the upstream DOM/XR UI, camera, controls, lights, background, animation tours, landmarks, skeleton, OBJ export, and keyboard handling out of the component.
 - Add a component preview asset and upstream Apache-2.0 attribution.
@@ -32,7 +33,7 @@ The reusable capability is the generated head mesh itself: load the published GN
   - `public/preview/gnmHeadComponent.svg`
   - `openspec/changes/add-gnm-head-component/`
 - APIs:
-  - Adds one dynamic component with resource URL, loading delay, semantic seed/strength, basic pose, material, and visibility props.
+  - Adds one dynamic component with resource URLs, semantic seed/strength, basic pose, skin-only opacity, material, and non-skin anatomy visibility props.
 - Dependencies:
   - Reuses browser APIs, Vue, tresjs, and Three.js; no new runtime or server dependency is required.
 - Network:

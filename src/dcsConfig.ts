@@ -6,6 +6,11 @@
  * @LastEditors: 地虎降天龙
  * @LastEditTime: 2026-05-22 12:24:29
  */
+import {
+  GNM_EXPRESSION_OPTIONS,
+  GNM_HEAD_DEFAULTS,
+} from './components/gnmHeadComponent/defaults'
+
 const config = {
   name: 'baseSample',
   version: '2.2.2',
@@ -1806,6 +1811,47 @@ const config = {
         offsetX: { name: '粒子偏移 X', com: 'Slider', min: -10, max: 10, step: 0.05 },
         offsetY: { name: '粒子偏移 Y', com: 'Slider', min: -10, max: 10, step: 0.05 },
         offsetZ: { name: '粒子偏移 Z', com: 'Slider', min: -10, max: 10, step: 0.05 },
+      },
+    },
+    {
+      name: 'GNM 参数化人头',
+      type: 'gnmHeadComponent',
+      comFile: './src/components/gnmHeadComponent/index.vue',
+      previewPath: './preview/gnmHeadComponent.svg',
+      description: '基于 Google GNM Head 浏览器数值实现的参数化人头组件；动态载入后立即显示轻量 3D loading，主模型与语义采样器分阶段按需下载，支持确定性身份/表情、头眼姿态、皮肤透明度与非皮肤解剖显隐，不创建相机、灯光、控制器或场景级 UI。',
+      default: {
+        ...GNM_HEAD_DEFAULTS,
+      },
+      defaultObject3D: {
+        position: { x: 0, y: -1.15, z: 0 },
+        scale: { x: 5, y: 5, z: 5 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      config: {
+        headUrl: { name: '头部模型 URL', com: 'Text' },
+        samplerUrl: { name: '语义采样器 URL', com: 'Text' },
+        identitySeed: { name: '身份种子', com: 'Slider', min: 0, max: 100000, step: 1 },
+        identityStrength: { name: '身份强度', com: 'Slider', min: 0, max: 3, step: 0.01 },
+        expressionSeed: { name: '表情种子', com: 'Slider', min: 0, max: 100000, step: 1 },
+        expressionClass: {
+          name: '表情类别',
+          com: 'Select',
+          options: GNM_EXPRESSION_OPTIONS.map(option => ({ ...option })),
+        },
+        expressionStrength: { name: '表情强度', com: 'Slider', min: 0, max: 3, step: 0.01 },
+        headPitch: { name: '头部俯仰°', com: 'Slider', min: -45, max: 45, step: 1 },
+        headYaw: { name: '头部偏航°', com: 'Slider', min: -70, max: 70, step: 1 },
+        headRoll: { name: '头部翻滚°', com: 'Slider', min: -45, max: 45, step: 1 },
+        eyePitch: { name: '眼球俯仰°', com: 'Slider', min: -35, max: 35, step: 1 },
+        eyeYaw: { name: '眼球偏航°', com: 'Slider', min: -45, max: 45, step: 1 },
+        skinColor: { name: '皮肤颜色', com: 'ColorPicker' },
+        irisColor: { name: '虹膜颜色', com: 'ColorPicker' },
+        roughness: { name: '材质粗糙度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        metalness: { name: '材质金属度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        skinOpacity: { name: '皮肤透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        showEyes: { name: '显示双眼', com: 'Switch' },
+        showTeethGums: { name: '显示牙齿牙龈', com: 'Switch' },
+        showTongue: { name: '显示舌头', com: 'Switch' },
       },
     },
   ],
