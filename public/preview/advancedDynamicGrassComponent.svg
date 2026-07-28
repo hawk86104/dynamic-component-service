@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-labelledby="title description">
+  <title id="title">高级动态草地</title>
+  <desc id="description">起伏地形上的风动草叶与野花</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bddce7"/>
+      <stop offset="1" stop-color="#edf4dc"/>
+    </linearGradient>
+    <linearGradient id="meadow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8ebd3d"/>
+      <stop offset="1" stop-color="#355f18"/>
+    </linearGradient>
+    <linearGradient id="blade" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#416d18"/>
+      <stop offset="1" stop-color="#c1e54d"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)"/>
+  <ellipse cx="320" cy="302" rx="260" ry="35" fill="#264516" opacity=".22" filter="url(#shadow)"/>
+  <path d="M38 286C112 215 186 232 247 200c75-40 144-16 205 10 58 25 102 35 150 80-136 52-426 54-564-4Z" fill="url(#meadow)"/>
+  <path d="M82 286c82-32 127-17 188-49 62-32 132-32 209 3 37 17 64 27 85 47-143 27-353 27-482-1Z" fill="#6f9c2f" opacity=".72"/>
+  <g fill="none" stroke="url(#blade)" stroke-linecap="round">
+    <path d="M117 278c-6-39-2-70 13-98" stroke-width="6"/>
+    <path d="M143 276c6-48 22-79 48-108" stroke-width="7"/>
+    <path d="M176 267c-6-42-3-75 12-109" stroke-width="5"/>
+    <path d="M218 255c9-55 25-91 51-122" stroke-width="7"/>
+    <path d="M259 248c-2-48 7-91 29-130" stroke-width="6"/>
+    <path d="M300 244c11-66 30-105 57-135" stroke-width="8"/>
+    <path d="M344 243c-1-55 8-96 29-132" stroke-width="6"/>
+    <path d="M386 250c14-59 32-95 58-121" stroke-width="7"/>
+    <path d="M428 258c2-48 14-82 36-108" stroke-width="6"/>
+    <path d="M473 268c14-48 31-76 55-98" stroke-width="7"/>
+    <path d="M516 278c3-39 15-67 35-88" stroke-width="5"/>
+  </g>
+  <g stroke="#557d24" stroke-width="4" stroke-linecap="round">
+    <path d="M111 282c14-34 25-53 45-69"/>
+    <path d="M198 269c19-36 40-57 67-68"/>
+    <path d="M273 251c20-34 42-53 71-63"/>
+    <path d="M365 249c17-37 37-59 64-72"/>
+    <path d="M453 263c21-31 43-47 68-54"/>
+  </g>
+  <g>
+    <circle cx="167" cy="222" r="8" fill="#e9a5be"/>
+    <circle cx="167" cy="222" r="3" fill="#f3c463"/>
+    <circle cx="413" cy="205" r="9" fill="#9e8bd7"/>
+    <circle cx="413" cy="205" r="3" fill="#f0d178"/>
+    <circle cx="495" cy="239" r="7" fill="#e9b665"/>
+    <circle cx="495" cy="239" r="2.5" fill="#bf6950"/>
+  </g>
+  <g fill="#17320f">
+    <rect x="24" y="22" width="248" height="54" rx="14" opacity=".82"/>
+    <text x="48" y="57" fill="#f2f8e8" font-family="Arial, sans-serif" font-size="24" font-weight="700">高级动态草地</text>
+  </g>
+</svg>
