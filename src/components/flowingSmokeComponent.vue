@@ -20,23 +20,29 @@ const props = withDefaults(
     directionX?: number
     directionY?: number
     directionZ?: number
+    emitterRadius?: number
     flowRate?: number
     lifeRange?: number
     opacity?: number
     particleSize?: number
+    sizeGrowth?: number
     spread?: number
+    turbulence?: number
   }>(),
   {
-    color: '#bfc7cf',
-    density: 0.65,
-    directionX: 0,
+    color: '#aeb4b8',
+    density: 0.38,
+    directionX: -0.08,
     directionY: 1,
-    directionZ: 0,
-    flowRate: 1.1,
-    lifeRange: 4.8,
-    opacity: 0.42,
-    particleSize: 34,
-    spread: 0.45,
+    directionZ: 0.03,
+    emitterRadius: 0.12,
+    flowRate: 0.16,
+    lifeRange: 3.2,
+    opacity: 0.26,
+    particleSize: 0.22,
+    sizeGrowth: 2.2,
+    spread: 0.22,
+    turbulence: 0.14,
   },
 )
 
@@ -53,12 +59,20 @@ const clampNumber = (value: number | undefined, min: number, max: number, fallba
   return THREE.MathUtils.clamp(value as number, min, max)
 }
 
-const safeFlowRate = computed(() => clampNumber(props.flowRate, 0.05, 6, 1.1))
-const safeDensity = computed(() => clampNumber(props.density, 0.05, 1, 0.65))
-const safeSpread = computed(() => clampNumber(props.spread, 0.05, 3, 0.45))
-const safeOpacity = computed(() => clampNumber(props.opacity, 0.05, 1, 0.42))
-const safeParticleSize = computed(() => clampNumber(props.particleSize, 8, 90, 34))
-const safeLifeRange = computed(() => clampNumber(props.lifeRange, 0.5, 14, 4.8))
+const safeFlowRate = computed(() => clampNumber(props.flowRate, 0.02, 6, 0.16))
+const safeDensity = computed(() => clampNumber(props.density, 0.05, 1, 0.38))
+const safeEmitterRadius = computed(() => clampNumber(props.emitterRadius, 0.01, 2, 0.12))
+const safeSpread = computed(() => clampNumber(props.spread, 0, 4, 0.22))
+const safeTurbulence = computed(() => clampNumber(props.turbulence, 0, 2, 0.14))
+const safeOpacity = computed(() => clampNumber(props.opacity, 0.01, 1, 0.26))
+const safeParticleSize = computed(() => {
+  const value = clampNumber(props.particleSize, 0.02, 300, 0.22)
+
+  // Existing editor scenes stored the old 8-90 range. Keep them usable after upgrading.
+  return THREE.MathUtils.clamp(value > 3 ? value / 100 : value, 0.02, 3)
+})
+const safeSizeGrowth = computed(() => clampNumber(props.sizeGrowth, 1, 4, 2.2))
+const safeLifeRange = computed(() => clampNumber(props.lifeRange, 0.5, 14, 3.2))
 const safeDirection = computed(() => {
   const direction = new THREE.Vector3(
     clampNumber(props.directionX, -1, 1, 0),
@@ -78,12 +92,15 @@ const smokeUniforms = {
   uColor: { value: new THREE.Color(props.color) },
   uDensity: { value: safeDensity.value },
   uDirection: { value: safeDirection.value.clone() },
+  uEmitterRadius: { value: safeEmitterRadius.value },
   uFlowRate: { value: safeFlowRate.value },
   uLifeRange: { value: safeLifeRange.value },
   uOpacity: { value: safeOpacity.value },
   uParticleSize: { value: safeParticleSize.value },
+  uSizeGrowth: { value: safeSizeGrowth.value },
   uSpread: { value: safeSpread.value },
   uTime: { value: 0 },
+  uTurbulence: { value: safeTurbulence.value },
 }
 
 const createSmokeMaterial = (): SmokeCustomMaterial => {
@@ -124,10 +141,10 @@ const createSmokeCloud = () => {
   for (let index = 0; index < MAX_PARTICLES; index += 1) {
     const cursor = index * 3
     const angle = Math.random() * Math.PI * 2
-    const radius = Math.random() * 0.08
+    const radius = Math.sqrt(Math.random())
 
     positions[cursor] = Math.cos(angle) * radius
-    positions[cursor + 1] = (Math.random() - 0.5) * 0.05
+    positions[cursor + 1] = (Math.random() - 0.5) * 0.3
     positions[cursor + 2] = Math.sin(angle) * radius
 
     jitters[cursor] = Math.random() * 2 - 1
@@ -161,8 +178,32 @@ const createSmokeCloud = () => {
 createSmokeCloud()
 
 watch(
-  [() => props.color, safeDensity, safeDirection, safeFlowRate, safeLifeRange, safeOpacity, safeParticleSize, safeSpread],
-  ([color, density, direction, flowRate, lifeRange, opacity, particleSize, spread]) => {
+  [
+    () => props.color,
+    safeDensity,
+    safeDirection,
+    safeEmitterRadius,
+    safeFlowRate,
+    safeLifeRange,
+    safeOpacity,
+    safeParticleSize,
+    safeSizeGrowth,
+    safeSpread,
+    safeTurbulence,
+  ],
+  ([
+    color,
+    density,
+    direction,
+    emitterRadius,
+    flowRate,
+    lifeRange,
+    opacity,
+    particleSize,
+    sizeGrowth,
+    spread,
+    turbulence,
+  ]) => {
     if (!smokeMaterial.value || !smokeGeometry.value) {
       return
     }
@@ -170,11 +211,14 @@ watch(
     smokeMaterial.value.uniforms.uColor.value.set(color)
     smokeMaterial.value.uniforms.uDensity.value = density
     smokeMaterial.value.uniforms.uDirection.value.copy(direction)
+    smokeMaterial.value.uniforms.uEmitterRadius.value = emitterRadius
     smokeMaterial.value.uniforms.uFlowRate.value = flowRate
     smokeMaterial.value.uniforms.uLifeRange.value = lifeRange
     smokeMaterial.value.uniforms.uOpacity.value = opacity
     smokeMaterial.value.uniforms.uParticleSize.value = particleSize
+    smokeMaterial.value.uniforms.uSizeGrowth.value = sizeGrowth
     smokeMaterial.value.uniforms.uSpread.value = spread
+    smokeMaterial.value.uniforms.uTurbulence.value = turbulence
     smokeGeometry.value.setDrawRange(0, visibleParticleCount.value)
   },
   { immediate: true },
