@@ -1,5 +1,7 @@
 import { reactive, shallowRef } from 'vue'
-import type { Group } from 'three'
+import type { TransformControls } from '@tresjs/cientos'
+
+type TransformTarget = InstanceType<typeof TransformControls>['$props']['object']
 
 interface VectorConfig { x: number, y: number, z: number }
 interface ObjectConfig {
@@ -10,7 +12,7 @@ interface ObjectConfig {
 
 /** Gizmo and transform state belong exclusively to the preview instance. */
 export function createPreviewTransform(pane: any, defaults: ObjectConfig = {}, enabled = false) {
-  const target = shallowRef<Group | null>(null)
+  const target = shallowRef<TransformTarget | null>(null)
   const tuple = (value: VectorConfig | undefined, fallback: number): [number, number, number] =>
     [value?.x ?? fallback, value?.y ?? fallback, value?.z ?? fallback]
   const position = tuple(defaults.position, 0)
