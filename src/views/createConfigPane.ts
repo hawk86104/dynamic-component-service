@@ -5,6 +5,7 @@ import JSON5 from 'json5'
 export interface ConfigSchemaItem {
   name: string
   com: 'Select' | 'ColorPicker' | 'Switch' | 'Slider' | 'Text' | 'jsonText' | 'ActionButton'
+  group?: string
   action?: string
   options?: Array<{ label: string, value: any }>
   min?: number
@@ -36,10 +37,15 @@ export function createConfigPane(
 
   pane.registerPlugin(EssentialsPlugin)
 
+  const folders = new Map<string, any>()
   Object.entries(config).forEach(([key, item]) => {
+    if (item.group && !folders.has(item.group)) {
+      folders.set(item.group, pane.addFolder({ title: item.group, expanded: true }))
+    }
+    const controls = item.group ? folders.get(item.group) : pane
     switch (item.com) {
       case 'Select':
-        pane
+        controls
           .addBinding(values, key, {
             label: item.name,
             options: item.options?.reduce((acc, cur) => {
@@ -53,7 +59,7 @@ export function createConfigPane(
         break
 
       case 'ColorPicker':
-        pane
+        controls
           .addBinding(values, key, {
             label: item.name,
             picker: 'inline',
@@ -64,7 +70,7 @@ export function createConfigPane(
         break
 
       case 'Switch':
-        pane
+        controls
           .addBinding(values, key, {
             label: item.name,
           })
@@ -74,7 +80,7 @@ export function createConfigPane(
         break
 
       case 'Slider':
-        pane
+        controls
           .addBinding(values, key, {
             label: item.name,
             min: item.min,
@@ -87,7 +93,7 @@ export function createConfigPane(
         break
 
       case 'Text':
-        pane
+        controls
           .addBinding(values, key, {
             label: item.name,
           })
@@ -97,7 +103,7 @@ export function createConfigPane(
         break
 
       case 'jsonText': {
-        const textBinding = pane.addBinding(values, key, {
+        const textBinding = controls.addBinding(values, key, {
           view: 'textarea',
           label: item.name,
           rows: 8,
@@ -107,12 +113,12 @@ export function createConfigPane(
         values.jsonError = ''
         values.jsonTextChangeNumber = 0
 
-        const errorBinding = pane.addBinding(values, 'jsonError', {
+        const errorBinding = controls.addBinding(values, 'jsonError', {
           label: 'JSON错误',
           readonly: true,
         })
 
-        pane.addButton({ title: '应用JSON数据' }).on('click', () => {
+        controls.addButton({ title: '应用JSON数据' }).on('click', () => {
           try {
             const parsed = JSON5.parse(values[key])
             values[key] = JSON.stringify(parsed, null, 2)
@@ -131,7 +137,7 @@ export function createConfigPane(
       }
 
       case 'ActionButton':
-        pane.addButton({ title: item.name }).on('click', async () => {
+        controls.addButton({ title: item.name }).on('click', async () => {
           await options?.onAction?.({
             actionId: item.action || key,
             values,

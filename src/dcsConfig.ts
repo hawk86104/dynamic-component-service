@@ -6,6 +6,7 @@
  * @LastEditors: 地虎降天龙
  * @LastEditTime: 2026-05-22 12:24:29
  */
+import { CARD_TRAIL_DEFAULTS } from './components/flowerTributeCardComponent/defaults'
 import {
   GNM_EXPRESSION_OPTIONS,
   GNM_HEAD_DEFAULTS,
@@ -79,6 +80,7 @@ const config = {
       previewPath: './preview/flowerTributeCardComponent.png',
       description: '纪念主题献花卡片，红色镭射、五角星压纹与两行白色寄语；背面显示镜像图文。',
       default: {
+        ...CARD_TRAIL_DEFAULTS,
         cornerRadius: 0.06,
         animationSpeed: 0.35,
         height: 6.45,
@@ -108,6 +110,21 @@ const config = {
         gain: { name: '镭射强度', com: 'Slider', min: 0, max: 4, step: 0.05 },
         redFilter: { name: '红色滤镜', com: 'Slider', min: 0, max: 1, step: 0.01 },
         stars: { name: '五角星炫光', com: 'Switch' },
+        particleGradient: { group: '红系粒子拖尾', name: '启用渐变色', com: 'Switch' },
+        particleColor: { group: '红系粒子拖尾', name: '纯色模式颜色', com: 'ColorPicker' },
+        particleColorStart: { group: '红系粒子拖尾', name: '渐变起始色', com: 'ColorPicker' },
+        particleColorMiddle: { group: '红系粒子拖尾', name: '渐变中间色', com: 'ColorPicker' },
+        particleColorEnd: { group: '红系粒子拖尾', name: '渐变末尾色', com: 'ColorPicker' },
+        outlineDensity: { group: '红系粒子拖尾', name: '轮廓抽稀密度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
+        particleDensity: { group: '红系粒子拖尾', name: '粒子密度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
+        trailDensity: { group: '红系粒子拖尾', name: '拖尾密度', com: 'Slider', min: 0.05, max: 1, step: 0.01 },
+        particleSize: { group: '红系粒子拖尾', name: '粒子尺寸', com: 'Slider', min: 0.1, max: 2, step: 0.01 },
+        particleSizeMultiplier: { group: '红系粒子拖尾', name: '粒子大小倍数', com: 'Slider', min: 0.05, max: 20, step: 0.05 },
+        particleOpacity: { group: '红系粒子拖尾', name: '粒子不透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        particleSpeed: { group: '红系粒子拖尾', name: '粒子速度', com: 'Slider', min: 0, max: 6, step: 0.05 },
+        trailLength: { group: '红系粒子拖尾', name: '拖尾长度', com: 'Slider', min: 0.1, max: 20, step: 0.1 },
+        turbulence: { group: '红系粒子拖尾', name: '扰动强度', com: 'Slider', min: 0, max: 4, step: 0.05 },
+        trailAmplitude: { group: '红系粒子拖尾', name: '拖尾幅度', com: 'Slider', min: 0, max: 5, step: 0.05 },
       },
     },
     {

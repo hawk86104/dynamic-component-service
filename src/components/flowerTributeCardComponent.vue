@@ -2,12 +2,29 @@
 import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue'
 import backgroundUrl from '../assets/flowerTributeCardComponent/background.png?url'
 import fragmentShader from '../shader/flowerTributeCardComponent/card.frag?raw'
 import vertexShader from '../shader/flowerTributeCardComponent/card.vert?raw'
+import { CARD_TRAIL_DEFAULTS } from './flowerTributeCardComponent/defaults'
+import { createCardParticleTrail } from './flowerTributeCardComponent/particleTrail'
 
 const props = withDefaults(defineProps<{
+  particleGradient?: boolean
+  particleColor?: string
+  particleColorStart?: string
+  particleColorMiddle?: string
+  particleColorEnd?: string
+  outlineDensity?: number
+  particleDensity?: number
+  trailDensity?: number
+  particleSize?: number
+  particleSizeMultiplier?: number
+  particleOpacity?: number
+  particleSpeed?: number
+  trailLength?: number
+  turbulence?: number
+  trailAmplitude?: number
   cornerRadius?: number
   animationSpeed?: number
   height?: number
@@ -20,6 +37,7 @@ const props = withDefaults(defineProps<{
   redFilter?: number
   stars?: boolean
 }>(), {
+  ...CARD_TRAIL_DEFAULTS,
   cornerRadius: 0.06,
   animationSpeed: 0.35,
   height: 6.45,
@@ -98,8 +116,34 @@ watch(() => [props.pitchNm, props.grooveAngle, props.gain, props.redFilter, prop
   material.uniforms.uStars.value = props.stars ? 1 : 0
   material.uniforms.uCornerRadius.value = safeNumber(props.cornerRadius, 0, 0.3, 0.06)
 }, { immediate: true })
+const rootGroup = shallowRef<THREE.Group | null>(null)
+const particleTrail = createCardParticleTrail()
+watch(() => [
+  props.particleGradient,
+  props.particleColor,
+  props.particleColorStart,
+  props.particleColorMiddle,
+  props.particleColorEnd,
+  props.outlineDensity,
+  props.particleDensity,
+  props.trailDensity,
+  props.particleSize,
+  props.particleSizeMultiplier,
+  props.particleOpacity,
+  props.particleSpeed,
+  props.trailLength,
+  props.turbulence,
+  props.trailAmplitude,
+], () => particleTrail.configure(props), { immediate: true })
+watch(() => [height.value, props.cornerRadius, props.outlineDensity, props.particleDensity, props.trailDensity], () => {
+  particleTrail.configure(props)
+  particleTrail.rebuild(height.value, safeNumber(props.cornerRadius, 0, 0.3, 0.06))
+}, { immediate: true })
 const { onBeforeRender } = useLoop()
 onBeforeRender(({ delta }) => {
+  if (rootGroup.value) {
+    particleTrail.update(rootGroup.value, delta)
+  }
   // Integrating speed keeps the current pattern position when speed changes or pauses.
   material.uniforms.uFlowOffset.value += delta * safeNumber(props.animationSpeed, 0, 3, 0.35)
 })
@@ -122,6 +166,7 @@ onMounted(() => {
 })
 onBeforeUnmount(() => {
   disposed = true
+  particleTrail.dispose()
   artTexture?.dispose()
   placeholder.dispose()
   textTexture.dispose()
@@ -130,10 +175,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <TresGroup>
+  <TresGroup ref="rootGroup">
     <TresMesh>
       <TresPlaneGeometry :args="[height * 941 / 1672, height]" />
       <primitive :object="material" attach="material" />
     </TresMesh>
+    <primitive :object="particleTrail.points" />
   </TresGroup>
 </template>
