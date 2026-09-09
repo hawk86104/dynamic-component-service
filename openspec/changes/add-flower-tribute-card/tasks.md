@@ -36,3 +36,7 @@
 - [x] 7.2 定向 lint、配置基线比对与 OpenSpec 校验；遵循项目规则不构建或浏览器调试。
 
 配色验证：组件及辅助 TS lint、OpenSpec strict、diff 检查通过；dcsConfig 的 208 条既有 lint 问题与 HEAD 基线一致。未运行构建或浏览器调试。
+
+## 8. 类型兼容修正
+- [x] 8.1 将拖尾更新输入限制为 matrixWorld 与 updateWorldMatrix，避免要求无关的指针捕获接口。
+- [x] 8.2 本轮用户提供构建错误后运行 yarn build：vue-tsc 与 Vite 构建通过，仅有大体积 chunk 警告；定向 lint 与 diff 检查通过。未运行浏览器调试。

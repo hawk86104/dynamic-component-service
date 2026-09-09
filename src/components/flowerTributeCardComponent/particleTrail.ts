@@ -94,7 +94,7 @@ export function createCardParticleTrail() {
       previous.dispose()
       history.reset()
     },
-    update(emitter: THREE.Object3D, delta: number) {
+    update(emitter: Pick<THREE.Object3D, 'matrixWorld' | 'updateWorldMatrix'>, delta: number) {
       emitter.updateWorldMatrix(true, false)
       const valid = history.update(emitter.matrixWorld, delta, params.trailLength / 3)
       points.visible = valid && params.trailAmplitude > 0 && params.particleOpacity > 0
