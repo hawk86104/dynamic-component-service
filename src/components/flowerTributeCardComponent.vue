@@ -3,11 +3,13 @@ import { useLoop } from '@tresjs/core'
 import * as THREE from 'three'
 import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
 import { computed, onBeforeUnmount, onMounted, shallowRef, watch } from 'vue'
-import backgroundUrl from '../assets/flowerTributeCardComponent/background.png?url'
+import { getResUrl } from '../common/utils'
 import fragmentShader from '../shader/flowerTributeCardComponent/card.frag?raw'
 import vertexShader from '../shader/flowerTributeCardComponent/card.vert?raw'
 import { CARD_TRAIL_DEFAULTS } from './flowerTributeCardComponent/defaults'
 import { createCardParticleTrail } from './flowerTributeCardComponent/particleTrail'
+
+const backgroundUrl = getResUrl('./image/flowerTributeCardComponent/background.png')
 
 const props = withDefaults(defineProps<{
   particleGradient?: boolean
