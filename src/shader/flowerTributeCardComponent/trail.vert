@@ -15,6 +15,18 @@ varying float vSeed;
 varying float vTrail;
 varying float vOutside;
 
+float hash(float value) {
+  return fract(sin(value * 127.1 + 311.7) * 43758.5453);
+}
+
+// Smooth random targets, independently sampled for each particle and axis.
+float noise(float value) {
+  float cell = floor(value);
+  float blend = fract(value);
+  blend = blend * blend * (3.0 - 2.0 * blend);
+  return mix(hash(cell), hash(cell + 1.0), blend) * 2.0 - 1.0;
+}
+
 void main() {
   float life = fract(uPhase * (0.4 + aSeed * 0.9) + aSeed + aTrailOffset);
   float historyIndex = life * 31.0;
@@ -40,9 +52,11 @@ void main() {
   vec3 crossDirection = cross(direction, reference);
   vec3 tangentA = crossDirection / max(length(crossDirection), 0.00001);
   vec3 tangentB = cross(direction, tangentA);
-  float phase = aSeed * 41.0 + uPhase + life * 9.0;
-  float spread = min(distanceMoved, 2.0) * uTurbulence * life * 0.13;
-  vec3 turbulence = (tangentA * sin(phase) + tangentB * cos(phase * 1.31)) * spread;
+  float phase = aSeed * 731.0 + uPhase * (1.2 + aSeed) + aTrailOffset * 19.0;
+  float spread = min(distanceMoved, 2.0) * uTurbulence * sqrt(life) * 0.35;
+  vec3 turbulence = (tangentA * noise(phase)
+    + tangentB * noise(phase * 1.37 + 83.0)
+    + direction * noise(phase * 0.73 + 157.0) * 0.25) * spread;
   vec3 particlePosition = position + (displacement + turbulence) * uAmplitude;
   // Keep the current card interior clear even when historical paths cross it.
   float radius = uCornerRadius * uCardWidth;

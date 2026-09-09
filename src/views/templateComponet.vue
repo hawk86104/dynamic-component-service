@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { defineAsyncComponent, onBeforeUnmount, reactive, ref } from 'vue'
+import { TransformControls } from '@tresjs/cientos'
 import { type ConfigPaneActionContext, createConfigPane } from './createConfigPane'
+import { createPreviewTransform } from './createPreviewTransform'
 
 const props = defineProps<{
   componentConfig: any
@@ -189,44 +191,30 @@ onBeforeUnmount(() => {
   pane.dispose()
 })
 
-let position = [0, 0, 0]
-if (props.componentConfig?.defaultObject3D?.position) {
-  position = [
-    props.componentConfig.defaultObject3D.position.x,
-    props.componentConfig.defaultObject3D.position.y,
-    props.componentConfig.defaultObject3D.position.z,
-  ]
-}
-let rotation = [0, 0, 0]
-if (props.componentConfig?.defaultObject3D?.rotation) {
-  rotation = [
-    props.componentConfig.defaultObject3D.rotation.x,
-    props.componentConfig.defaultObject3D.rotation.y,
-    props.componentConfig.defaultObject3D.rotation.z,
-  ]
-}
-let scale = [1, 1, 1]
-if (props.componentConfig?.defaultObject3D?.scale) {
-  scale = [
-    props.componentConfig.defaultObject3D.scale.x,
-    props.componentConfig.defaultObject3D.scale.y,
-    props.componentConfig.defaultObject3D.scale.z,
-  ]
-}
+const { target, state: transformState, position, rotation, scale } = createPreviewTransform(
+  pane,
+  props.componentConfig?.defaultObject3D,
+  props.componentConfig?.previewTransform === true,
+)
 </script>
 
 <template>
-  <Suspense>
-    <component
-      :is="foundComponent"
-      v-if="foundComponent"
-      ref="componentRef"
-      :position="position"
-      :rotation="rotation"
-      :scale="scale"
-      v-bind="attrsData"
-    />
-  </Suspense>
+  <TresGroup ref="target" :position="position" :rotation="rotation" :scale="scale">
+    <Suspense>
+      <component
+        :is="foundComponent"
+        v-if="foundComponent"
+        ref="componentRef"
+        v-bind="attrsData"
+      />
+    </Suspense>
+  </TresGroup>
+  <TransformControls
+    v-if="componentConfig?.previewTransform && target"
+    :object="target"
+    :mode="transformState.mode"
+    :space="transformState.space"
+  />
   <TresGridHelper v-if="defaultState.showGrid" :position-y="0.1" />
   <TresAxesHelper v-if="defaultState.showAxes" />
 </template>

@@ -76,6 +76,7 @@ const config = {
     {
       name: '献花卡片',
       type: 'flowerTributeCardComponent',
+      previewTransform: true,
       comFile: './src/components/flowerTributeCardComponent.vue',
       previewPath: './preview/flowerTributeCardComponent.png',
       description: '纪念主题献花卡片，红色镭射、五角星压纹与两行白色寄语；背面显示镜像图文。',

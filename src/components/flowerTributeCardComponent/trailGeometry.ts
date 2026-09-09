@@ -47,12 +47,11 @@ export function createTrailGeometry(height: number, radius: number, params: Card
       x = Math.sign(x) * (Math.min(Math.abs(x), hx - r) + cx * r / length)
       y = Math.sign(y) * (Math.min(Math.abs(y), hy - r) + cy * r / length)
     }
-    const seed = random()
     for (let j = 0; j < segments; j++) {
       const index = i * segments + j
       positions.set([x, y, 0], index * 3)
-      seeds[index] = seed
-      offsets[index] = j / segments
+      seeds[index] = random()
+      offsets[index] = (j + random()) / segments
       sizes[index] = 0.65 + random() * 0.6
     }
   }

@@ -25,7 +25,7 @@ const componentDescription = computed(() => componentConfig.value?.description?.
   <div class="preview-root">
     <TresCanvas clear-color="#333" window-size>
       <TresPerspectiveCamera :position="[5, 5, 5]" />
-      <OrbitControls />
+      <OrbitControls make-default />
       <TresAmbientLight :intensity="0.5" />
       <TresDirectionalLight :position="[10, 10, 10]" :intensity="1.5" />
       <templateComponet :componentConfig="componentConfig" />
