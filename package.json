@@ -22,6 +22,7 @@
     "@tresjs/post-processing": "latest",
     "concurrently": "^9.2.1",
     "express": "^5.2.1",
+    "html-to-image": "1.11.13",
     "json5": "^2.2.3",
     "naive-ui": "^2.43.2",
     "three": "^0.180.0",

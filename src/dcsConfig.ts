@@ -6,6 +6,7 @@
  * @LastEditors: 地虎降天龙
  * @LastEditTime: 2026-05-22 12:24:29
  */
+import { DOM_CANVAS_DEFAULTS } from './components/domCanvasComponent/defaults'
 import { CARD_TRAIL_DEFAULTS } from './components/flowerTributeCardComponent/defaults'
 import {
   GNM_EXPRESSION_OPTIONS,
@@ -73,6 +74,27 @@ const config = {
   </div>
 </div>`,
   components: [
+    {
+      name: 'dom-canvas',
+      type: 'domCanvasComponent',
+      previewTransform: true,
+      comFile: './src/components/domCanvasComponent.vue',
+      previewPath: './preview/domCanvasComponent.svg',
+      description: 'HTML 转 Canvas 纹理平面，支持透明背景、深度遮挡与普通元素 blur(px) 毛玻璃；仅展示，不执行 DOM 交互。',
+      default: { ...DOM_CANVAS_DEFAULTS },
+      defaultObject3D: {},
+      config: {
+        domContent: { name: 'HTML 内容', com: 'Text' },
+        pixelWidth: { name: '画布宽度(px)', com: 'Slider', min: 16, max: 2048, step: 1 },
+        pixelHeight: { name: '画布高度(px)', com: 'Slider', min: 16, max: 2048, step: 1 },
+        width: { name: '场景宽度', com: 'Slider', min: 0.1, max: 50, step: 0.1 },
+        pixelRatio: { name: '纹理清晰度倍率', com: 'Slider', min: 0.5, max: 4, step: 0.5 },
+        opacity: { name: '整体不透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        glass: { name: '场景毛玻璃', com: 'Switch' },
+        captureScale: { name: '毛玻璃采样倍率', com: 'Slider', min: 0.1, max: 1, step: 0.1 },
+        refreshKey: { name: '刷新标记(改变即刷新)', com: 'Slider', min: 0, max: 10000, step: 1 },
+      },
+    },
     {
       name: '献花卡片',
       type: 'flowerTributeCardComponent',
