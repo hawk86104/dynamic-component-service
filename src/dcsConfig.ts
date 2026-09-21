@@ -6,6 +6,7 @@
  * @LastEditors: 地虎降天龙
  * @LastEditTime: 2026-05-22 12:24:29
  */
+import { MECHANICAL_FLOOR_DEFAULTS } from './components/mechanicalFloorComponent/defaults'
 import { DOM_CANVAS_DEFAULTS } from './components/domCanvasComponent/defaults'
 import { CARD_TRAIL_DEFAULTS } from './components/flowerTributeCardComponent/defaults'
 import {
@@ -74,6 +75,26 @@ const config = {
   </div>
 </div>`,
   components: [
+    {
+      name: '机械科技地面',
+      type: 'mechanicalFloorComponent',
+      previewTransform: true,
+      comFile: './src/components/mechanicalFloorComponent.vue',
+      previewPath: './preview/mechanicalFloorComponent.svg',
+      description: '5×5 米模型模块实例化拼接，居中铺设、顶面 Y=0。保留原始纹理；环境反射需场景环境贴图。IOR 调整不透明表面的光学响应，不产生透视折射。',
+      default: { ...MECHANICAL_FLOOR_DEFAULTS },
+      defaultObject3D: {},
+      config: {
+        repeatWidth: { name: '宽向拼接块数', com: 'Slider', min: 1, max: 32, step: 1 },
+        repeatLength: { name: '长向拼接块数', com: 'Slider', min: 1, max: 32, step: 1 },
+        color: { name: '整体色调', com: 'ColorPicker' },
+        reflectivity: { name: '反光性（非金属高光）', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        roughness: { name: '粗糙性', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        metalness: { name: '金属性', com: 'Slider', min: 0, max: 1, step: 0.01 },
+        ior: { name: '环境折射度（IOR）', com: 'Slider', min: 1, max: 2.333, step: 0.01 },
+        envMapIntensity: { name: '环境反射强度', com: 'Slider', min: 0, max: 5, step: 0.05 },
+      },
+    },
     {
       name: 'dom-canvas',
       type: 'domCanvasComponent',
