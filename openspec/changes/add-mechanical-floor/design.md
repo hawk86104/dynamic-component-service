@@ -7,4 +7,6 @@
 ## Risks / Trade-offs
 实例化降低绘制提交开销，不减少三角形；32×32 全可见仍可能受 GPU 限制。分区裁剪改善局部视角，不能承诺固定帧率。需宿主环境贴图展示环境反射。
 ## Validation
+新增 textureContrast 通过片元着色器 uniform 调节底色采样，以白色为锚点：0 去除底色纹理明暗、1 保留原图、2 增强暗纹；保留 alpha 与法线。着色器片段独立存放于 src/shader/mechanicalFloorComponent，无自定义顶点着色器。emissiveIntensity 调节原始发光贴图强度，默认 1，范围 0–10。材质模块负责注入，仅更新 uniform，不重新编译或增加绘制提交。
+
 按用户项目规则不运行构建、服务或浏览器。检查模型 JSON、静态源代码、局部 lint 与 diff；实际画面及帧率留待运行验证。

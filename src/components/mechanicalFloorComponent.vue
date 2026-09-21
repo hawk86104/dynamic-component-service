@@ -4,10 +4,22 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js'
 import { getResUrl } from '../common/utils'
 import { MECHANICAL_FLOOR_DEFAULTS } from './mechanicalFloorComponent/defaults'
-import type { FloorOptions } from './mechanicalFloorComponent/defaults'
 import { createFloorRuntime, disposeSource } from './mechanicalFloorComponent/runtime'
 
-const props = withDefaults(defineProps<Partial<FloorOptions>>(), MECHANICAL_FLOOR_DEFAULTS)
+// Declare runtime props explicitly: imported type changes can leave stale
+// declarations during HMR even when the imported defaults have been updated.
+const props = defineProps({
+  repeatWidth: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.repeatWidth },
+  repeatLength: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.repeatLength },
+  color: { type: String, default: MECHANICAL_FLOOR_DEFAULTS.color },
+  textureContrast: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.textureContrast },
+  emissiveIntensity: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.emissiveIntensity },
+  reflectivity: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.reflectivity },
+  roughness: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.roughness },
+  metalness: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.metalness },
+  ior: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.ior },
+  envMapIntensity: { type: Number, default: MECHANICAL_FLOOR_DEFAULTS.envMapIntensity },
+})
 const emit = defineEmits<{ loadError: [error: unknown] }>()
 const runtime = shallowRef<ReturnType<typeof createFloorRuntime> | null>(null)
 let disposed = false
@@ -41,7 +53,7 @@ onMounted(async () => {
 watch(() => [props.repeatWidth, props.repeatLength], () => {
   runtime.value?.setLayout(props.repeatWidth, props.repeatLength)
 })
-watch(() => [props.color, props.reflectivity, props.roughness, props.metalness, props.ior, props.envMapIntensity], () => {
+watch(() => [props.color, props.textureContrast, props.emissiveIntensity, props.reflectivity, props.roughness, props.metalness, props.ior, props.envMapIntensity], () => {
   runtime.value?.setMaterial(props)
 })
 onBeforeUnmount(() => {

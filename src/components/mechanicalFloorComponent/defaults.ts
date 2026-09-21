@@ -2,6 +2,8 @@ export interface FloorOptions {
   repeatWidth: number
   repeatLength: number
   color: string
+  textureContrast: number
+  emissiveIntensity: number
   reflectivity: number
   roughness: number
   metalness: number
@@ -13,6 +15,8 @@ export const MECHANICAL_FLOOR_DEFAULTS: FloorOptions = {
   repeatWidth: 4,
   repeatLength: 4,
   color: '#ffffff',
+  textureContrast: 1,
+  emissiveIntensity: 1,
   reflectivity: 1,
   roughness: 0.88,
   metalness: 0.9,

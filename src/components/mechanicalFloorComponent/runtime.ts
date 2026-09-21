@@ -1,8 +1,9 @@
-import { Box3, Color, Group, InstancedMesh, Matrix4, Mesh, MeshPhysicalMaterial, MeshStandardMaterial, Texture, Vector3 } from 'three'
-import type { BufferGeometry, Material } from 'three'
+import { Box3, Color, Group, InstancedMesh, Matrix4, Mesh, MeshStandardMaterial, Texture, Vector3 } from 'three'
+import type { BufferGeometry, Material, MeshPhysicalMaterial } from 'three'
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { bounded, MECHANICAL_FLOOR_DEFAULTS as defaults } from './defaults'
 import type { FloorOptions } from './defaults'
+import { createFloorMaterial } from './material'
 
 // floor.glb is a 5 m module; its 4.996 m geometry leaves the intended seam.
 const TILE_PITCH = 5
@@ -35,7 +36,12 @@ export function disposeSource(scene: GLTF['scene']) {
 
 export function createFloorRuntime(scene: GLTF['scene']) {
   const group = new Group()
-  const parts: { geometry: BufferGeometry, material: MeshPhysicalMaterial, baseColor: Color }[] = []
+  const parts: {
+    geometry: BufferGeometry
+    material: MeshPhysicalMaterial
+    baseColor: Color
+    textureContrast: { value: number }
+  }[] = []
   scene.updateMatrixWorld(true)
   const bounds = new Box3().setFromObject(scene)
   const center = bounds.getCenter(new Vector3())
@@ -45,10 +51,8 @@ export function createFloorRuntime(scene: GLTF['scene']) {
     if (!(object.material instanceof MeshStandardMaterial)) { return }
     const geometry = object.geometry.clone().applyMatrix4(object.matrixWorld)
     geometry.translate(-center.x, -bounds.max.y, -center.z)
-    const material = new MeshPhysicalMaterial()
-    MeshStandardMaterial.prototype.copy.call(material, object.material)
-    material.defines = { STANDARD: '', PHYSICAL: '' }
-    parts.push({ geometry, material, baseColor: material.color.clone() })
+    const { material, textureContrast } = createFloorMaterial(object.material)
+    parts.push({ geometry, material, textureContrast, baseColor: material.color.clone() })
   })
   if (!parts.length) { throw new Error('floor.glb has no supported static PBR meshes') }
 
@@ -90,8 +94,10 @@ export function createFloorRuntime(scene: GLTF['scene']) {
 
   function setMaterial(options: FloorOptions) {
     const tint = new Color(options.color)
-    parts.forEach(({ material, baseColor }) => {
+    parts.forEach(({ material, baseColor, textureContrast }) => {
       material.color.copy(baseColor).multiply(tint)
+      textureContrast.value = bounded(options.textureContrast, 0, 2, defaults.textureContrast)
+      material.emissiveIntensity = bounded(options.emissiveIntensity, 0, 10, defaults.emissiveIntensity)
       material.roughness = bounded(options.roughness, 0, 1, defaults.roughness)
       material.metalness = bounded(options.metalness, 0, 1, defaults.metalness)
       material.specularIntensity = bounded(options.reflectivity, 0, 1, defaults.reflectivity)

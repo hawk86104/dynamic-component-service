@@ -88,6 +88,8 @@ const config = {
         repeatWidth: { name: '宽向拼接块数', com: 'Slider', min: 1, max: 32, step: 1 },
         repeatLength: { name: '长向拼接块数', com: 'Slider', min: 1, max: 32, step: 1 },
         color: { name: '整体色调', com: 'ColorPicker' },
+        textureContrast: { name: '纹理对比度（0 为纯色）', com: 'Slider', min: 0, max: 2, step: 0.01 },
+        emissiveIntensity: { name: '发光强度', com: 'Slider', min: 0, max: 10, step: 0.05 },
         reflectivity: { name: '反光性（非金属高光）', com: 'Slider', min: 0, max: 1, step: 0.01 },
         roughness: { name: '粗糙性', com: 'Slider', min: 0, max: 1, step: 0.01 },
         metalness: { name: '金属性', com: 'Slider', min: 0, max: 1, step: 0.01 },
