@@ -16,7 +16,7 @@ import {
 
 const config = {
   name: 'baseSample',
-  version: '2.2.2',
+  version: '3.0.0',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {
