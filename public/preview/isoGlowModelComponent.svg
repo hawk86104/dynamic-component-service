@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="372" viewBox="0 0 600 372" role="img" aria-label="IsoGlowModel 工程结构线风格示意图">
+  <defs>
+    <radialGradient id="bg"><stop stop-color="#242628"/><stop offset="1" stop-color="#121314"/></radialGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter>
+    <g id="bike" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="180" cy="242" rx="57" ry="68" transform="rotate(-17 180 242)"/>
+      <ellipse cx="419" cy="189" rx="57" ry="68" transform="rotate(-17 419 189)"/>
+      <path d="m180 242 49-106 45 88-94 18 177-142 62 89M229 136l128-36-83 124M357 100l-7-18 35-9M229 136l-8-20 30-7M274 224l29 14 14-4"/>
+      <ellipse cx="274" cy="224" rx="18" ry="22" transform="rotate(-17 274 224)"/>
+      <path d="m274 224 22-42 104-31M180 242l5-62M180 242l-36-20M180 242l-20 48M180 242l42 17M419 189l5-62M419 189l-36-20M419 189l-20 48M419 189l42 17" opacity=".55"/>
+      <path d="m185 245 49-106 45 88-94 18 177-142 62 89M234 139l128-36-83 124" opacity=".35"/>
+    </g>
+  </defs>
+  <rect width="600" height="372" fill="url(#bg)"/>
+  <g stroke="#899aab" stroke-width=".6" opacity=".12"><path d="m82 285 395-95M94 308l395-95M137 332l-69-129M210 314l-69-129M283 297l-69-129M356 279l-69-129M429 261l-69-129M502 243l-69-129"/></g>
+  <use href="#bike" stroke="#40464e" stroke-width="2"/>
+  <use href="#bike" stroke="#7b858f" stroke-width="1"/>
+  <path d="m403 146 17-4 4 9-17 4z" fill="#ff9d3c" opacity=".7" filter="url(#glow)"/>
+  <path d="m403 146 17-4 4 9-17 4z" fill="#ffbd76"/>
+  <g fill="#ffd7a0" font-family="monospace"><text x="30" y="40" font-size="16" letter-spacing="3">ISO-GLOW</text><text x="30" y="61" font-size="8" opacity=".6" letter-spacing="2">MODEL / STRUCTURE / LIGHT</text></g>
+  <g fill="#8494a6" font-family="sans-serif" font-size="10"><text x="30" y="344">工程结构线 · 非破坏性材质</text><text x="528" y="344">风格示意</text></g>
+</svg>

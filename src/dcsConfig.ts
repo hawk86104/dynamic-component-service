@@ -7,6 +7,7 @@
  * @LastEditTime: 2026-05-22 12:24:29
  */
 import { MECHANICAL_FLOOR_DEFAULTS } from './components/mechanicalFloorComponent/defaults'
+import { ISO_GLOW_DEFAULTS } from './components/isoGlowModelComponent/defaults'
 import { DOM_CANVAS_DEFAULTS } from './components/domCanvasComponent/defaults'
 import { CARD_TRAIL_DEFAULTS } from './components/flowerTributeCardComponent/defaults'
 import {
@@ -75,6 +76,37 @@ const config = {
   </div>
 </div>`,
   components: [
+    {
+      name: 'IsoGlowModel 三维模型风格化',
+      type: 'isoGlowModelComponent',
+      comFile: './src/components/isoGlowModelComponent/index.vue',
+      previewPath: './preview/isoGlowModelComponent.svg',
+      description: '在线 GLB 非破坏性风格化。ISO-GLOW：暗色实体、细轮廓与局部暖光；工程蓝图：表面排线与隐藏结构虚线；X-Ray：边缘增强的透明壳层与内部结构。颜色、透明度和发光沿用现有参数，切换预设不改写参数值。关闭风格化恢复原始材质。模型及外部资源须允许 CORS；相机、灯光和后处理由宿主管理。',
+      default: { ...ISO_GLOW_DEFAULTS },
+      defaultObject3D: {},
+      config: {
+        modelUrl: { name: 'GLB URL（必填）', com: 'Text', group: '基础' },
+        enabled: { name: '开启风格化', com: 'Switch', group: '基础' },
+        stylePreset: {
+          name: '风格预设',
+          com: 'Select',
+          group: '风格',
+          options: [
+            { label: 'ISO-GLOW', value: 'iso-glow' },
+            { label: '工程蓝图', value: 'blueprint' },
+            { label: 'X-Ray', value: 'x-ray' },
+          ],
+        },
+        surfaceColor: { name: '表面颜色', com: 'ColorPicker', group: '表面' },
+        surfaceOpacity: { name: '表面透明度', com: 'Slider', min: 0, max: 1, step: 0.01, group: '表面' },
+        showEdges: { name: '显示结构线', com: 'Switch', group: '结构线' },
+        edgeColor: { name: '结构线颜色', com: 'ColorPicker', group: '结构线' },
+        edgeOpacity: { name: '结构线透明度', com: 'Slider', min: 0, max: 1, step: 0.01, group: '结构线' },
+        edgeThreshold: { name: '边缘阈值（度）', com: 'Slider', min: 0, max: 180, step: 1, group: '结构线' },
+        emissiveColor: { name: '自发光颜色', com: 'ColorPicker', group: '发光' },
+        emissiveIntensity: { name: '自发光强度', com: 'Slider', min: 0, max: 10, step: 0.01, group: '发光' },
+      },
+    },
     {
       name: '机械科技地面',
       type: 'mechanicalFloorComponent',
