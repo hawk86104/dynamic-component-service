@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-label="三维视频投影示意图">
+  <defs>
+    <radialGradient id="bg"><stop stop-color="#14334b"/><stop offset="1" stop-color="#07121e"/></radialGradient>
+    <linearGradient id="video" x2="1" y2="1"><stop stop-color="#26e3ca"/><stop offset=".5" stop-color="#287fe9"/><stop offset="1" stop-color="#7b65ff"/></linearGradient>
+    <linearGradient id="beam"><stop stop-color="#36d9ef" stop-opacity=".03"/><stop offset="1" stop-color="#36d9ef" stop-opacity=".2"/></linearGradient>
+    <clipPath id="surfaces"><path d="M255 78 550 113 550 250 255 215Z M215 225 455 290 550 250 255 215Z"/></clipPath>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <g stroke="#33566c" stroke-width="1" fill="none" opacity=".5">
+    <path d="M130 235 420 320 595 248 M170 218 460 303 M210 201 500 286 M250 184 540 269 M290 167 580 252"/>
+    <path d="m190 253 175-85 m55 152 175-85 m-230 70 175-85 m-230 70 175-85"/>
+  </g>
+  <path d="m111 171 144-93 295 35v137l-95 40Z" fill="url(#beam)"/>
+  <path d="M255 78 550 113 550 250 255 215Z" fill="#203347" stroke="#6d97b4"/>
+  <path d="M215 225 455 290 550 250 255 215Z" fill="#1a3449" stroke="#6d97b4"/>
+  <g clip-path="url(#surfaces)" opacity=".85">
+    <path d="M255 88 535 121v123l-89 33-218-54Z" fill="url(#video)"/>
+    <g fill="none" stroke="#b5fff1" stroke-width="6" opacity=".65">
+      <path d="M245 170q70-100 125-10t180-8 M220 220q70-100 125-10t180-8 M200 270q70-100 125-10t180-8"/>
+    </g>
+    <path d="m352 163 39 4 20 79-47-13Z" fill="#142d43" opacity=".65"/>
+  </g>
+  <path d="m292 176 45-27 53 12-44 28Z" fill="#70dfef" stroke="#b5f7ff"/>
+  <path d="m292 176 54 13v66l-54-16Z" fill="#3189cd" stroke="#b5f7ff"/>
+  <path d="m346 189 44-28v65l-44 29Z" fill="#5253aa" stroke="#b5f7ff"/>
+  <circle cx="447" cy="229" r="32" fill="url(#video)" stroke="#b5f7ff"/>
+  <path d="M426 205q40 10 36 45 M417 227q30 20 59 1" fill="none" stroke="#bdfff2" stroke-width="4" opacity=".75"/>
+  <g fill="none" stroke="#35e0ed" stroke-width="1.3" opacity=".7">
+    <path d="m111 171 144-93 295 35v137l-95 40-344-119 439-58 M111 171l144 44 295 35"/>
+  </g>
+  <path d="m72 157 29-12 24 11v32l-24 9-29-14Z" fill="#174b63" stroke="#66edff" stroke-width="2"/>
+  <ellipse cx="112" cy="171" rx="7" ry="11" fill="#b1ffff"/>
+  <text x="34" y="39" fill="#d5f9ff" font-family="sans-serif" font-size="19" font-weight="600">3D VIDEO PROJECTION</text>
+  <text x="34" y="333" fill="#84afc9" font-family="sans-serif" font-size="13">PERSPECTIVE · SURFACE MAPPING · OCCLUSION</text>
+</svg>

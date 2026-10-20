@@ -10,6 +10,7 @@ import { MECHANICAL_FLOOR_DEFAULTS } from './components/mechanicalFloorComponent
 import { ISO_GLOW_DEFAULTS } from './components/isoGlowModelComponent/defaults'
 import { DOM_CANVAS_DEFAULTS } from './components/domCanvasComponent/defaults'
 import { CARD_TRAIL_DEFAULTS } from './components/flowerTributeCardComponent/defaults'
+import { VIDEO_3D_DEFAULTS } from './components/video3DProjectionComponent/defaults'
 import {
   GNM_EXPRESSION_OPTIONS,
   GNM_HEAD_DEFAULTS,
@@ -1884,6 +1885,60 @@ const config = {
         opacity: { name: '视频透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
         videoTint: { name: '视频染色', com: 'ColorPicker' },
         frustumColor: { name: '视锥颜色', com: 'ColorPicker' },
+      },
+    },
+    {
+      name: '三维视频投影',
+      type: 'video3DProjectionComponent',
+      comFile: './src/components/video3DProjectionComponent.vue',
+      previewPath: './preview/video3DProjectionComponent.svg',
+      description: '参考 <a href="https://github.com/hh-hang/vid3d-projection" target="_blank" rel="noopener noreferrer">vid3d-projection</a> 的 Three.js 视频融合：画面贴合墙面、地面与立体模型，支持真实遮挡。关闭演示接收体即可投射宿主场景；目标名称留空时接收全部可见网格，可填写模型父级名称或 UUID（逗号分隔）。',
+      default: { ...VIDEO_3D_DEFAULTS },
+      defaultObject3D: {
+        position: { x: 0, y: 2.5, z: 3 },
+        scale: { x: 1, y: 1, z: 1 },
+        rotation: { x: 0, y: 0, z: 0 },
+      },
+      previewTransform: true,
+      config: {
+        enabled: { name: '启用投影', com: 'Switch', group: '投影目标' },
+        showDemoReceivers: { name: '演示接收体', com: 'Switch', group: '投影目标' },
+        targetNames: { name: '目标名称/UUID', com: 'Text', group: '投影目标' },
+        videoUrl: { name: '视频地址', com: 'Text', group: '视频' },
+        autoplay: { name: '自动播放', com: 'Switch', group: '视频' },
+        loop: { name: '循环播放', com: 'Switch', group: '视频' },
+        videoPlay: { name: '播放', com: 'ActionButton', action: 'videoPlay', group: '视频' },
+        videoPause: { name: '暂停', com: 'ActionButton', action: 'videoPause', group: '视频' },
+        videoStop: { name: '停止', com: 'ActionButton', action: 'videoStop', group: '视频' },
+        angle: { name: '水平张角°', com: 'Slider', min: 1, max: 120, step: 0.1, group: '投影相机' },
+        angle2: { name: '垂直张角°', com: 'Slider', min: 1, max: 120, step: 0.1, group: '投影相机' },
+        heading: { name: '方向角°', com: 'Slider', min: -180, max: 180, step: 0.1, group: '投影相机' },
+        pitch: { name: '俯仰角°', com: 'Slider', min: -89, max: 89, step: 0.1, group: '投影相机' },
+        roll: { name: '横滚角°', com: 'Slider', min: -180, max: 180, step: 0.1, group: '投影相机' },
+        near: { name: '近裁剪面', com: 'Slider', min: 0.01, max: 5, step: 0.01, group: '投影相机' },
+        distance: { name: '投射距离', com: 'Slider', min: 0.1, max: 100, step: 0.1, group: '投影相机' },
+        showFrustum: { name: '视锥线框', com: 'Switch', group: '投影相机' },
+        frustumColor: { name: '视锥颜色', com: 'ColorPicker', group: '投影相机' },
+        flipX: { name: '水平镜像', com: 'Switch', group: '画面' },
+        stRotationDegree: { name: '视频旋转°', com: 'Slider', min: 0, max: 360, step: 1, group: '画面' },
+        opacity: { name: '视频透明度', com: 'Slider', min: 0, max: 1, step: 0.01, group: '画面' },
+        intensity: { name: '投影强度', com: 'Slider', min: 0, max: 5, step: 0.05, group: '画面' },
+        edgeFeather: { name: '边缘羽化', com: 'Slider', min: 0, max: 0.3, step: 0.005, group: '画面' },
+        videoTint: { name: '视频染色', com: 'ColorPicker', group: '画面' },
+        enableOcclusion: { name: '遮挡剔除', com: 'Switch', group: '遮挡' },
+        depthBias: { name: '深度偏移', com: 'Slider', min: 0, max: 0.02, step: 0.0001, group: '遮挡' },
+        depthResolution: {
+          name: '深度分辨率',
+          com: 'Select',
+          group: '遮挡',
+          options: [
+            { label: '256', value: 256 },
+            { label: '512', value: 512 },
+            { label: '1024', value: 1024 },
+            { label: '2048', value: 2048 },
+            { label: '4096', value: 4096 },
+          ],
+        },
       },
     },
     {
