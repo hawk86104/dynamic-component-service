@@ -11,16 +11,14 @@ export interface NeonDonutOptions {
   bevel: number
   opacity: number
   glowIntensity: number
+  reflectionStrength: number
+  roughness: number
   useDataColors: boolean
   palette: string
   showLabels: boolean
   showSummary: boolean
   labelSize: number
   textColor: string
-  showBase: boolean
-  showGrid: boolean
-  baseColor: string
-  gridColor: string
 }
 
 export const NEON_DONUT_DEFAULTS: NeonDonutOptions = {
@@ -44,16 +42,14 @@ export const NEON_DONUT_DEFAULTS: NeonDonutOptions = {
   gapAngle: 3,
   startAngle: 155,
   bevel: 0.045,
-  opacity: 0.82,
-  glowIntensity: 0.65,
+  opacity: 0.64,
+  glowIntensity: 0.5,
+  reflectionStrength: 1.2,
+  roughness: 0.18,
   useDataColors: true,
   palette: 'neon',
   showLabels: false,
   showSummary: true,
   labelSize: 0.8,
   textColor: '#f0f8ff',
-  showBase: true,
-  showGrid: true,
-  baseColor: '#101c2a',
-  gridColor: '#345064',
 }

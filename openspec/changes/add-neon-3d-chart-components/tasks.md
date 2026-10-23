@@ -14,7 +14,14 @@
 - [x] 3.1 同步组件默认值、dcsConfig 注册/面板，添加两张 SVG 和参数/数据文档。
 - [x] 3.2 执行定向 lint、纯数据/几何测试与 OpenSpec 校验，确认公共预览文件未变；记录按 AGENTS.md 跳过的构建/浏览器验证。
 
-## 验证结果
+## 4. 环图无底座与玻璃质感调整
+
+- [x] 4.1 删除环图底座、网格及四项对应参数，扇区和标注移除底座抬升量；源码与面板扫描可验证。
+- [x] 4.2 实现平滑倒角法线、视角相关反射、Fresnel 通透层次与磨砂纹理，同步反射/磨砂默认值和控件。
+- [x] 4.3 同步环图 SVG、参数文档与规格，保留面积图及共享预览层现有行为。
+- [x] 4.4 执行定向静态检查、既有数据/几何测试和 OpenSpec 校验；记录未运行的构建与浏览器验证。
+
+## 初次实现验证结果
 
 - `node --test tests/neonCharts.test.mjs`：11 项通过，0 失败/跳过。
 - `vue-tsc --noEmit --pretty false`：通过。
@@ -23,3 +30,11 @@
 - `openspec validate add-neon-3d-chart-components --strict`：通过。
 - `git diff --check`、两张 SVG 的 XML 校验：通过；通用预览视图、依赖声明和锁文件无修改。
 - 按 `AGENTS.md` 未运行构建、开发/预览服务或浏览器视觉验证；未宣称截图一致性或 WebGL 实机验证通过。
+
+## 环图质感调整验证结果
+
+- 既有 `tests/neonCharts.test.mjs`：11 项通过；`vue-tsc --noEmit --pretty false` 和环图目录定向 ESLint 通过。
+- `src/dcsConfig.ts` 与 HEAD 基线逐项比较，均为 208 项存量 lint 错误，新增诊断为 0。
+- OpenSpec 严格校验、`git diff --check` 和环图 SVG XML 校验通过；源码扫描确认环图组件及 shader 中没有底座调用或四项底座参数。
+- 面积图源码、共享图表工具、通用预览视图、依赖声明和锁文件无修改。
+- 遵守 `AGENTS.md`，未运行构建、服务或浏览器调试；玻璃 shader 的实际 WebGL 编译与视觉效果未经浏览器验证。

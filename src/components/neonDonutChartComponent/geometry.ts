@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js'
 
 export function createDonutSector(innerRadius: number, radius: number, height: number, start: number, end: number, bevel: number) {
   const finish = Math.min(end, start + Math.PI * 2 - 0.00001)
@@ -10,7 +11,7 @@ export function createDonutSector(innerRadius: number, radius: number, height: n
   shape.closePath()
   const candidateBevel = Math.min(bevel, (radius - innerRadius) * 0.15, height * 0.2, (finish - start) * innerRadius * 0.15)
   const safeBevel = candidateBevel > 0.0001 ? candidateBevel : 0
-  const geometry = new THREE.ExtrudeGeometry(shape, {
+  let geometry: THREE.BufferGeometry = new THREE.ExtrudeGeometry(shape, {
     depth: height,
     bevelEnabled: safeBevel > 0,
     bevelSize: safeBevel,
@@ -21,6 +22,15 @@ export function createDonutSector(innerRadius: number, radius: number, height: n
   })
   geometry.rotateX(-Math.PI / 2)
   geometry.translate(0, safeBevel, 0)
+  if (safeBevel > 0) {
+    // ExtrudeGeometry splits each face; join bevel vertices for continuous glass reflections.
+    const facetedGeometry = geometry
+    geometry.deleteAttribute('normal')
+    geometry.deleteAttribute('uv')
+    geometry = mergeVertices(geometry, Math.min(0.00001, safeBevel * 0.01))
+    geometry.computeVertexNormals()
+    facetedGeometry.dispose()
+  }
   geometry.computeBoundingBox()
   return { geometry, top: height + safeBevel * 2 }
 }

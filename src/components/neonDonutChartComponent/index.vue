@@ -6,7 +6,7 @@ import { onBeforeUnmount, onMounted, ref, shallowRef, watch } from 'vue'
 import fragmentShader from '../../shader/neonDonutChartComponent/chart.frag?raw'
 import vertexShader from '../../shader/neonDonutChartComponent/chart.vert?raw'
 import { bounded, parseDonutData } from '../chart3d/data'
-import { addLine, addStage, clearChart, createLabel } from '../chart3d/scene'
+import { addLine, clearChart, createLabel } from '../chart3d/scene'
 import { NEON_DONUT_DEFAULTS } from './defaults'
 import { createDonutSector, sectorOutline } from './geometry'
 
@@ -51,8 +51,10 @@ function rebuild() {
   const inner = radius * bounded(props.innerRatio, 0.15, 0.85, 0.56)
   const height = bounded(props.height, 0.1, 8, 1.75)
   const minHeight = bounded(props.minHeight, 0.05, height, 0.45)
-  const opacity = bounded(props.opacity, 0.1, 1, 0.82)
-  const glow = bounded(props.glowIntensity, 0, 3, 0.65)
+  const opacity = bounded(props.opacity, 0.1, 1, NEON_DONUT_DEFAULTS.opacity)
+  const glow = bounded(props.glowIntensity, 0, 3, NEON_DONUT_DEFAULTS.glowIntensity)
+  const reflection = bounded(props.reflectionStrength, 0, 3, NEON_DONUT_DEFAULTS.reflectionStrength)
+  const roughness = bounded(props.roughness, 0, 1, NEON_DONUT_DEFAULTS.roughness)
   const labelSize = bounded(props.labelSize, 0.3, 2, 0.8)
   const palette = palettes[props.palette] || palettes.neon
   const items = data.value.items.filter(item => item.value > 0)
@@ -63,15 +65,6 @@ function rebuild() {
     value: item.value,
     color: props.useDataColors && item.color ? item.color : palette[index % palette.length],
   }))
-  addStage(group, {
-    width: (radius + 0.3) * 2,
-    depth: (radius + 0.3) * 2,
-    baseColor: props.baseColor,
-    gridColor: props.gridColor,
-    showBase: props.showBase,
-    showGrid: props.showGrid,
-    round: true,
-  })
   let cursor = THREE.MathUtils.degToRad(bounded(props.startAngle, -360, 360, 155))
   items.forEach((item, index) => {
     const span = item.value / total * Math.PI * 2
@@ -94,24 +87,36 @@ function rebuild() {
         uHeight: { value: top },
         uOpacity: { value: opacity },
         uGlow: { value: glow },
+        uReflectionStrength: { value: reflection },
+        uRoughness: { value: roughness },
+        uThickness: { value: radius - inner },
       },
       transparent: opacity < 1,
       depthWrite: opacity >= 1,
+      side: opacity < 1 ? THREE.DoubleSide : THREE.FrontSide,
+      forceSinglePass: false,
       toneMapped: false,
     }))
-    mesh.position.y = 0.24
     mesh.name = `DonutSector_${item.id}`
     mesh.userData.chartItem = { ...item, percentage: item.value / total * 100 }
     group.add(mesh)
     const highlight = `#${new THREE.Color(rows[index].color).lerp(new THREE.Color('#ffffff'), 0.36).getHexString()}`
-    addLine(group, sectorOutline(inner, radius, top + 0.245, start, end), highlight, Math.min(1, 0.3 + glow), true)
-    const anchor = new THREE.Vector3(Math.cos(middle) * (inner + radius) / 2, top + 0.3, -Math.sin(middle) * (inner + radius) / 2)
+    addLine(group, sectorOutline(inner, radius, top + 0.005, start, end), highlight, Math.min(1, 0.2 + glow * 0.5), true)
+    addLine(group, sectorOutline(inner, radius, 0.005, start, end), rows[index].color, Math.min(0.5, 0.1 + glow * 0.15), true)
+    for (const angle of [start, end]) {
+      for (const edgeRadius of [inner, radius]) {
+        const x = Math.cos(angle) * edgeRadius
+        const z = -Math.sin(angle) * edgeRadius
+        addLine(group, [new THREE.Vector3(x, 0.005, z), new THREE.Vector3(x, top, z)], highlight, Math.min(0.55, 0.1 + glow * 0.15))
+      }
+    }
+    const anchor = new THREE.Vector3(Math.cos(middle) * (inner + radius) / 2, top + 0.06, -Math.sin(middle) * (inner + radius) / 2)
     const marker = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.8, toneMapped: false }))
     marker.position.copy(anchor)
     group.add(marker)
     if (props.showLabels) {
       const label = createLabel(item.name, `${(item.value / total * 100).toFixed(1)}%`, props.textColor, labelSize)
-      label.position.set(Math.cos(middle) * (radius + 0.6), top + 0.65, -Math.sin(middle) * (radius + 0.6))
+      label.position.set(Math.cos(middle) * (radius + 0.6), top + 0.41, -Math.sin(middle) * (radius + 0.6))
       addLine(group, [anchor, label.position.clone().add(new THREE.Vector3(0, -0.15, 0))], highlight, 0.5)
       group.add(label)
     }
@@ -122,7 +127,7 @@ function rebuild() {
       summaryRows.push({ name: '其余分类', value: rows.slice(5).reduce((sum, row) => sum + row.value, 0), color: '#9caec0' })
     }
     const summary = createLabel(data.value.title, `${total.toLocaleString('en-US')} ${data.value.unit}`, props.textColor, labelSize * 1.65, summaryRows)
-    summary.position.set(radius + 0.65, height * 0.75 + 0.45, -radius * 0.35)
+    summary.position.set(radius + 0.65, height * 0.75 + 0.21, -radius * 0.35)
     group.add(summary)
   }
 }
