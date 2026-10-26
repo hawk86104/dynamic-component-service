@@ -65,6 +65,8 @@ const geometry = await load('src/components/elementalCards/geometry.ts')
 const { CardClock, createCardRuntime } = await load('src/components/elementalCards/runtime.ts')
 const { ELEMENTAL_CARD_ENTRIES } = await load('src/components/elementalCards/catalog.ts')
 const { solarBoundary } = await load('src/components/elementalCards/solar/geometry.ts')
+const { breezeStreamPoint } = await load('src/components/elementalCards/breeze/geometry.ts')
+const { bloomPetalProfile, bloomOpening, createPetalGeometry } = await load('src/components/elementalCards/bloom/geometry.ts')
 for (const [width, height] of [[0.3, 12], [0.54, 0.6], [1.45, 2.45], [8, 12]]) {
   const shoulder = (height - width) * 0.5
   for (let i = 0; i <= 720; i++) {
@@ -133,8 +135,92 @@ function validShaders(material) {
     for (const [, chunk] of source.matchAll(/#include\s+<(\w+)>/g)) {
       assert.ok(chunk in THREE.ShaderChunk, `Unknown shader chunk: ${chunk}`)
     }
+    for (const [, name] of source.matchAll(/uniform\s+\w+\s+(u\w+)(?:\s*\[[^\]]+\])?\s*;/g)) {
+      assert.ok(name in material.uniforms, `Missing shader uniform: ${name}`)
+      const value = material.uniforms[name].value
+      if (typeof value === 'number') { assert.ok(Number.isFinite(value), `Non-finite uniform ${name}`) }
+    }
   }
 }
+
+function validAttributes(object) {
+  if (!object.geometry || !object.material) { return }
+  const materials = Array.isArray(object.material) ? object.material : [object.material]
+  for (const material of materials) {
+    if (!material.isShaderMaterial) { continue }
+    for (const [, type, name] of material.vertexShader.matchAll(/attribute\s+(float|vec[234])\s+(a\w+)\s*;/g)) {
+      const attribute = object.geometry.getAttribute(name)
+      assert.ok(attribute, `Missing shader attribute: ${name}`)
+      assert.equal(attribute.itemSize, type === 'float' ? 1 : Number(type.at(-1)))
+    }
+  }
+}
+
+function capsuleDistance(point, width, height) {
+  const shoulder = (height - width) * 0.5
+  return Math.hypot(point.x, point.y - Math.max(-shoulder, Math.min(shoulder, point.y))) - width * 0.5
+}
+for (const [width, height] of [[0.3, 12], [0.54, 0.6], [1.45, 2.45], [8, 12]]) {
+  const options = { ...defaults.BREEZE_CARD_DEFAULTS, width, height }
+  for (const lane of [0, 0.2, 0.9]) {
+    for (const side of [-1, 1]) {
+      let previousX = -Infinity
+      for (let step = 0; step <= 1000; step++) {
+        const u = step / 1000
+        const point = breezeStreamPoint(u, options, lane, side, 0.37)
+        assert.ok(point.toArray().every(Number.isFinite))
+        assert.ok(capsuleDistance(point, width, height) >= width * 0.021, 'Wind centerlines must clear the opaque capsule at all supported aspect ratios')
+        assert.ok(point.x >= previousX - 1e-7, 'Both wind branches must pass from left to right')
+        previousX = point.x
+      }
+      for (const seam of [0.28, 0.72]) {
+        const a = breezeStreamPoint(seam - 1e-7, options, lane, side, 0.37)
+        const b = breezeStreamPoint(seam + 1e-7, options, lane, side, 0.37)
+        assert.ok(a.distanceTo(b) < height * 1e-5, 'Wind inlets and arcs must join continuously')
+      }
+    }
+  }
+}
+const flowerBox = new THREE.Box3()
+for (const [width, height, petalCount, petalCurl, petalDepth, petalHeight] of [
+  [1.45, 2.45, 9, 0.35, 0.32, 1],
+  [0.3, 12, 6, 0, 0.05, 0.4],
+  [0.54, 0.6, 7, 0.8, 0.8, 1.6],
+  [8, 12, 24, 0.8, 0.8, 1.6],
+]) {
+  const options = defaults.sanitizeCardOptions({ ...defaults.BLOOM_CARD_DEFAULTS, width, height, petalCount, petalCurl, petalDepth, petalHeight }, defaults.BLOOM_CARD_DEFAULTS, defaults.BLOOM_CARD_RANGES)
+  for (let index = 0; index < petalCount; index++) {
+    const { geometry: petal, center } = createPetalGeometry(options, index)
+    finiteGeometry(petal)
+    const position = petal.getAttribute('position')
+    const closed = petal.getAttribute('aClosed')
+    const point = new THREE.Vector3()
+    for (let vertex = 0; vertex < position.count; vertex++) {
+      point.fromBufferAttribute(position, vertex).add(center)
+      if (petalCount === 9) { flowerBox.expandByPoint(point) }
+      if (capsuleDistance(point, options.width, options.height) < -1e-5) {
+        assert.ok(point.z < -options.thickness * 0.5, 'Visible petal roots must remain behind the opaque card')
+      }
+      point.fromBufferAttribute(closed, vertex).add(center)
+      assert.ok(capsuleDistance(point, options.width, options.height) < 0, 'Closed petals must fit behind the card silhouette')
+      assert.ok(point.z < -options.thickness * 0.5)
+    }
+    petal.dispose()
+  }
+}
+const flowerSize = flowerBox.getSize(new THREE.Vector3())
+assert.ok(flowerSize.x / defaults.BLOOM_CARD_DEFAULTS.width > 2.4 && flowerSize.x / defaults.BLOOM_CARD_DEFAULTS.width < 2.7, 'Default lotus width must match the reference silhouette estimate')
+assert.ok(flowerBox.max.y / defaults.BLOOM_CARD_DEFAULTS.height > 0.61 && flowerBox.max.y / defaults.BLOOM_CARD_DEFAULTS.height < 0.67)
+assert.ok(flowerBox.min.y / defaults.BLOOM_CARD_DEFAULTS.height > -0.59 && flowerBox.min.y / defaults.BLOOM_CARD_DEFAULTS.height < -0.5)
+assert.ok(flowerSize.z > defaults.BLOOM_CARD_DEFAULTS.width * 0.35, 'Lotus layers must carry actual spatial depth')
+const central = bloomPetalProfile(defaults.BLOOM_CARD_DEFAULTS, 0)
+const lateral = bloomPetalProfile(defaults.BLOOM_CARD_DEFAULTS, 5)
+const low = bloomPetalProfile(defaults.BLOOM_CARD_DEFAULTS, 7)
+assert.ok(central.curve.getPoint(1).y > lateral.curve.getPoint(1).y && lateral.curve.getPoint(1).y > low.curve.getPoint(1).y)
+assert.ok(low.halfWidth > central.halfWidth, 'Lower petals must be broader than the central high petal')
+assert.ok(bloomOpening(0.15, defaults.BLOOM_CARD_DEFAULTS, central.delay) > bloomOpening(0.15, defaults.BLOOM_CARD_DEFAULTS, low.delay))
+assert.equal(bloomOpening(0, { ...defaults.BLOOM_CARD_DEFAULTS, openingDuration: 0 }), 1)
+process.stdout.write(`Wind paths clear the capsule; lotus bounds: ${(flowerSize.x / defaults.BLOOM_CARD_DEFAULTS.width).toFixed(3)} card widths, Y ${(flowerBox.min.y / defaults.BLOOM_CARD_DEFAULTS.height).toFixed(3)}..${(flowerBox.max.y / defaults.BLOOM_CARD_DEFAULTS.height).toFixed(3)} card heights.\n`)
 const camera = new THREE.PerspectiveCamera(50, 1.5, 0.1, 100)
 camera.position.set(2.5, 1.5, 7)
 camera.lookAt(0, 0, 0)
@@ -274,10 +360,109 @@ for (const entry of cases) {
     assert.equal(runtime.root.getObjectByName('solar-corona-core').material.uniforms.uTime.value, 0)
     runtime.update(1, camera, renderer)
   }
-  else {
-    assert.equal(factory.ownsRim, undefined)
-    assert.equal(factory.createParticles, undefined)
-    assert.equal(factory.timeScale, undefined)
+  else if (kind === 'breeze') {
+    assert.equal(factory.ownsRim, true)
+    const streams = runtime.root.getObjectByName('breeze-white-streams')
+    const tails = runtime.root.getObjectByName('breeze-soft-trails')
+    const rim = runtime.root.getObjectByName('breeze-edge-current')
+    const glow = runtime.root.getObjectByName('breeze-edge-glow')
+    const motes = runtime.root.getObjectByName('breeze-curled-motes')
+    assert.ok(streams && tails && rim && glow && motes)
+    assert.equal(streams.geometry, tails.geometry)
+    assert.equal(rim.geometry, glow.geometry)
+    assert.equal(streams.geometry.getAttribute('position').count, initial.streamCount * 226)
+    assert.equal(motes.geometry.getAttribute('position').count, initial.particleCount)
+    const field = streams.geometry.getAttribute('position').array.slice()
+    const particlePositions = motes.geometry.getAttribute('position').array.slice()
+    const phase = streams.material.uniforms.uTime.value
+    const beforeGeometry = resources(runtime.root).geometries
+    runtime.configure({ ...initial, flowSpeed: 0, trailLength: 0.35, trailGlow: 0, rimIntensity: 0, curlRatio: 0.3 })
+    runtime.update(2, camera, renderer)
+    assert.equal(streams.material.uniforms.uTime.value, phase)
+    assert.equal(motes.material.uniforms.uTime.value, phase)
+    assert.deepEqual(motes.geometry.getAttribute('position').array, particlePositions, 'Wind speed zero must freeze CPU particle positions too')
+    assert.equal(streams.material.uniforms.uTrailLength.value, 0.35)
+    assert.equal(motes.material.uniforms.uCurlRatio.value, 0.3)
+    assert.equal(tails.visible, false)
+    assert.equal(rim.visible, false)
+    assert.equal(glow.visible, false)
+    for (const buffer of beforeGeometry) { assert.ok(resources(runtime.root).geometries.has(buffer), 'Wind style edits must retain geometry') }
+    runtime.configure({ ...initial, flowSpeed: 2 })
+    runtime.update(2.25, camera, renderer)
+    assert.equal(streams.material.uniforms.uTime.value, phase + 0.5)
+    assert.notDeepEqual(motes.geometry.getAttribute('position').array, particlePositions)
+    assert.deepEqual(streams.geometry.getAttribute('position').array, field, 'The full wind field must not rotate with its moving segments')
+    let released = 0
+    streams.geometry.addEventListener('dispose', () => { released++ })
+    runtime.configure({ ...initial, flowSpeed: 0, streamCount: initial.streamCount + 2 })
+    runtime.update(2.5, camera, renderer)
+    assert.equal(released, 1, 'Shared wind core/tail geometry must be disposed once')
+    const rebuilt = runtime.root.getObjectByName('breeze-white-streams')
+    assert.equal(rebuilt.geometry.getAttribute('position').count, (initial.streamCount + 2) * 226)
+    assert.equal(rebuilt.material.uniforms.uTime.value, phase + 0.5)
+    runtime.configure({ ...initial, effectIntensity: 0 })
+    assert.equal(runtime.root.getObjectByName('breeze-wind-field').visible, false)
+    assert.equal(motes.parent.visible, false)
+    runtime.configure(initial)
+    runtime.update(0, camera, renderer)
+    assert.equal(runtime.root.getObjectByName('breeze-white-streams').material.uniforms.uTime.value, 0)
+    runtime.update(1, camera, renderer)
+  }
+  else if (kind === 'bloom') {
+    assert.equal(factory.ownsRim, true)
+    const petal = runtime.root.getObjectByName('bloom-petal-1')
+    const glow = runtime.root.getObjectByName('bloom-petal-glow-1')
+    const motes = runtime.root.getObjectByName('bloom-petal-flakes-and-hearts')
+    assert.ok(petal && glow && motes && runtime.root.getObjectByName('bloom-pearl-rim'))
+    assert.equal(petal.geometry, glow.geometry)
+    assert.equal(petal.material.blending, THREE.NormalBlending)
+    assert.equal(glow.material.blending, THREE.AdditiveBlending)
+    assert.equal(petal.material.depthTest, true)
+    assert.equal(petal.material.depthWrite, false)
+    assert.equal(petal.renderOrder, 0)
+    const phase = petal.material.uniforms.uTime.value
+    const openCenter = petal.position.clone()
+    const beforeGeometry = resources(runtime.root).geometries
+    runtime.configure({ ...initial, bloomSpeed: 0, bloomAmount: 0.45, edgeBrightness: 2, veinStrength: 0.7, heartRatio: 0.4 })
+    runtime.update(2, camera, renderer)
+    assert.equal(petal.material.uniforms.uTime.value, phase)
+    assert.equal(motes.material.uniforms.uTime.value, phase)
+    assert.equal(petal.material.uniforms.uOpen.value, 0.45)
+    assert.equal(petal.material.uniforms.uEdgeBrightness.value, 2)
+    assert.equal(petal.material.uniforms.uVeinStrength.value, 0.7)
+    assert.equal(motes.material.uniforms.uHeartRatio.value, 0.4)
+    assert.notDeepEqual(petal.position, openCenter, 'Petal sorting center must follow its opening pose')
+    assert.deepEqual(petal.position, glow.position)
+    assert.deepEqual(petal.position, petal.material.uniforms.uSortCenter.value)
+    for (const buffer of beforeGeometry) { assert.ok(resources(runtime.root).geometries.has(buffer), 'Petal surface and animation edits must retain geometry') }
+    runtime.configure({ ...initial, bloomSpeed: 2 })
+    runtime.update(2.25, camera, renderer)
+    assert.equal(petal.material.uniforms.uTime.value, phase + 0.5)
+    let released = 0
+    petal.geometry.addEventListener('dispose', () => { released++ })
+    runtime.configure({ ...initial, bloomSpeed: 0, petalCount: 11 })
+    runtime.update(2.5, camera, renderer)
+    assert.equal(released, 1, 'Shared petal surface/glow geometry must be released once')
+    assert.ok(runtime.root.getObjectByName('bloom-petal-11'))
+    assert.equal(runtime.root.getObjectByName('bloom-petal-1').material.uniforms.uTime.value, phase + 0.5)
+    runtime.configure(initial)
+    runtime.update(0, camera, renderer)
+    const first = runtime.root.getObjectByName('bloom-petal-1')
+    const last = runtime.root.getObjectByName(`bloom-petal-${initial.petalCount}`)
+    assert.equal(first.material.uniforms.uOpen.value, 0)
+    assert.equal(motes.material.uniforms.uReveal.value, 0)
+    runtime.update(0.15, camera, renderer)
+    assert.ok(first.material.uniforms.uOpen.value > last.material.uniforms.uOpen.value, 'Bloom replay must unfold high petals before low petals')
+    runtime.update(0.8, camera, renderer)
+    assert.equal(first.material.uniforms.uOpen.value, 1)
+    assert.equal(last.material.uniforms.uOpen.value, 1)
+    runtime.update(1, camera, renderer)
+    assert.equal(last.material.uniforms.uOpen.value, 1, 'The flower must remain open after its initial reveal')
+    runtime.configure({ ...initial, openingDuration: 0 })
+    runtime.update(0, camera, renderer)
+    assert.equal(last.material.uniforms.uOpen.value, 1)
+    runtime.configure(initial)
+    runtime.update(1, camera, renderer)
   }
   const owned = resources(runtime.root)
   const otherOwned = resources(another.root)
@@ -286,6 +471,7 @@ for (const entry of cases) {
   }
   for (const buffer of owned.geometries) { finiteGeometry(buffer) }
   for (const material of owned.materials) { validShaders(material) }
+  runtime.root.traverse(validAttributes)
   const capsule = runtime.root.getObjectByName('capsule')
   capsule.geometry.computeBoundingBox()
   const size = capsule.geometry.boundingBox.getSize(new THREE.Vector3())
@@ -327,6 +513,9 @@ for (const entry of cases) {
   ortho.lookAt(0, 0, 0)
   ortho.updateMatrixWorld()
   runtime.update(3, ortho, renderer)
+  runtime.root.traverse((object) => {
+    if (object.isPoints) { assert.equal(object.material.uniforms.uPerspective.value, 0, 'Particle size must support orthographic host cameras') }
+  })
   const remaining = resources(runtime.root)
   for (const group of Object.values(remaining)) {
     for (const item of group) {

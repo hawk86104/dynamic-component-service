@@ -68,3 +68,29 @@ Solar SHALL provide an unbroken near-white capsule corona, short light spikes, v
 #### Scenario: Independent refinement
 - **WHEN** Solar is refined or reconfigured
 - **THEN** Ember, Breeze and Bloom retain their dedicated implementations and defaults.
+
+### Requirement: Breeze reference-specific split airflow
+Breeze SHALL provide upper and lower open airflow paths that pass from left to right around the capsule, with a bright near-edge field, soft broad trails, moving narrow white-mint segments and sparse curled motes. The field SHALL retain actual spatial depth and SHALL NOT rotate as one rigid loop.
+
+#### Scenario: Flow around an obstacle
+- **WHEN** Breeze is configured at supported card proportions
+- **THEN** the path centerlines stay outside the capsule silhouette, divide above and below it and converge toward the left and right mid-height regions, while moving segments advance along these paths.
+
+#### Scenario: Independent breeze controls
+- **WHEN** flow speed, trail length, trail glow, rim brightness or curl ratio changes
+- **THEN** the related uniforms or particles update without replacing the host scene, and flow speed zero preserves the current effect phase.
+
+### Requirement: Bloom reference-specific layered lotus
+Bloom SHALL provide a layered lotus silhouette, with a central high petal, paired tall/diagonal/lateral petals and broad low petals at default settings. Petals SHALL be curved translucent surfaces with spatial cupping, fine lengthwise veins, warm-white luminous edges and separate local glow. Dedicated particles SHALL include petal flakes and sparse hollow hearts.
+
+#### Scenario: Layered opening and replay
+- **WHEN** Bloom starts or restarts with a nonzero opening duration
+- **THEN** petals unfold successively from a closed shape behind the opaque card, and remain near the target opening with gentle motion instead of continuously opening and closing the whole flower.
+
+#### Scenario: Moving transparent petals
+- **WHEN** opening, curl, depth or spread changes
+- **THEN** petal geometry and sorting centers represent the new pose, the card retains its depth occlusion, and replaced owned resources are released exactly once.
+
+#### Scenario: Isolated refinements and honest validation
+- **WHEN** Breeze and Bloom are refined
+- **THEN** Ember, Solar and generic preview sources remain unchanged, and static validation is reported separately from GPU visual comparison, which is skipped under the current user instruction.

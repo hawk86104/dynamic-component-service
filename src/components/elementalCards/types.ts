@@ -62,6 +62,11 @@ export interface BreezeCardOptions extends CardOptions {
   orbitSpread: number
   flowTurbulence: number
   depthSpread: number
+  flowSpeed: number
+  trailLength: number
+  trailGlow: number
+  rimIntensity: number
+  curlRatio: number
 }
 
 export interface BloomCardOptions extends CardOptions {
@@ -73,6 +78,14 @@ export interface BloomCardOptions extends CardOptions {
   petalColor: string
   tipColor: string
   swayStrength: number
+  petalCurl: number
+  petalDepth: number
+  edgeBrightness: number
+  veinStrength: number
+  openingDuration: number
+  bloomSpeed: number
+  breathAmount: number
+  heartRatio: number
 }
 
 export type NumericRanges = Record<string, readonly [number, number, number]>

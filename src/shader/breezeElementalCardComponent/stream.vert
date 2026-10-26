@@ -1,36 +1,27 @@
 #include <common>
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>
-#include <elemental_common>
+attribute vec3 aAcross;
 attribute vec4 aSeed;
-uniform vec2 uCardSize;
+attribute float aLane;
 uniform float uTime;
+uniform float uWidth;
 uniform float uStreamWidth;
-uniform float uOrbitSpread;
 uniform float uTurbulence;
-uniform float uDepthSpread;
+uniform float uLayer;
 varying vec2 vUv;
-varying float vLight;
-
-vec3 streamPosition(float phase) {
-  vec3 p = ecCapsulePoint(phase, uCardSize * vec2(1.05, 1.025));
-  vec3 outward = ecCapsuleNormal(p, uCardSize * vec2(1.05, 1.025));
-  float wave = sin(phase * 19.0 + uTime * 1.4 + aSeed.z * 24.0);
-  float offset = uCardSize.x * (0.045 + aSeed.y * uOrbitSpread + wave * uTurbulence * 0.08);
-  p += outward * offset;
-  p.z = sin(phase * 6.283185 + aSeed.z * 6.283185) * uCardSize.x * uDepthSpread * (0.18 + aSeed.y * 0.6);
-  return p;
-}
+varying vec4 vSeed;
+varying float vLane;
 
 void main() {
   vUv = uv;
-  float phase = aSeed.x + uv.x * (0.18 + aSeed.w * 0.55) + uTime * (0.045 + aSeed.y * 0.035);
-  vec3 p = streamPosition(phase);
-  vec3 tangent = normalize(streamPosition(phase + 0.001) - p);
-  vec3 across = normalize(vec3(-tangent.y, tangent.x, 0.0001));
-  float taper = pow(max(sin(uv.x * 3.14159265), 0.0), 0.45);
-  p += across * position.y * uStreamWidth * (0.35 + aSeed.w) * taper;
-  vLight = 0.4 + aSeed.z * 0.6;
+  vSeed = aSeed;
+  vLane = aLane;
+  float wave = sin(uv.x * 15.0 - uTime * 1.15 + aSeed.w * 21.0) + sin(uv.x * 29.0 - uTime * 0.8 + aSeed.x * 9.0) * 0.25;
+  vec3 p = position + aAcross * wave * uTurbulence * uWidth * 0.006;
+  float scale = mix(0.48 + aSeed.y * 0.65, 6.0 + aSeed.y * 8.0, uLayer);
+  float taper = 0.35 + 0.65 * pow(max(sin(uv.x * 3.14159265), 0.0), 0.4);
+  p += aAcross * (uv.y * 2.0 - 1.0) * uStreamWidth * scale * taper;
   vec4 mvPosition = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mvPosition;
   #include <logdepthbuf_vertex>

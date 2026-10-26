@@ -1,50 +1,62 @@
 import * as THREE from 'three'
 import fragmentShader from '../../shader/breezeElementalCardComponent/stream.frag?raw'
 import vertexShader from '../../shader/breezeElementalCardComponent/stream.vert?raw'
-import { createStripGeometry, disposeGroup, seededRandom } from './geometry'
+import rimFragment from '../../shader/breezeElementalCardComponent/rim.frag?raw'
+import rimVertex from '../../shader/breezeElementalCardComponent/rim.vert?raw'
+import { createBreezeRimGeometry, createBreezeStreamGeometry } from './breeze/geometry'
+import { createBreezeParticles } from './breeze/particles'
+import { disposeGroup } from './geometry'
 import { createElementMaterial } from './material'
 import type { BreezeCardOptions, EffectFactory } from './types'
 
 export const breezeEffect: EffectFactory<BreezeCardOptions> = {
-  geometryKeys: ['streamCount', 'seed'],
+  ownsRim: true,
+  timeScale: options => options.flowSpeed,
+  createParticles: createBreezeParticles,
+  geometryKeys: ['width', 'height', 'thickness', 'streamCount', 'orbitSpread', 'depthSpread', 'seed'],
   create(initial) {
     const group = new THREE.Group()
-    group.name = 'breeze-streams'
-    const strip = createStripGeometry(100)
-    const geometry = new THREE.InstancedBufferGeometry()
-    geometry.setIndex(strip.index!.clone())
-    for (const name of ['position', 'uv']) { geometry.setAttribute(name, strip.getAttribute(name).clone()) }
-    strip.dispose()
-    const seeds = new Float32Array(initial.streamCount * 4)
-    const random = seededRandom(initial.seed + 831)
-    for (let i = 0; i < seeds.length; i++) { seeds[i] = random() }
-    geometry.setAttribute('aSeed', new THREE.InstancedBufferAttribute(seeds, 4))
-    geometry.instanceCount = initial.streamCount
+    group.name = 'breeze-wind-field'
+    const geometry = createBreezeStreamGeometry(initial)
     const uniforms = {
-      uCardSize: { value: new THREE.Vector2() },
       uTime: { value: 0 },
-      uStreamWidth: { value: 0.01 },
-      uOrbitSpread: { value: 0.3 },
-      uTurbulence: { value: 0.2 },
-      uDepthSpread: { value: 0.6 },
-      uColor: { value: new THREE.Color() },
+      uWidth: { value: initial.width },
+      uStreamWidth: { value: initial.streamWidth },
+      uTurbulence: { value: initial.flowTurbulence },
+      uTrailLength: { value: initial.trailLength },
+      uTrailGlow: { value: initial.trailGlow },
+      uRimIntensity: { value: initial.rimIntensity },
+      uColor: { value: new THREE.Color(initial.effectColor) },
       uIntensity: { value: 1 },
       uOpacity: { value: 1 },
     }
-    const mesh = new THREE.Mesh(geometry, createElementMaterial(vertexShader, fragmentShader, uniforms, { blending: THREE.AdditiveBlending }))
-    mesh.frustumCulled = false
-    mesh.raycast = () => {}
-    group.add(mesh)
+    function addMesh(buffer: THREE.BufferGeometry, vertex: string, fragment: string, name: string, layer: number) {
+      const material = createElementMaterial(vertex, fragment, { ...uniforms, uLayer: { value: layer } }, { blending: THREE.AdditiveBlending })
+      const mesh = new THREE.Mesh(buffer, material)
+      mesh.name = name
+      mesh.frustumCulled = false
+      mesh.raycast = () => {}
+      group.add(mesh)
+      return mesh
+    }
+    const tails = addMesh(geometry, vertexShader, fragmentShader, 'breeze-soft-trails', 1)
+    addMesh(geometry, vertexShader, fragmentShader, 'breeze-white-streams', 0)
+    const rim = createBreezeRimGeometry(initial)
+    const core = addMesh(rim, rimVertex, rimFragment, 'breeze-edge-current', 0)
+    const halo = addMesh(rim, rimVertex, rimFragment, 'breeze-edge-glow', 1)
     function configure(options: BreezeCardOptions) {
-      uniforms.uCardSize.value.set(options.width, options.height)
       uniforms.uStreamWidth.value = options.streamWidth
-      uniforms.uOrbitSpread.value = options.orbitSpread
       uniforms.uTurbulence.value = options.flowTurbulence
-      uniforms.uDepthSpread.value = options.depthSpread
+      uniforms.uTrailLength.value = options.trailLength
+      uniforms.uTrailGlow.value = options.trailGlow
+      uniforms.uRimIntensity.value = options.rimIntensity
       uniforms.uColor.value.set(options.effectColor)
       uniforms.uIntensity.value = options.effectIntensity
       uniforms.uOpacity.value = options.opacity
       group.visible = options.effectIntensity > 0
+      tails.visible = options.trailGlow > 0
+      core.visible = options.rimIntensity > 0
+      halo.visible = options.rimIntensity > 0
     }
     configure(initial)
     return {
