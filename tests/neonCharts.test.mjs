@@ -2,14 +2,79 @@ import assert from 'node:assert/strict'
 import { existsSync, readFileSync } from 'node:fs'
 // eslint-disable-next-line test/no-import-node-test -- Use the built-in runner; this repository has no Vitest dependency.
 import { test } from 'node:test'
+import { compileScript, parse } from '@vue/compiler-sfc'
 import * as THREE from 'three'
 import ts from 'typescript'
+import { createRenderer, defineComponent, h, nextTick, reactive } from 'vue'
 import { parseAreaData, parseDonutData, sampleArea } from '../src/components/chart3d/data.ts'
 import { addStage, clearChart, createLabel } from '../src/components/chart3d/scene.ts'
 import { NEON_DONUT_DEFAULTS } from '../src/components/neonDonutChartComponent/defaults.ts'
 import { createDonutSector } from '../src/components/neonDonutChartComponent/geometry.ts'
-import { RIBBON_AREA_DEFAULTS } from '../src/components/ribbonAreaChartComponent/defaults.ts'
+import { RIBBON_AREA_DEFAULTS, RIBBON_AREA_PROPS } from '../src/components/ribbonAreaChartComponent/defaults.ts'
 import { createRibbonGeometry } from '../src/components/ribbonAreaChartComponent/geometry.ts'
+import { createRibbonGlassMaterial, createRibbonSideMaterial } from '../src/components/ribbonAreaChartComponent/material.ts'
+
+function ribbonSideShaders() {
+  return {
+    vertexShader: readFileSync(new URL('../src/shader/ribbonAreaChartComponent/side.vert', import.meta.url), 'utf8'),
+    fragmentShader: readFileSync(new URL('../src/shader/ribbonAreaChartComponent/side.frag', import.meta.url), 'utf8'),
+  }
+}
+
+test('the Vue entry declares every ribbon control at runtime and accepts live side updates', async () => {
+  const filename = new URL('../src/components/ribbonAreaChartComponent/index.vue', import.meta.url).pathname
+  const source = readFileSync(new URL('../src/components/ribbonAreaChartComponent/index.vue', import.meta.url), 'utf8')
+  const script = compileScript(parse(source, { filename }).descriptor, { id: 'ribbon-runtime-props' })
+  const compiled = ts.createSourceFile('ribbon.ts', script.content, ts.ScriptTarget.Latest, true)
+  let propsDeclaration
+  const visit = (node) => {
+    if (ts.isPropertyAssignment(node) && node.name.getText(compiled) === 'props') {
+      propsDeclaration = node.initializer
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(compiled)
+  assert.equal(propsDeclaration?.getText(compiled), 'RIBBON_AREA_PROPS')
+  assert.deepEqual(Object.keys(RIBBON_AREA_PROPS).sort(), Object.keys(RIBBON_AREA_DEFAULTS).sort())
+  const renderer = createRenderer({
+    createComment: () => ({}),
+    insert() {},
+    remove() {},
+    parentNode: () => null,
+    nextSibling: () => null,
+  })
+  const values = reactive({})
+  const warnings = []
+  let received
+  const component = defineComponent({
+    props: RIBBON_AREA_PROPS,
+    setup(props) {
+      received = props
+      return () => null
+    },
+  })
+  const app = renderer.createApp({ setup: () => () => h(component, values) })
+  app.config.warnHandler = message => warnings.push(message)
+  app.mount({})
+  try {
+    assert.deepEqual({ ...received }, RIBBON_AREA_DEFAULTS)
+    for (const sideColor of ['#0033d8', '#ff0000', '#00ff00']) {
+      Object.assign(values, { sideColor, bevel: 0.1, reflectionStrength: 2, roughness: 0.6, sideGradient: 0.4, sideOpacity: 0.2 })
+      await nextTick()
+      for (const [key, value] of Object.entries(values)) {
+        assert.equal(received[key], value, key)
+      }
+      const material = createRibbonSideMaterial(received, ribbonSideShaders())
+      assert.equal(material.color.getHexString(), sideColor.slice(1))
+      assert.equal(material.opacity, RIBBON_AREA_DEFAULTS.opacity * 0.2)
+      material.dispose()
+    }
+    assert.deepEqual(warnings, [])
+  }
+  finally {
+    app.unmount()
+  }
+})
 
 test('reference defaults preserve totals, palette and shared category lengths', () => {
   const donut = parseDonutData(NEON_DONUT_DEFAULTS.jsonText)
@@ -111,37 +176,184 @@ test('donut sectors remain hollow and have the requested standing height', () =>
 })
 
 test('area ribbons are watertight, outward-facing solids including the two end caps', () => {
-  const geometry = createRibbonGeometry([{ x: -2, y: 1 }, { x: 0, y: 3 }, { x: 3, y: 2 }], 0.8)
+  for (const bevel of [0, 0.055]) {
+    const geometry = createRibbonGeometry([{ x: -2, y: 1 }, { x: 0, y: 3 }, { x: 3, y: 2 }], 0.8, bevel)
+    finiteGeometry(geometry)
+    const positions = geometry.getAttribute('position')
+    const edges = new Map()
+    const a = new THREE.Vector3()
+    const b = new THREE.Vector3()
+    const c = new THREE.Vector3()
+    let volume = 0
+    for (let index = 0; index < positions.count; index += 3) {
+      a.fromBufferAttribute(positions, index)
+      b.fromBufferAttribute(positions, index + 1)
+      c.fromBufferAttribute(positions, index + 2)
+      volume += a.dot(new THREE.Vector3().crossVectors(b, c)) / 6
+      const keys = [a, b, c].map(point => point.toArray().map(value => value.toFixed(5)).join(','))
+      for (let vertex = 0; vertex < 3; vertex++) {
+        const key = [keys[vertex], keys[(vertex + 1) % 3]].sort().join('|')
+        edges.set(key, (edges.get(key) || 0) + 1)
+      }
+    }
+    assert.ok([...edges.values()].every(count => count === 2))
+    assert.ok(bevel ? volume > 9.18 && volume < 9.2 : Math.abs(volume - 9.2) < 1e-5)
+    assert.ok(Math.abs(geometry.boundingBox.max.y - 3) < 1e-5)
+    assert.ok(Math.abs(geometry.boundingBox.max.z - 0.4) < 1e-5)
+    geometry.dispose()
+  }
+})
+
+test('rounded roofs share continuous unit normals and walls use their own local height', () => {
+  const points = sampleArea([0.4, 2, 0.8, 3, 1.5], 12)
+  const geometry = createRibbonGeometry(points, 0.9, 0.055)
   finiteGeometry(geometry)
   const positions = geometry.getAttribute('position')
-  const edges = new Map()
-  const a = new THREE.Vector3()
-  const b = new THREE.Vector3()
-  const c = new THREE.Vector3()
-  let volume = 0
-  for (let index = 0; index < positions.count; index += 3) {
-    a.fromBufferAttribute(positions, index)
-    b.fromBufferAttribute(positions, index + 1)
-    c.fromBufferAttribute(positions, index + 2)
-    volume += a.dot(new THREE.Vector3().crossVectors(b, c)) / 6
-    const keys = [a, b, c].map(point => point.toArray().map(value => value.toFixed(5)).join(','))
-    for (let vertex = 0; vertex < 3; vertex++) {
-      const key = [keys[vertex], keys[(vertex + 1) % 3]].sort().join('|')
-      edges.set(key, (edges.get(key) || 0) + 1)
+  const normals = geometry.getAttribute('normal')
+  const surfaces = geometry.getAttribute('surface')
+  const localHeights = new Map(points.map(point => [point.x.toFixed(5), point.y]))
+  const roofNormals = new Map()
+  const normal = new THREE.Vector3()
+  let sharedRoofVertices = 0
+  for (let index = 0; index < positions.count; index++) {
+    normal.fromBufferAttribute(normals, index)
+    assert.ok(Math.abs(normal.length() - 1) < 1e-5)
+    const height = localHeights.get(positions.getX(index).toFixed(5))
+    assert.ok(Math.abs(surfaces.getY(index) - positions.getY(index) / height) < 1e-5)
+    if (surfaces.getX(index) > 0.999) {
+      const key = [positions.getX(index), positions.getY(index), positions.getZ(index)].map(value => value.toFixed(5)).join(',')
+      if (roofNormals.has(key)) {
+        assert.ok(normal.distanceTo(roofNormals.get(key)) < 1e-6)
+        sharedRoofVertices++
+      }
+      roofNormals.set(key, normal.clone())
     }
   }
-  assert.ok([...edges.values()].every(count => count === 2))
-  assert.ok(Math.abs(volume - 9.2) < 1e-5)
+  assert.ok(sharedRoofVertices > 100)
+  geometry.dispose()
+})
+
+test('linear mode preserves flat slope normals while keeping the rounded width edges', () => {
+  const geometry = createRibbonGeometry([{ x: 0, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 0.5 }], 0.8, 0.055, false)
+  const positions = geometry.getAttribute('position')
+  const normals = geometry.getAttribute('normal')
+  const surfaces = geometry.getAttribute('surface')
+  for (let index = 0; index < positions.count; index += 3) {
+    const centerX = (positions.getX(index) + positions.getX(index + 1) + positions.getX(index + 2)) / 3
+    const slope = centerX < 1 ? 1 : -1.5
+    for (let vertex = index; vertex < index + 3; vertex++) {
+      if (surfaces.getX(vertex) > 0.999) {
+        assert.ok(Math.abs(normals.getX(vertex) + slope / Math.hypot(slope, 1)) < 1e-5)
+      }
+    }
+  }
   geometry.dispose()
 })
 
 test('single-category and all-zero ribbons keep finite geometry and nonzero thickness', () => {
   for (const values of [[0], [0, 0, 0], [7], [1e-12, 1e12]]) {
-    const geometry = createRibbonGeometry(sampleArea(values), 0.8)
-    finiteGeometry(geometry)
-    assert.ok(geometry.boundingBox.max.x > geometry.boundingBox.min.x)
-    assert.ok(geometry.boundingBox.max.y > 0)
+    for (const bevel of [0, 0.055]) {
+      const geometry = createRibbonGeometry(sampleArea(values), 0.8, bevel)
+      finiteGeometry(geometry)
+      assert.ok(geometry.boundingBox.max.x > geometry.boundingBox.min.x)
+      assert.ok(geometry.boundingBox.max.y > 0)
+      geometry.dispose()
+    }
+  }
+})
+
+test('side opacity keeps the material transparent independently of full overall opacity', () => {
+  const shaders = {
+    vertexShader: readFileSync(new URL('../src/shader/ribbonAreaChartComponent/chart.vert', import.meta.url), 'utf8'),
+    fragmentShader: readFileSync(new URL('../src/shader/ribbonAreaChartComponent/chart.frag', import.meta.url), 'utf8'),
+  }
+  for (const [opacity, sideOpacity, transparent] of [[1, 0, true], [1, 0.25, true], [1, 1, false], [0.7, 1, true]]) {
+    const style = { ...RIBBON_AREA_DEFAULTS, opacity, sideOpacity }
+    const material = createRibbonGlassMaterial(style, ['#00f', '#0ff', '#cf0'], shaders)
+    assert.equal(material.transparent, transparent)
+    assert.equal(material.depthWrite, !transparent)
+    assert.equal(material.side, transparent ? THREE.DoubleSide : THREE.FrontSide)
+    assert.equal(material.uniforms.uSideOpacity.value, sideOpacity)
+    material.dispose()
+    const side = createRibbonSideMaterial(style, ribbonSideShaders())
+    assert.equal(side.transparent, transparent)
+    assert.equal(side.depthWrite, !transparent)
+    assert.equal(side.opacity, opacity * sideOpacity)
+    side.dispose()
+  }
+})
+
+test('visible walls and end caps use the native side material with the selected color', () => {
+  const points = [{ x: -2, y: 1 }, { x: 0, y: 3 }, { x: 3, y: 2 }]
+  const geometry = createRibbonGeometry(points, 0.8, 0.055)
+  assert.equal(geometry.groups.length, 2)
+  for (const sideColor of ['#0033d8', '#ff0000', '#00ff00']) {
+    const style = { ...RIBBON_AREA_DEFAULTS, sideColor }
+    const roof = createRibbonGlassMaterial(style, ['#00f', '#0ff', '#cf0'], { vertexShader: '', fragmentShader: '' })
+    const side = createRibbonSideMaterial(style, ribbonSideShaders())
+    const mesh = new THREE.Mesh(geometry, [roof, side])
+    const wallHit = new THREE.Raycaster(new THREE.Vector3(0, 1, 10), new THREE.Vector3(0, 0, -1)).intersectObject(mesh)[0]
+    const capHit = new THREE.Raycaster(new THREE.Vector3(-5, 0.5, 0), new THREE.Vector3(1, 0, 0)).intersectObject(mesh)[0]
+    const roofHit = new THREE.Raycaster(new THREE.Vector3(0, 10, 0), new THREE.Vector3(0, -1, 0)).intersectObject(mesh)[0]
+    assert.equal(wallHit.face.materialIndex, 1)
+    assert.equal(capHit.face.materialIndex, 1)
+    assert.equal(roofHit.face.materialIndex, 0)
+    const visibleSide = mesh.material[wallHit.face.materialIndex]
+    assert.equal(visibleSide.isMeshBasicMaterial, true)
+    assert.equal(visibleSide.color.getHexString(), sideColor.slice(1))
+    roof.dispose()
+    side.dispose()
+  }
+  geometry.dispose()
+})
+
+test('side vertex gradients stay neutral so they cannot replace blue with grey-white', () => {
+  for (const gradient of [0, 1]) {
+    const geometry = createRibbonGeometry([{ x: 0, y: 2 }, { x: 2, y: 3 }], 0.8, 0.055, true, { gradient, opaque: false })
+    const wall = geometry.groups[1]
+    const colors = geometry.getAttribute('color')
+    const positions = geometry.getAttribute('position')
+    assert.equal(colors.itemSize, 4)
+    let bottomCount = 0
+    for (let index = wall.start; index < wall.start + wall.count; index++) {
+      assert.equal(colors.getX(index), colors.getY(index))
+      assert.equal(colors.getY(index), colors.getZ(index))
+      if (gradient === 0) {
+        assert.equal(colors.getX(index), 1)
+        assert.equal(colors.getW(index), 1)
+      }
+      else if (positions.getY(index) === 0) {
+        assert.ok(Math.abs(colors.getX(index) - 0.08) < 1e-6)
+        assert.ok(Math.abs(colors.getW(index) - 0.3) < 1e-6)
+        bottomCount++
+      }
+    }
+    assert.ok(gradient === 0 || bottomCount > 0)
     geometry.dispose()
+  }
+})
+
+test('native side coating keeps a single shader entry point and the normal color pipeline', () => {
+  const material = createRibbonSideMaterial(RIBBON_AREA_DEFAULTS, ribbonSideShaders())
+  const shader = { uniforms: {}, vertexShader: THREE.ShaderLib.basic.vertexShader, fragmentShader: THREE.ShaderLib.basic.fragmentShader }
+  material.onBeforeCompile(shader, null)
+  assert.equal([...shader.vertexShader.matchAll(/void\s+main\s*\(/g)].length, 1)
+  assert.equal([...shader.fragmentShader.matchAll(/void\s+main\s*\(/g)].length, 1)
+  assert.ok(shader.fragmentShader.includes('#include <color_fragment>'))
+  assert.equal(shader.uniforms.uRibbonSideReflection.value, RIBBON_AREA_DEFAULTS.reflectionStrength)
+  material.dispose()
+})
+
+test('side color and gradient controls are independent of the data-driven roof palette', () => {
+  const shaders = { vertexShader: '', fragmentShader: '' }
+  for (const [sideColor, sideGradient] of [['#ff0000', 0], ['#00ff00', 1], ['#0000ff', 0.5]]) {
+    const material = createRibbonGlassMaterial({ ...RIBBON_AREA_DEFAULTS, sideColor, sideGradient }, ['#008cff', '#32e9dc', '#d2ee29'], shaders)
+    assert.ok(material.uniforms.uSideColor.value.equals(new THREE.Color(sideColor)))
+    assert.equal(material.uniforms.uSideGradient.value, sideGradient)
+    assert.ok(material.uniforms.uStart.value.equals(new THREE.Color('#008cff')))
+    assert.ok(material.uniforms.uMiddle.value.equals(new THREE.Color('#32e9dc')))
+    assert.ok(material.uniforms.uEnd.value.equals(new THREE.Color('#d2ee29')))
+    material.dispose()
   }
 })
 
@@ -218,5 +430,6 @@ test('both dynamic component entries have real assets and controls for all edita
     for (const key of Object.keys(defaults).filter(key => key !== 'jsonTextChangeNumber')) {
       assert.ok(controls.has(key), `${type}.${key}`)
     }
+    assert.deepEqual([...controls].sort(), Object.keys(defaults).filter(key => key !== 'jsonTextChangeNumber').sort(), type)
   }
 })
