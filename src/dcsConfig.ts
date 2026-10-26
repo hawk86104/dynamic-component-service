@@ -13,6 +13,7 @@ import { CARD_TRAIL_DEFAULTS } from './components/flowerTributeCardComponent/def
 import { VIDEO_3D_DEFAULTS } from './components/video3DProjectionComponent/defaults'
 import { NEON_DONUT_DEFAULTS } from './components/neonDonutChartComponent/defaults'
 import { RIBBON_AREA_DEFAULTS } from './components/ribbonAreaChartComponent/defaults'
+import { ELEMENTAL_CARD_ENTRIES } from './components/elementalCards/catalog'
 import {
   GNM_EXPRESSION_OPTIONS,
   GNM_HEAD_DEFAULTS,
@@ -79,6 +80,7 @@ const config = {
   </div>
 </div>`,
   components: [
+    ...ELEMENTAL_CARD_ENTRIES,
     {
       name: '霓虹立体环形图',
       type: 'neonDonutChartComponent',
