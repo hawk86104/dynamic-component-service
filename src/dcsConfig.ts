@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-05-22 12:24:29
+ * @LastEditTime: 2026-10-27 13:35:00
  */
 import { MECHANICAL_FLOOR_DEFAULTS } from './components/mechanicalFloorComponent/defaults'
 import { ISO_GLOW_DEFAULTS } from './components/isoGlowModelComponent/defaults'
@@ -21,7 +21,7 @@ import {
 
 const config = {
   name: 'baseSample',
-  version: '3.0.0',
+  version: '3.2.0',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {
@@ -85,7 +85,8 @@ const config = {
       name: '霓虹立体环形图',
       type: 'neonDonutChartComponent',
       comFile: './src/components/neonDonutChartComponent/index.vue',
-      previewPath: './preview/neonDonutChartComponent.svg',
+      previewPath: './preview/animated/neonDonutChartComponent.webp',
+      previewPosterPath: './preview/animated/neonDonutChartComponent.poster.webp',
       description: '无底座的三维玻璃空心扇区，支持独立高度、平滑圆角、条形反光、细微磨砂与统计卡片。可调反射强度、磨砂程度和通透度。JSON 使用 items: [{ id, name, value, color?, height? }]；value 决定占比，height 可单独指定世界单位高度。关闭“使用数据配色”后启用预设色系。',
       default: { ...NEON_DONUT_DEFAULTS },
       defaultObject3D: {
@@ -123,7 +124,8 @@ const config = {
       name: '流光立体面积图',
       type: 'ribbonAreaChartComponent',
       comFile: './src/components/ribbonAreaChartComponent/index.vue',
-      previewPath: './preview/ribbonAreaChartComponent.svg',
+      previewPath: './preview/animated/ribbonAreaChartComponent.webp',
+      previewPosterPath: './preview/animated/ribbonAreaChartComponent.poster.webp',
       description: '圆润的磨砂玻璃面积曲面，彩色渐变顶面与通透侧面独立着色，带柔光反射、渐变细轮廓和峰值卡片；不生成底座、网格或围挡。侧面玻璃色直接控制侧面，纵向渐变和侧面不透明度可独立调节，整体不透明度为 1 时仍可保持透明侧面。JSON 使用 categories 与 series: [{ id, name, values, colors?: [起色, 中色, 末色] }]，values 与分类等长。共用 Y 轴尺度，yMax=0 自动缩放；关闭“使用数据配色”可统一调节顶面三色渐变。',
       default: { ...RIBBON_AREA_DEFAULTS },
       defaultObject3D: {
@@ -163,7 +165,8 @@ const config = {
       name: 'IsoGlowModel 三维模型风格化',
       type: 'isoGlowModelComponent',
       comFile: './src/components/isoGlowModelComponent/index.vue',
-      previewPath: './preview/isoGlowModelComponent.svg',
+      previewPath: './preview/animated/isoGlowModelComponent.webp',
+      previewPosterPath: './preview/animated/isoGlowModelComponent.poster.webp',
       description: '在线 GLB 非破坏性风格化。ISO-GLOW：暗色实体、细轮廓与局部暖光；工程蓝图：表面排线与隐藏结构虚线；X-Ray：边缘增强的透明壳层与内部结构。颜色、透明度和发光沿用现有参数，切换预设不改写参数值。关闭风格化恢复原始材质。模型及外部资源须允许 CORS；相机、灯光和后处理由宿主管理。',
       default: { ...ISO_GLOW_DEFAULTS },
       defaultObject3D: {},
@@ -195,7 +198,8 @@ const config = {
       type: 'mechanicalFloorComponent',
       previewTransform: true,
       comFile: './src/components/mechanicalFloorComponent.vue',
-      previewPath: './preview/mechanicalFloorComponent.svg',
+      previewPath: './preview/animated/mechanicalFloorComponent.webp',
+      previewPosterPath: './preview/animated/mechanicalFloorComponent.poster.webp',
       description: '5×5 米模型模块实例化拼接，居中铺设、顶面 Y=0。保留原始纹理；环境反射需场景环境贴图。IOR 调整不透明表面的光学响应，不产生透视折射。',
       default: { ...MECHANICAL_FLOOR_DEFAULTS },
       defaultObject3D: {},
@@ -217,7 +221,8 @@ const config = {
       type: 'domCanvasComponent',
       previewTransform: true,
       comFile: './src/components/domCanvasComponent.vue',
-      previewPath: './preview/domCanvasComponent.svg',
+      previewPath: './preview/animated/domCanvasComponent.webp',
+      previewPosterPath: './preview/animated/domCanvasComponent.poster.webp',
       description: 'HTML 转 Canvas 纹理平面，支持透明背景、深度遮挡与普通元素 blur(px) 毛玻璃；仅展示，不执行 DOM 交互。',
       default: { ...DOM_CANVAS_DEFAULTS },
       defaultObject3D: {},
@@ -238,7 +243,8 @@ const config = {
       type: 'flowerTributeCardComponent',
       previewTransform: true,
       comFile: './src/components/flowerTributeCardComponent.vue',
-      previewPath: './preview/flowerTributeCardComponent.png',
+      previewPath: './preview/animated/flowerTributeCardComponent.webp',
+      previewPosterPath: './preview/animated/flowerTributeCardComponent.poster.webp',
       description: '纪念主题献花卡片，红色镭射、五角星压纹与两行白色寄语；背面显示镜像图文。',
       default: {
         ...CARD_TRAIL_DEFAULTS,
@@ -292,7 +298,8 @@ const config = {
       name: '测试组件',
       type: 'testBase',
       comFile: './src/components/testBase.vue',
-      previewPath: './preview/testBase.png',
+      previewPath: './preview/animated/testBase.webp',
+      previewPosterPath: './preview/animated/testBase.poster.webp',
       default: {},
       defaultObject3D: {},
       config: {},
@@ -301,7 +308,8 @@ const config = {
       name: '矩形跑光组件',
       type: 'rectangleShimmerComponent',
       comFile: './src/components/rectangleShimmerComponent.vue',
-      previewPath: './preview/rectangleShimmerComponent.png',
+      previewPath: './preview/animated/rectangleShimmerComponent.webp',
+      previewPosterPath: './preview/animated/rectangleShimmerComponent.poster.webp',
       default: {
         gradientLength: 2.6,
         height: 1.4,
@@ -338,7 +346,8 @@ const config = {
       name: '梦幻流体面板',
       type: 'dreamyFluidPanelComponent',
       comFile: './src/components/dreamyFluidPanelComponent.vue',
-      previewPath: './preview/dreamyFluidPanelComponent.png',
+      previewPath: './preview/animated/dreamyFluidPanelComponent.webp',
+      previewPosterPath: './preview/animated/dreamyFluidPanelComponent.poster.webp',
       default: {
         baseColor: '#10204f',
         highlightColor: '#ffe7ba',
@@ -377,7 +386,8 @@ const config = {
       name: '梦幻流体马赛克面板',
       type: 'giltMosaicGroundPanelComponent',
       comFile: './src/components/giltMosaicGroundPanelComponent.vue',
-      previewPath: './preview/giltMosaicGroundPanelComponent.gif',
+      previewPath: './preview/animated/giltMosaicGroundPanelComponent.webp',
+      previewPosterPath: './preview/animated/giltMosaicGroundPanelComponent.poster.webp',
       default: {
         animationMode: 1,
         baseColor: '#5e411f',
@@ -431,7 +441,8 @@ const config = {
       name: '芯片地板',
       type: 'chipFloorGroundComponent',
       comFile: './src/components/chipFloorGroundComponent.vue',
-      previewPath: './preview/chipFloorGroundComponent.png',
+      previewPath: './preview/animated/chipFloorGroundComponent.webp',
+      previewPosterPath: './preview/animated/chipFloorGroundComponent.poster.webp',
       default: {
         "baseColor": "#090909",
         "chipHeight": 0.034800000000000005,
@@ -480,7 +491,8 @@ const config = {
       name: '高级动态草地',
       type: 'advancedDynamicGrassComponent',
       comFile: './src/components/advancedDynamicGrassComponent/index.vue',
-      previewPath: './preview/advancedDynamicGrassComponent.svg',
+      previewPath: './preview/animated/advancedDynamicGrassComponent.webp',
+      previewPosterPath: './preview/animated/advancedDynamicGrassComponent.poster.webp',
       description: '移植自 three-stylized 的高级草地组件，保留确定性起伏地形、实例化草叶、动态风场与程序化野花；不创建或配置 Sun、背景、环境、相机与控制器，适合直接加入区域场景编辑器。',
       default: {
         terrainWidth: 8,
@@ -538,7 +550,8 @@ const config = {
       name: '流动烟雾组件',
       type: 'flowingSmokeComponent',
       comFile: './src/components/flowingSmokeComponent.vue',
-      previewPath: './preview/flowingSmokeComponent.png',
+      previewPath: './preview/animated/flowingSmokeComponent.webp',
+      previewPosterPath: './preview/animated/flowingSmokeComponent.poster.webp',
       default: {
         color: '#aeb4b8',
         density: 0.38,
@@ -579,7 +592,8 @@ const config = {
       name: '喷火组件',
       type: 'flameJetComponent',
       comFile: './src/components/flameJetComponent.vue',
-      previewPath: './preview/flameJetComponent.gif',
+      previewPath: './preview/animated/flameJetComponent.webp',
+      previewPosterPath: './preview/animated/flameJetComponent.poster.webp',
       description: '基于 fragment shader 的喷火效果组件，沿 +X 方向喷射，支持长度、扰动、颜色梯度等参数调节。',
       default: {
         coreColor: '#ffc738',
@@ -617,7 +631,8 @@ const config = {
       name: '三维流体火焰',
       type: 'volumetricFluidFlameComponent',
       comFile: './src/components/volumetricFluidFlameComponent.vue',
-      previewPath: './preview/volumetricFluidFlameComponent.png',
+      previewPath: './preview/animated/volumetricFluidFlameComponent.webp',
+      previewPosterPath: './preview/animated/volumetricFluidFlameComponent.poster.webp',
       description: '基于 GPU atlas 体素仿真的三维体积火焰组件，默认采用较低成本的模拟分辨率、压力迭代和光线步数。',
       default: {
         absorption: 7.5,
@@ -696,7 +711,8 @@ const config = {
       name: '液体气泡组件',
       type: 'liquidBubbleComponent',
       comFile: './src/components/liquidBubbleComponent/index.vue',
-      previewPath: './preview/liquidBubbleComponent.gif',
+      previewPath: './preview/animated/liquidBubbleComponent.webp',
+      previewPosterPath: './preview/animated/liquidBubbleComponent.poster.webp',
       description: '静止液体体块内部持续冒泡的效果组件，支持长方体与圆柱体两种形状。',
       default: {
         shapeType: 'cylinder',
@@ -747,7 +763,8 @@ const config = {
       name: '流动液体容器组件',
       type: 'liquidContainerComponent',
       comFile: './src/components/liquidContainerComponent/index.vue',
-      previewPath: './preview/liquidContainerComponent.gif',
+      previewPath: './preview/animated/liquidContainerComponent.webp',
+      previewPosterPath: './preview/animated/liquidContainerComponent.poster.webp',
       default: {
         shapeType: 'cylinderTank',
         vasePreset: 'roundPot',
@@ -830,7 +847,8 @@ const config = {
       name: '动态旋转基座',
       type: 'dynamicRotatingBase',
       comFile: './src/components/dynamicRotatingBase.vue',
-      previewPath: './preview/dynamicRotatingBase.png',
+      previewPath: './preview/animated/dynamicRotatingBase.webp',
+      previewPosterPath: './preview/animated/dynamicRotatingBase.poster.webp',
       default: {
         type: 'imgA',
         color: '#fff',
@@ -862,7 +880,8 @@ const config = {
       name: '艺术三维饼图',
       type: 'PieChartArt',
       comFile: './src/components/PieChartArt/index.vue',
-      previewPath: './preview/PieChartArt.svg',
+      previewPath: './preview/animated/PieChartArt.webp',
+      previewPosterPath: './preview/animated/PieChartArt.poster.webp',
       description: 'WebGL 版 3D 艺术饼图，默认使用 Market Share 数据；应用 JSON 后会直接重建新图形。',
       default: {
         jsonText: `{
@@ -946,7 +965,8 @@ const config = {
       name: '圆形动态粒子图表',
       type: 'circularParticleChartComponent',
       comFile: './src/components/circularParticleChartComponent.vue',
-      previewPath: './preview/circularParticleChartComponent.png',
+      previewPath: './preview/animated/circularParticleChartComponent.webp',
+      previewPosterPath: './preview/animated/circularParticleChartComponent.poster.webp',
       description: '自发光圆形粒子图表，带可反向的扫描动效和中心标题/单位文字；不依赖灯光、环境贴图或场景镜面。',
       default: {
         "particleSize": 8.3,
@@ -982,7 +1002,8 @@ const config = {
       name: '简单柱体图表',
       type: 'simpleColumn',
       comFile: './src/components/simpleColumn/index.vue',
-      previewPath: './preview/simpleColumn.png',
+      previewPath: './preview/animated/simpleColumn.webp',
+      previewPosterPath: './preview/animated/simpleColumn.poster.webp',
       default: {
         spacing: 0, // 间距
         distribution: 'proportional', // 布局方式
@@ -1043,7 +1064,8 @@ const config = {
       name: '高级树组件',
       type: 'ezTreeCom',
       comFile: './src/components/ezTreeCom.vue',
-      previewPath: './preview/ezTreeCom.png',
+      previewPath: './preview/animated/ezTreeCom.webp',
+      previewPosterPath: './preview/animated/ezTreeCom.poster.webp',
       description: `<a style="color: #5384ff;" href="https://github.com/dgreenheck/ez-tree" target="_blank">开源 ez-tree</a> 组件，实现高级树模型展示，<a style="color: #03765b;" href="https://www.eztree.dev" target="_blank">配置生成器</a>，SavePreset 导出配置。`,
       default: {
         isUpdate: true,
@@ -1175,7 +1197,8 @@ const config = {
       name: '超级能量盾组件',
       type: 'superEnergyShieldComponent',
       comFile: './src/components/superEnergyShieldComponent.vue',
-      previewPath: './preview/superEnergyShieldComponent.gif',
+      previewPath: './preview/animated/superEnergyShieldComponent.webp',
+      previewPosterPath: './preview/animated/superEnergyShieldComponent.poster.webp',
       default: {
         color: '#26aeff',
         edgeWidth: 0.06,
@@ -1242,7 +1265,8 @@ const config = {
       name: '光速护盾展开组件',
       type: 'lightSpeedShieldDeployComponent',
       comFile: './src/components/lightSpeedShieldDeployComponent.vue',
-      previewPath: './preview/lightSpeedShieldDeployComponent.jpg',
+      previewPath: './preview/animated/lightSpeedShieldDeployComponent.webp',
+      previewPosterPath: './preview/animated/lightSpeedShieldDeployComponent.poster.webp',
       default: {
         autoAnimate: true,
         collapseDuration: 0.35,
@@ -1309,7 +1333,8 @@ const config = {
       name: '箱式隔间容器',
       type: 'binsContainerComponent',
       comFile: './src/components/binsContainer/index.vue',
-      previewPath: './preview/binsContainerComponent.png',
+      previewPath: './preview/animated/binsContainerComponent.webp',
+      previewPosterPath: './preview/animated/binsContainerComponent.poster.webp',
       default: {
         width: 320,
         height: 130,
@@ -1367,7 +1392,8 @@ const config = {
       name: '聚能光球汇聚组件',
       type: 'chargeOrbGatherComponent',
       comFile: './src/components/chargeOrbGatherComponent.vue',
-      previewPath: './preview/chargeOrbGatherComponent.gif',
+      previewPath: './preview/animated/chargeOrbGatherComponent.webp',
+      previewPosterPath: './preview/animated/chargeOrbGatherComponent.poster.webp',
       default: {
         autoAnimate: true,
         chargeProgress: 0.72,
@@ -1446,7 +1472,8 @@ const config = {
       name: '充能爆裂环组件',
       type: 'chargedBlastRingsComponent',
       comFile: './src/components/chargedBlastRingsComponent.vue',
-      previewPath: './preview/chargedBlastRingsComponent.png',
+      previewPath: './preview/animated/chargedBlastRingsComponent.webp',
+      previewPosterPath: './preview/animated/chargedBlastRingsComponent.poster.webp',
       default: {
         autoPlay: true,
         burstToken: 0,
@@ -1502,7 +1529,8 @@ const config = {
       name: '充能爆裂炮弹组件',
       type: 'chargedBlastProjectileComponent',
       comFile: './src/components/chargedBlastProjectileComponent.vue',
-      previewPath: './preview/chargedBlastProjectileComponent.png',
+      previewPath: './preview/animated/chargedBlastProjectileComponent.webp',
+      previewPosterPath: './preview/animated/chargedBlastProjectileComponent.poster.webp',
       default: {
         autoPlay: true,
         shotToken: 0,
@@ -1569,7 +1597,8 @@ const config = {
       name: '充能爆裂释放组件',
       type: 'chargedBlastReleaseComponent',
       comFile: './src/components/chargedBlastReleaseComponent.vue',
-      previewPath: './preview/chargedBlastReleaseComponent.gif',
+      previewPath: './preview/animated/chargedBlastReleaseComponent.webp',
+      previewPosterPath: './preview/animated/chargedBlastReleaseComponent.poster.webp',
       default: {
         autoPlay: true,
         shotToken: 0,
@@ -1616,7 +1645,8 @@ const config = {
       name: '眩目光环',
       type: 'vertigoHaloComponent',
       comFile: './src/components/vertigoHaloComponent.vue',
-      previewPath: './preview/vertigoHaloComponent.svg',
+      previewPath: './preview/animated/vertigoHaloComponent.webp',
+      previewPosterPath: './preview/animated/vertigoHaloComponent.poster.webp',
       default: {
         voidColor: '#220033',
         baseColor: '#cc1133',
@@ -1657,7 +1687,8 @@ const config = {
       name: '公交线网',
       type: 'busLineNetworkComponent',
       comFile: './src/components/busLineNetworkComponent.vue',
-      previewPath: './preview/busLineNetworkComponent.svg',
+      previewPath: './preview/animated/busLineNetworkComponent.webp',
+      previewPosterPath: './preview/animated/busLineNetworkComponent.poster.webp',
       description: '基于 Mars3D 北京公交 GeoJSON 数据渲染的三维线网组件，支持原始定位、采样、分层高度与脉冲效果。',
       default: {
         baseHeight: 0.06,
@@ -1710,7 +1741,8 @@ const config = {
       name: '光晕线',
       type: 'polylineGlowComponent',
       comFile: './src/components/polylineGlowComponent.vue',
-      previewPath: './preview/polylineGlowComponent.svg',
+      previewPath: './preview/animated/polylineGlowComponent.webp',
+      previewPosterPath: './preview/animated/polylineGlowComponent.poster.webp',
       description: '参考 Mars3D PolylineGlow 发光线 (ex_4_1_1)：基于 GeoJSON 数据源渲染，支持确认生成与原始定位。',
       default: {
         color: '#FF4500',
@@ -1743,7 +1775,8 @@ const config = {
       name: '电流纹波面板',
       type: 'currentRipplePanelComponent',
       comFile: './src/components/currentRipplePanelComponent.vue',
-      previewPath: './preview/currentRipplePanelComponent.gif',
+      previewPath: './preview/animated/currentRipplePanelComponent.webp',
+      previewPosterPath: './preview/animated/currentRipplePanelComponent.poster.webp',
       default: {
         baseColor: '#081321',
         currentColor: '#18c8ff',
@@ -1784,7 +1817,8 @@ const config = {
       name: '月光涟漪水面',
       type: 'moonlitRippleWaterPanelComponent',
       comFile: './src/components/moonlitRippleWaterPanelComponent.vue',
-      previewPath: './preview/moonlitRippleWaterPanelComponent.gif',
+      previewPath: './preview/animated/moonlitRippleWaterPanelComponent.webp',
+      previewPosterPath: './preview/animated/moonlitRippleWaterPanelComponent.poster.webp',
       default: {
         cameraTilt: 0.15,
         deepColor: '#07131f',
@@ -1819,7 +1853,8 @@ const config = {
       name: '水滴玻璃材质',
       type: 'waterDropGlassMaterialComponent',
       comFile: './src/components/waterDropGlassMaterialComponent/index.vue',
-      previewPath: './preview/waterDropGlassMaterialComponent.gif',
+      previewPath: './preview/animated/waterDropGlassMaterialComponent.webp',
+      previewPosterPath: './preview/animated/waterDropGlassMaterialComponent.poster.webp',
       default: {
         "attenuationDistance": 3.26,
         "clearcoat": 1,
@@ -1888,7 +1923,8 @@ const config = {
       name: '魔法炫光技能',
       type: 'radiantSwirlSkillComponent',
       comFile: './src/components/radiantSwirlSkillComponent.vue',
-      previewPath: './preview/radiantSwirlSkillComponent.png',
+      previewPath: './preview/animated/radiantSwirlSkillComponent.webp',
+      previewPosterPath: './preview/animated/radiantSwirlSkillComponent.poster.webp',
       description: '基于 shader 的 4 阶段技能炫光效果：从散射光叶逐步汇聚到完整能量环与核心光球。',
       default: {
         animationSpeed: 0.6,
@@ -1932,7 +1968,8 @@ const config = {
       name: '视频2D投射',
       type: 'video2DProjectionComponent',
       comFile: './src/components/video2DProjectionComponent.vue',
-      previewPath: './preview/video2DProjectionComponent.svg',
+      previewPath: './preview/animated/video2DProjectionComponent.webp',
+      previewPosterPath: './preview/animated/video2DProjectionComponent.poster.webp',
       description: '参考 Mars3D Video2D 的视频投射可视化组件，使用 VideoTexture 将示例视频投射到视锥远端平面。',
       default: {
         angle: 46,
@@ -1973,7 +2010,8 @@ const config = {
       name: '三维视频投影',
       type: 'video3DProjectionComponent',
       comFile: './src/components/video3DProjectionComponent.vue',
-      previewPath: './preview/video3DProjectionComponent.svg',
+      previewPath: './preview/animated/video3DProjectionComponent.webp',
+      previewPosterPath: './preview/animated/video3DProjectionComponent.poster.webp',
       description: '参考 <a href="https://github.com/hh-hang/vid3d-projection" target="_blank" rel="noopener noreferrer">vid3d-projection</a> 的 Three.js 视频融合：画面贴合墙面、地面与立体模型，支持真实遮挡。关闭演示接收体即可投射宿主场景；目标名称留空时接收全部可见网格，可填写模型父级名称或 UUID（逗号分隔）。',
       default: { ...VIDEO_3D_DEFAULTS },
       defaultObject3D: {
@@ -2027,7 +2065,8 @@ const config = {
       name: '模型生三维粒子器',
       type: 'modelParticleGeneratorComponent',
       comFile: './src/components/modelParticleGeneratorComponent/index.vue',
-      previewPath: './preview/modelParticleGeneratorComponent.svg',
+      previewPath: './preview/animated/modelParticleGeneratorComponent.webp',
+      previewPosterPath: './preview/animated/modelParticleGeneratorComponent.poster.webp',
       description: '通过 URL 加载一个 GLB 模型（支持 DRACO 压缩），对其网格表面采样，生成随风飘动的粒子拖尾效果。',
       default: {
         "modelUrl": "https://oss.icegl.cn/p/modelServer/models/3%E8%88%B9/models/游轮C.glb",
@@ -2093,7 +2132,8 @@ const config = {
       name: 'GNM 参数化人头',
       type: 'gnmHeadComponent',
       comFile: './src/components/gnmHeadComponent/index.vue',
-      previewPath: './preview/gnmHeadComponent.svg',
+      previewPath: './preview/animated/gnmHeadComponent.webp',
+      previewPosterPath: './preview/animated/gnmHeadComponent.poster.webp',
       description: '基于 Google GNM Head 浏览器数值实现的参数化人头组件；动态载入后立即显示轻量 3D loading，主模型与语义采样器分阶段按需下载，支持确定性身份/表情、头眼姿态、皮肤透明度与非皮肤解剖显隐，不创建相机、灯光、控制器或场景级 UI。',
       default: {
         ...GNM_HEAD_DEFAULTS,

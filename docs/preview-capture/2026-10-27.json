@@ -1,0 +1,1948 @@
+{
+  "summary": {
+    "date": "2026-10-27",
+    "components": 44,
+    "width": 600,
+    "height": 400,
+    "totalFrames": 441,
+    "frameCounts": [
+      10,
+      11
+    ],
+    "animationBytes": 2386214,
+    "posterBytes": 272602,
+    "minAnimationBytes": 5088,
+    "maxAnimationBytes": 163600,
+    "averageAnimationBytes": 54232,
+    "buildOrServerCommandsRun": false
+  },
+  "components": [
+    {
+      "type": "emberElementalCardComponent",
+      "name": "元素卡片 · 火焰 Ember",
+      "url": "#/preview/emberElementalCardComponent",
+      "original": "./preview/emberElementalCardComponent.svg",
+      "animation": "./preview/animated/emberElementalCardComponent.webp",
+      "poster": "./preview/animated/emberElementalCardComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 33468,
+      "posterBytes": 3964,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 33468
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "solarElementalCardComponent",
+      "name": "元素卡片 · 太阳 Solar",
+      "url": "#/preview/solarElementalCardComponent",
+      "original": "./preview/solarElementalCardComponent.svg",
+      "animation": "./preview/animated/solarElementalCardComponent.webp",
+      "poster": "./preview/animated/solarElementalCardComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 77030,
+      "posterBytes": 8202,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 77030
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "breezeElementalCardComponent",
+      "name": "元素卡片 · 风流 Breeze",
+      "url": "#/preview/breezeElementalCardComponent",
+      "original": "./preview/breezeElementalCardComponent.svg",
+      "animation": "./preview/animated/breezeElementalCardComponent.webp",
+      "poster": "./preview/animated/breezeElementalCardComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252
+      ],
+      "durationMs": 2520,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 41442,
+      "posterBytes": 4986,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 41442
+        }
+      ],
+      "captureMinIntervalMs": 250,
+      "captureMaxIntervalMs": 267,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "bloomElementalCardComponent",
+      "name": "元素卡片 · 花瓣 Bloom",
+      "url": "#/preview/bloomElementalCardComponent",
+      "original": "./preview/bloomElementalCardComponent.svg",
+      "animation": "./preview/animated/bloomElementalCardComponent.webp",
+      "poster": "./preview/animated/bloomElementalCardComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 58258,
+      "posterBytes": 6288,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 58258
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "neonDonutChartComponent",
+      "name": "霓虹立体环形图",
+      "url": "#/preview/neonDonutChartComponent",
+      "original": "./preview/neonDonutChartComponent.svg",
+      "animation": "./preview/animated/neonDonutChartComponent.webp",
+      "poster": "./preview/animated/neonDonutChartComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249
+      ],
+      "durationMs": 2490,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 77940,
+      "posterBytes": 7734,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 77940
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 253,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "ribbonAreaChartComponent",
+      "name": "流光立体面积图",
+      "url": "#/preview/ribbonAreaChartComponent",
+      "original": "./preview/ribbonAreaChartComponent.svg",
+      "animation": "./preview/animated/ribbonAreaChartComponent.webp",
+      "poster": "./preview/animated/ribbonAreaChartComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 51862,
+      "posterBytes": 5340,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 51862
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 253,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "isoGlowModelComponent",
+      "name": "IsoGlowModel 三维模型风格化",
+      "url": "#/preview/isoGlowModelComponent",
+      "original": "./preview/isoGlowModelComponent.svg",
+      "animation": "./preview/animated/isoGlowModelComponent.webp",
+      "poster": "./preview/animated/isoGlowModelComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 86718,
+      "posterBytes": 8640,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 86718
+        }
+      ],
+      "captureMinIntervalMs": 241,
+      "captureMaxIntervalMs": 262,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "mechanicalFloorComponent",
+      "name": "机械科技地面",
+      "url": "#/preview/mechanicalFloorComponent",
+      "original": "./preview/mechanicalFloorComponent.svg",
+      "animation": "./preview/animated/mechanicalFloorComponent.webp",
+      "poster": "./preview/animated/mechanicalFloorComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 96218,
+      "posterBytes": 9854,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 96218
+        }
+      ],
+      "captureMinIntervalMs": 248,
+      "captureMaxIntervalMs": 253,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "domCanvasComponent",
+      "name": "dom-canvas",
+      "url": "#/preview/domCanvasComponent",
+      "original": "./preview/domCanvasComponent.svg",
+      "animation": "./preview/animated/domCanvasComponent.webp",
+      "poster": "./preview/animated/domCanvasComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 68224,
+      "posterBytes": 6798,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 68224
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "flowerTributeCardComponent",
+      "name": "献花卡片",
+      "url": "#/preview/flowerTributeCardComponent",
+      "original": "./preview/flowerTributeCardComponent.png",
+      "animation": "./preview/animated/flowerTributeCardComponent.webp",
+      "poster": "./preview/animated/flowerTributeCardComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 70790,
+      "posterBytes": 7952,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 70790
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 254,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "testBase",
+      "name": "测试组件",
+      "url": "#/preview/testBase",
+      "original": "./preview/testBase.png",
+      "animation": "./preview/animated/testBase.webp",
+      "poster": "./preview/animated/testBase.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 29220,
+      "posterBytes": 3702,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 29220
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "rectangleShimmerComponent",
+      "name": "矩形跑光组件",
+      "url": "#/preview/rectangleShimmerComponent",
+      "original": "./preview/rectangleShimmerComponent.png",
+      "animation": "./preview/animated/rectangleShimmerComponent.webp",
+      "poster": "./preview/animated/rectangleShimmerComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 28212,
+      "posterBytes": 3716,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 28212
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "dreamyFluidPanelComponent",
+      "name": "梦幻流体面板",
+      "url": "#/preview/dreamyFluidPanelComponent",
+      "original": "./preview/dreamyFluidPanelComponent.png",
+      "animation": "./preview/animated/dreamyFluidPanelComponent.webp",
+      "poster": "./preview/animated/dreamyFluidPanelComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 41050,
+      "posterBytes": 9024,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 41050
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "giltMosaicGroundPanelComponent",
+      "name": "梦幻流体马赛克面板",
+      "url": "#/preview/giltMosaicGroundPanelComponent",
+      "original": "./preview/giltMosaicGroundPanelComponent.gif",
+      "animation": "./preview/animated/giltMosaicGroundPanelComponent.webp",
+      "poster": "./preview/animated/giltMosaicGroundPanelComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 97200,
+      "posterBytes": 11414,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 97200
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "chipFloorGroundComponent",
+      "name": "芯片地板",
+      "url": "#/preview/chipFloorGroundComponent",
+      "original": "./preview/chipFloorGroundComponent.png",
+      "animation": "./preview/animated/chipFloorGroundComponent.webp",
+      "poster": "./preview/animated/chipFloorGroundComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 134764,
+      "posterBytes": 13510,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 134764
+        }
+      ],
+      "captureMinIntervalMs": 248,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "advancedDynamicGrassComponent",
+      "name": "高级动态草地",
+      "url": "#/preview/advancedDynamicGrassComponent",
+      "original": "./preview/advancedDynamicGrassComponent.svg",
+      "animation": "./preview/animated/advancedDynamicGrassComponent.webp",
+      "poster": "./preview/animated/advancedDynamicGrassComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 90494,
+      "posterBytes": 9134,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 90494
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "flowingSmokeComponent",
+      "name": "流动烟雾组件",
+      "url": "#/preview/flowingSmokeComponent",
+      "original": "./preview/flowingSmokeComponent.png",
+      "animation": "./preview/animated/flowingSmokeComponent.webp",
+      "poster": "./preview/animated/flowingSmokeComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247
+      ],
+      "durationMs": 2470,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 5088,
+      "posterBytes": 798,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 5088
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 249,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "flameJetComponent",
+      "name": "喷火组件",
+      "url": "#/preview/flameJetComponent",
+      "original": "./preview/flameJetComponent.gif",
+      "animation": "./preview/animated/flameJetComponent.webp",
+      "poster": "./preview/animated/flameJetComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249
+      ],
+      "durationMs": 2490,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 31972,
+      "posterBytes": 3098,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 31972
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "volumetricFluidFlameComponent",
+      "name": "三维流体火焰",
+      "url": "#/preview/volumetricFluidFlameComponent",
+      "original": "./preview/volumetricFluidFlameComponent.png",
+      "animation": "./preview/animated/volumetricFluidFlameComponent.webp",
+      "poster": "./preview/animated/volumetricFluidFlameComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 21146,
+      "posterBytes": 1904,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 21146
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "liquidBubbleComponent",
+      "name": "液体气泡组件",
+      "url": "#/preview/liquidBubbleComponent",
+      "original": "./preview/liquidBubbleComponent.gif",
+      "animation": "./preview/animated/liquidBubbleComponent.webp",
+      "poster": "./preview/animated/liquidBubbleComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 15230,
+      "posterBytes": 2700,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 15230
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "liquidContainerComponent",
+      "name": "流动液体容器组件",
+      "url": "#/preview/liquidContainerComponent",
+      "original": "./preview/liquidContainerComponent.gif",
+      "animation": "./preview/animated/liquidContainerComponent.webp",
+      "poster": "./preview/animated/liquidContainerComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 12948,
+      "posterBytes": 1820,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 12948
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "dynamicRotatingBase",
+      "name": "动态旋转基座",
+      "url": "#/preview/dynamicRotatingBase",
+      "original": "./preview/dynamicRotatingBase.png",
+      "animation": "./preview/animated/dynamicRotatingBase.webp",
+      "poster": "./preview/animated/dynamicRotatingBase.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 14308,
+      "posterBytes": 1654,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 14308
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "PieChartArt",
+      "name": "艺术三维饼图",
+      "url": "#/preview/PieChartArt",
+      "original": "./preview/PieChartArt.svg",
+      "animation": "./preview/animated/PieChartArt.webp",
+      "poster": "./preview/animated/PieChartArt.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 47228,
+      "posterBytes": 4826,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 47228
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "circularParticleChartComponent",
+      "name": "圆形动态粒子图表",
+      "url": "#/preview/circularParticleChartComponent",
+      "original": "./preview/circularParticleChartComponent.png",
+      "animation": "./preview/animated/circularParticleChartComponent.webp",
+      "poster": "./preview/animated/circularParticleChartComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 80336,
+      "posterBytes": 8824,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 80336
+        }
+      ],
+      "captureMinIntervalMs": 250,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "simpleColumn",
+      "name": "简单柱体图表",
+      "url": "#/preview/simpleColumn",
+      "original": "./preview/simpleColumn.png",
+      "animation": "./preview/animated/simpleColumn.webp",
+      "poster": "./preview/animated/simpleColumn.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249
+      ],
+      "durationMs": 2490,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 58994,
+      "posterBytes": 5930,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 58994
+        }
+      ],
+      "captureMinIntervalMs": 244,
+      "captureMaxIntervalMs": 254,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "ezTreeCom",
+      "name": "高级树组件",
+      "url": "#/preview/ezTreeCom",
+      "original": "./preview/ezTreeCom.png",
+      "animation": "./preview/animated/ezTreeCom.webp",
+      "poster": "./preview/animated/ezTreeCom.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249
+      ],
+      "durationMs": 2490,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 56900,
+      "posterBytes": 5640,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 56900
+        }
+      ],
+      "captureMinIntervalMs": 247,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "superEnergyShieldComponent",
+      "name": "超级能量盾组件",
+      "url": "#/preview/superEnergyShieldComponent",
+      "original": "./preview/superEnergyShieldComponent.gif",
+      "animation": "./preview/animated/superEnergyShieldComponent.webp",
+      "poster": "./preview/animated/superEnergyShieldComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 56402,
+      "posterBytes": 5878,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 56402
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 253,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "lightSpeedShieldDeployComponent",
+      "name": "光速护盾展开组件",
+      "url": "#/preview/lightSpeedShieldDeployComponent",
+      "original": "./preview/lightSpeedShieldDeployComponent.jpg",
+      "animation": "./preview/animated/lightSpeedShieldDeployComponent.webp",
+      "poster": "./preview/animated/lightSpeedShieldDeployComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 103000,
+      "posterBytes": 12422,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 103000
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "binsContainerComponent",
+      "name": "箱式隔间容器",
+      "url": "#/preview/binsContainerComponent",
+      "original": "./preview/binsContainerComponent.png",
+      "animation": "./preview/animated/binsContainerComponent.webp",
+      "poster": "./preview/animated/binsContainerComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 47694,
+      "posterBytes": 4984,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 47694
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "chargeOrbGatherComponent",
+      "name": "聚能光球汇聚组件",
+      "url": "#/preview/chargeOrbGatherComponent",
+      "original": "./preview/chargeOrbGatherComponent.gif",
+      "animation": "./preview/animated/chargeOrbGatherComponent.webp",
+      "poster": "./preview/animated/chargeOrbGatherComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 11,
+      "sourceFrames": 12,
+      "uniqueFrames": 11,
+      "frameDurationsMs": [
+        213,
+        213,
+        213,
+        213,
+        213,
+        213,
+        426,
+        213,
+        213,
+        213,
+        213
+      ],
+      "durationMs": 2556,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 13348,
+      "posterBytes": 1732,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 13348
+        }
+      ],
+      "captureMinIntervalMs": 211,
+      "captureMaxIntervalMs": 215,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "chargedBlastRingsComponent",
+      "name": "充能爆裂环组件",
+      "url": "#/preview/chargedBlastRingsComponent",
+      "original": "./preview/chargedBlastRingsComponent.png",
+      "animation": "./preview/animated/chargedBlastRingsComponent.webp",
+      "poster": "./preview/animated/chargedBlastRingsComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "camera-follow-native-animation",
+      "bytes": 17166,
+      "posterBytes": 2264,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 17166
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "chargedBlastProjectileComponent",
+      "name": "充能爆裂炮弹组件",
+      "url": "#/preview/chargedBlastProjectileComponent",
+      "original": "./preview/chargedBlastProjectileComponent.png",
+      "animation": "./preview/animated/chargedBlastProjectileComponent.webp",
+      "poster": "./preview/animated/chargedBlastProjectileComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247
+      ],
+      "durationMs": 2470,
+      "loop": 0,
+      "motion": "camera-follow-native-animation",
+      "bytes": 12848,
+      "posterBytes": 1748,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 12848
+        }
+      ],
+      "captureMinIntervalMs": 244,
+      "captureMaxIntervalMs": 249,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "chargedBlastReleaseComponent",
+      "name": "充能爆裂释放组件",
+      "url": "#/preview/chargedBlastReleaseComponent",
+      "original": "./preview/chargedBlastReleaseComponent.gif",
+      "animation": "./preview/animated/chargedBlastReleaseComponent.webp",
+      "poster": "./preview/animated/chargedBlastReleaseComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "camera-follow-native-animation",
+      "bytes": 17322,
+      "posterBytes": 1846,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 17322
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "vertigoHaloComponent",
+      "name": "眩目光环",
+      "url": "#/preview/vertigoHaloComponent",
+      "original": "./preview/vertigoHaloComponent.svg",
+      "animation": "./preview/animated/vertigoHaloComponent.webp",
+      "poster": "./preview/animated/vertigoHaloComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 39140,
+      "posterBytes": 4076,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 39140
+        }
+      ],
+      "captureMinIntervalMs": 250,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "busLineNetworkComponent",
+      "name": "公交线网",
+      "url": "#/preview/busLineNetworkComponent",
+      "original": "./preview/busLineNetworkComponent.svg",
+      "animation": "./preview/animated/busLineNetworkComponent.webp",
+      "poster": "./preview/animated/busLineNetworkComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 163600,
+      "posterBytes": 16874,
+      "quality": 74,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 193814
+        },
+        {
+          "quality": 74,
+          "bytes": 163600
+        }
+      ],
+      "captureMinIntervalMs": 243,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "polylineGlowComponent",
+      "name": "光晕线",
+      "url": "#/preview/polylineGlowComponent",
+      "original": "./preview/polylineGlowComponent.svg",
+      "animation": "./preview/animated/polylineGlowComponent.webp",
+      "poster": "./preview/animated/polylineGlowComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 86136,
+      "posterBytes": 8704,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 86136
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "currentRipplePanelComponent",
+      "name": "电流纹波面板",
+      "url": "#/preview/currentRipplePanelComponent",
+      "original": "./preview/currentRipplePanelComponent.gif",
+      "animation": "./preview/animated/currentRipplePanelComponent.webp",
+      "poster": "./preview/animated/currentRipplePanelComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 87002,
+      "posterBytes": 8878,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 87002
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "moonlitRippleWaterPanelComponent",
+      "name": "月光涟漪水面",
+      "url": "#/preview/moonlitRippleWaterPanelComponent",
+      "original": "./preview/moonlitRippleWaterPanelComponent.gif",
+      "animation": "./preview/animated/moonlitRippleWaterPanelComponent.webp",
+      "poster": "./preview/animated/moonlitRippleWaterPanelComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 40118,
+      "posterBytes": 4224,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 40118
+        }
+      ],
+      "captureMinIntervalMs": 249,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "waterDropGlassMaterialComponent",
+      "name": "水滴玻璃材质",
+      "url": "#/preview/waterDropGlassMaterialComponent",
+      "original": "./preview/waterDropGlassMaterialComponent.gif",
+      "animation": "./preview/animated/waterDropGlassMaterialComponent.webp",
+      "poster": "./preview/animated/waterDropGlassMaterialComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249,
+        249
+      ],
+      "durationMs": 2490,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 19824,
+      "posterBytes": 1766,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 19824
+        }
+      ],
+      "captureMinIntervalMs": 244,
+      "captureMaxIntervalMs": 252,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "radiantSwirlSkillComponent",
+      "name": "魔法炫光技能",
+      "url": "#/preview/radiantSwirlSkillComponent",
+      "original": "./preview/radiantSwirlSkillComponent.png",
+      "animation": "./preview/animated/radiantSwirlSkillComponent.webp",
+      "poster": "./preview/animated/radiantSwirlSkillComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 33462,
+      "posterBytes": 3246,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 33462
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 251,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "video2DProjectionComponent",
+      "name": "视频2D投射",
+      "url": "#/preview/video2DProjectionComponent",
+      "original": "./preview/video2DProjectionComponent.svg",
+      "animation": "./preview/animated/video2DProjectionComponent.webp",
+      "poster": "./preview/animated/video2DProjectionComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247,
+        247
+      ],
+      "durationMs": 2470,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 91396,
+      "posterBytes": 12150,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 91396
+        }
+      ],
+      "captureMinIntervalMs": 245,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "video3DProjectionComponent",
+      "name": "三维视频投影",
+      "url": "#/preview/video3DProjectionComponent",
+      "original": "./preview/video3DProjectionComponent.svg",
+      "animation": "./preview/animated/video3DProjectionComponent.webp",
+      "poster": "./preview/animated/video3DProjectionComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 52942,
+      "posterBytes": 10308,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 52942
+        }
+      ],
+      "captureMinIntervalMs": 247,
+      "captureMaxIntervalMs": 253,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    },
+    {
+      "type": "modelParticleGeneratorComponent",
+      "name": "模型生三维粒子器",
+      "url": "#/preview/modelParticleGeneratorComponent",
+      "original": "./preview/modelParticleGeneratorComponent.svg",
+      "animation": "./preview/animated/modelParticleGeneratorComponent.webp",
+      "poster": "./preview/animated/modelParticleGeneratorComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248,
+        248
+      ],
+      "durationMs": 2480,
+      "loop": 0,
+      "motion": "native-animation",
+      "bytes": 51608,
+      "posterBytes": 11182,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 51608
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 250,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": {
+        "source": "https://oss.icegl.cn/p/modelServer/models/3%E8%88%B9/models/游轮C.glb",
+        "temporaryLocalCopy": ".cache/preview-capture/2026-10-27/assets/ship.glb",
+        "reason": "MissingAllowOriginHeader"
+      }
+    },
+    {
+      "type": "gnmHeadComponent",
+      "name": "GNM 参数化人头",
+      "url": "#/preview/gnmHeadComponent",
+      "original": "./preview/gnmHeadComponent.svg",
+      "animation": "./preview/animated/gnmHeadComponent.webp",
+      "poster": "./preview/animated/gnmHeadComponent.poster.webp",
+      "width": 600,
+      "height": 400,
+      "frames": 10,
+      "sourceFrames": 10,
+      "uniqueFrames": 10,
+      "frameDurationsMs": [
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250,
+        250
+      ],
+      "durationMs": 2500,
+      "loop": 0,
+      "motion": "gentle-camera-orbit",
+      "bytes": 26166,
+      "posterBytes": 2868,
+      "quality": 80,
+      "targetKiB": 180,
+      "attempts": [
+        {
+          "quality": 80,
+          "bytes": 26166
+        }
+      ],
+      "captureMinIntervalMs": 246,
+      "captureMaxIntervalMs": 253,
+      "captureMethod": "tres-rendered-canvas-after-render",
+      "captureNotes": null
+    }
+  ],
+  "validation": {
+    "resourceDecode": "44 animations and 44 static posters verified; poster pixels match the decoded first animation frame",
+    "syntax": "Vue script/template/CSS and TypeScript syntax passed; 44 unique registrations and 88 resource paths verified",
+    "lint": {
+      "baselineErrors": 208,
+      "currentErrors": 208,
+      "introducedErrors": 0,
+      "cleanFiles": 3
+    },
+    "browser": {
+      "initialCards": 44,
+      "initialPosterRequests": 15,
+      "initialAnimationRequests": 0,
+      "loading": {
+        "animationOpacity": "0",
+        "posterLoaded": true,
+        "posterVisible": true,
+        "state": "loading"
+      },
+      "playing": {
+        "animationOpacity": "1",
+        "animations": 1,
+        "playing": 1,
+        "src": "http://localhost:5173/preview/animated/emberElementalCardComponent.webp"
+      },
+      "leave": {
+        "animations": 0,
+        "poster": "./preview/animated/emberElementalCardComponent.poster.webp",
+        "state": "poster"
+      },
+      "rapidLeave": {
+        "animations": 0,
+        "state": "poster"
+      },
+      "failureFallback": {
+        "animationPresent": false,
+        "posterLoaded": true,
+        "state": "poster"
+      },
+      "renderedPlayback": {
+        "differentPixels": true,
+        "differenceBounds": [
+          171,
+          482,
+          257,
+          611
+        ],
+        "screenshotSize": [
+          1147,
+          760
+        ],
+        "sampleSeparationMs": 320,
+        "hoverTransitionSettledBeforeSamplingMs": 550
+      },
+      "search": "One matching water-drop card, then restored to 44 cards with no animation nodes"
+    },
+    "diffCheck": "passed",
+    "build": "Skipped under AGENTS.md; used only the user-started service"
+  },
+  "legacyCleanup": {
+    "deletedFiles": 44,
+    "deletedBytes": 17674960,
+    "extensions": {
+      ".svg": 18,
+      ".gif": 10,
+      ".png": 15,
+      ".jpg": 1
+    },
+    "remainingAnimationFiles": 44,
+    "remainingPosterFiles": 44,
+    "runtimeAndReadmeReferences": "No old filenames remain in src, scripts or README; original fields are historical provenance",
+    "validation": "44 old paths absent; all 88 current registered resource paths exist",
+    "buildAndDebug": "Skipped under AGENTS.md"
+  }
+}

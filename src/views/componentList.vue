@@ -9,6 +9,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import dcsConfig from '../dcsConfig'
+import AnimatedPreview from './catalog/AnimatedPreview.vue'
 
 const isDev = import.meta.env.DEV
 const keyword = ref('')
@@ -111,7 +112,7 @@ function previewHref(type: string) {
               :aria-label="`查看${item.name}演示（新窗口）`"
             >
               <div class="preview-wrapper">
-                <img :src="item.previewPath" :alt="`${item.name}效果预览`" loading="lazy" decoding="async" width="300" height="186" />
+                <AnimatedPreview :src="item.previewPath" :poster="item.previewPosterPath" :alt="`${item.name}效果预览`" />
               </div>
               <h2 :title="item.name">{{ item.name }}</h2>
               <p class="component-type" :title="item.type">{{ item.type }}</p>
@@ -454,16 +455,9 @@ function previewHref(type: string) {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 3 / 2;
   border-radius: 8px;
   background: #0f172a;
-}
-.preview-wrapper img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.35s;
 }
 .component-preview h2 {
   display: -webkit-box;
@@ -716,21 +710,16 @@ function previewHref(type: string) {
     border-color: var(--catalog-accent);
     box-shadow: var(--catalog-shadow);
   }
-  .component-card:hover .preview-wrapper img {
-    transform: scale(1.04);
-  }
   .component-card:hover h2 {
     color: var(--catalog-accent);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .component-card,
-  .preview-wrapper img {
+  .component-card {
     transition: none;
   }
-  .component-card:hover,
-  .component-card:hover .preview-wrapper img {
+  .component-card:hover {
     transform: none;
   }
   .service-description :deep(.eco-item) {
