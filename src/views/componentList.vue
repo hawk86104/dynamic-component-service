@@ -72,7 +72,7 @@ function previewHref(type: string) {
           <span class="catalog-count">{{ dcsConfig.components.length }} 个组件</span>
         </section>
 
-        <details class="service-info">
+        <details class="service-info" open>
           <summary>服务信息 <span>{{ dcsConfig.name }} · v{{ dcsConfig.version }}</span></summary>
           <div class="service-info-body">
             <div class="service-meta">
