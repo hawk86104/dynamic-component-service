@@ -16,7 +16,9 @@ import {
   Uniform,
   Vector3,
 } from 'three'
-import type { AnimationClip, Camera, Light, Material, Object3D } from 'three'
+import type { AnimationClip, Camera, Light, Material } from 'three'
+// Tres extends the barrel's Object3D type; derived Three.js nodes use the base type.
+import type { Object3D } from 'three/src/core/Object3D.js'
 import type { DivineFireSettings } from './defaults'
 import { createFireGeometry } from './geometry'
 import { disposeSubjects } from './resources'

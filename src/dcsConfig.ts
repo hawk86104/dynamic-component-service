@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-10-27 13:35:00
+ * @LastEditTime: 2026-11-05 16:59:18
  */
 import { MECHANICAL_FLOOR_DEFAULTS } from './components/mechanicalFloorComponent/defaults'
 import { ISO_GLOW_DEFAULTS } from './components/isoGlowModelComponent/defaults'
@@ -23,7 +23,7 @@ import {
 
 const config = {
   name: 'baseSample',
-  version: '3.2.0',
+  version: '3.5.0',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {

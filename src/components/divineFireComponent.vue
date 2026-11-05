@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useLoop, useTres } from '@tresjs/core'
 import { Group } from 'three'
-import type { Object3D } from 'three'
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { getResUrl } from '../common/utils'
 import { DIVINE_FIRE_DEFAULTS, resolveDivineFireSettings } from './divineFireComponent/defaults'
@@ -78,7 +77,7 @@ async function loadRequestedModel(url: string, id: number) {
     let next: FireSubject
     try {
       next = createFireSubject(
-        gltf.scene as unknown as Object3D,
+        gltf.scene,
         gltf.animations,
         settings.value,
         () => disposeFireGLTF(gltf),

@@ -1,5 +1,6 @@
-import type { BufferGeometry, InstancedMesh, Material, Mesh, Object3D, Skeleton, SkinnedMesh, Texture } from 'three'
+import type { BufferGeometry, InstancedMesh, Material, Mesh, Skeleton, SkinnedMesh, Texture } from 'three'
 import type { GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import type { Object3D } from 'three/src/core/Object3D.js'
 
 export function disposeSubjects(roots: Object3D[]) {
   const geometries = new Set<BufferGeometry>()
@@ -41,5 +42,5 @@ export function disposeSubjects(roots: Object3D[]) {
 }
 
 export function disposeFireGLTF(gltf: GLTF) {
-  disposeSubjects([gltf.scene, ...gltf.scenes].filter(Boolean) as unknown as Object3D[])
+  disposeSubjects([gltf.scene, ...gltf.scenes].filter(Boolean))
 }
