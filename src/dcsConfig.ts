@@ -15,6 +15,7 @@ import { NEON_DONUT_DEFAULTS } from './components/neonDonutChartComponent/defaul
 import { RIBBON_AREA_DEFAULTS } from './components/ribbonAreaChartComponent/defaults'
 import { ELEMENTAL_CARD_ENTRIES } from './components/elementalCards/catalog'
 import { VULCAN_FIRE_DEFAULTS } from './components/vulcanFireComponent/defaults'
+import { DIVINE_FIRE_DEFAULTS } from './components/divineFireComponent/defaults'
 import {
   GNM_EXPRESSION_OPTIONS,
   GNM_HEAD_DEFAULTS,
@@ -683,6 +684,43 @@ const config = {
         groundRadius: { name: '地面半径', com: 'Slider', min: 0.1, max: 8, step: 0.05, group: '环境点缀' },
         lightEnabled: { name: '照亮周围', com: 'Switch', group: '环境点缀' },
         lightIntensity: { name: '火光强度', com: 'Slider', min: 0, max: 30, step: 0.1, group: '环境点缀' },
+      },
+    },
+    {
+      name: '模型附着火焰',
+      type: 'divineFireComponent',
+      previewTransform: true,
+      comFile: './src/components/divineFireComponent.vue',
+      previewPath: './preview/animated/divineFireComponent.webp',
+      previewPosterPath: './preview/animated/divineFireComponent.poster.webp',
+      description: 'Divine Fire 风格的模型表面附着火焰，默认燃烧正方体；填写在线 GLB/glTF 地址可替换模型，自动居中落地。仅提供模型与火焰参数，场景和后期处理由宿主管理。跨域模型及依赖资源须允许 CORS。',
+      default: { ...DIVINE_FIRE_DEFAULTS },
+      defaultObject3D: {},
+      config: {
+        modelUrl: { name: '模型 URL（留空用正方体）', com: 'Text', group: '绑定模型' },
+        modelSize: { name: '模型最大边长', com: 'Slider', min: 0.1, max: 20, step: 0.1, group: '绑定模型' },
+        showSource: { name: '显示模型本体', com: 'Switch', group: '绑定模型' },
+        burning: { name: '燃烧开关', com: 'Switch', group: '燃烧控制' },
+        leadIn: { name: '点燃时长（秒）', com: 'Slider', min: 0, max: 5, step: 0.1, group: '燃烧控制' },
+        leadOut: { name: '熄灭时长（秒）', com: 'Slider', min: 0, max: 5, step: 0.1, group: '燃烧控制' },
+        autoPlay: { name: '播放动画', com: 'Switch', group: '播放' },
+        animationSpeed: { name: '动画速度', com: 'Slider', min: 0, max: 4, step: 0.05, group: '播放' },
+        height: { name: '火焰高度', com: 'Slider', min: 0, max: 2, step: 0.01, group: '火舌形态' },
+        inflate: { name: '表面外扩', com: 'Slider', min: 0, max: 0.1, step: 0.001, group: '火舌形态' },
+        tongueScale: { name: '火舌密度', com: 'Slider', min: 0, max: 10, step: 0.1, group: '火舌形态' },
+        tongueSpeed: { name: '火舌速度', com: 'Slider', min: 0, max: 4, step: 0.05, group: '火舌形态' },
+        tongueVariation: { name: '火舌随机性', com: 'Slider', min: 0, max: 1, step: 0.01, group: '火舌形态' },
+        erosion: { name: '顶部侵蚀', com: 'Slider', min: 0, max: 2, step: 0.01, group: '火舌形态' },
+        softness: { name: '边缘柔和', com: 'Slider', min: 0.01, max: 1, step: 0.01, group: '火舌形态' },
+        fresnelPower: { name: '视角衰减', com: 'Slider', min: 0, max: 5, step: 0.05, group: '火舌形态' },
+        textureScale: { name: '纹理密度', com: 'Slider', min: 0.2, max: 10, step: 0.1, group: '火焰纹理' },
+        scrollSpeed: { name: '纹理上升速度', com: 'Slider', min: 0, max: 4, step: 0.05, group: '火焰纹理' },
+        distortion: { name: '纹理扭曲', com: 'Slider', min: 0, max: 1.5, step: 0.01, group: '火焰纹理' },
+        distortionSpeed: { name: '扭曲速度', com: 'Slider', min: 0, max: 2, step: 0.05, group: '火焰纹理' },
+        brightness: { name: '火焰亮度', com: 'Slider', min: 0, max: 6, step: 0.05, group: '火焰颜色' },
+        colorCore: { name: '焰心色', com: 'ColorPicker', group: '火焰颜色' },
+        colorMid: { name: '焰身色', com: 'ColorPicker', group: '火焰颜色' },
+        colorDeep: { name: '焰边色', com: 'ColorPicker', group: '火焰颜色' },
       },
     },
     {
