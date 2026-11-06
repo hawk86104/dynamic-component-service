@@ -20,7 +20,12 @@ dcsConfig.components.forEach((item: any) => {
 })
 export default defineConfig(({ command }) => {
   return {
-    // base: './',
+    experimental: {
+      renderBuiltUrl(_filename, { hostType, type }) {
+        // 跨域加载远程组件时，预加载资源应相对于远程模块的 URL 解析。
+        return hostType === 'js' && type === 'asset' ? { relative: true } : undefined
+      },
+    },
     plugins: [
       vue({
         ...templateCompilerOptions,
