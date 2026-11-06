@@ -4,7 +4,7 @@
  * @Autor: 地虎降天龙
  * @Date: 2025-12-29 09:16:25
  * @LastEditors: 地虎降天龙
- * @LastEditTime: 2026-11-05 16:59:18
+ * @LastEditTime: 2026-11-06 09:33:36
  */
 import { MECHANICAL_FLOOR_DEFAULTS } from './components/mechanicalFloorComponent/defaults'
 import { ISO_GLOW_DEFAULTS } from './components/isoGlowModelComponent/defaults'
@@ -24,7 +24,7 @@ import {
 
 const config = {
   name: 'baseSample',
-  version: '3.5.0',
+  version: '4.0.0',
   description: `<div style="font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
   <style>
     .eco-title {
@@ -82,8 +82,13 @@ const config = {
     </div>
   </div>
 </div>`,
+  categories: [
+    { id: 'pixelFx', name: 'PixelFX' },
+    { id: 'other', name: '其他' },
+  ] as const,
+  defaultCategory: 'other' as const,
   components: [
-    ...PIXEL_FX_ENTRIES,
+    ...PIXEL_FX_ENTRIES.map(entry => ({ ...entry, category: 'pixelFx' as const })),
     ...ELEMENTAL_CARD_ENTRIES,
     {
       name: '霓虹立体环形图',

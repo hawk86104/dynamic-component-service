@@ -319,6 +319,11 @@ const config = {
   name: 'baseSample',
   version: '1.1.0',
   description: '动态组件服务示例组件库',
+  categories: [
+    { id: 'pixelFx', name: 'PixelFX' },
+    { id: 'other', name: '其他' },
+  ],
+  defaultCategory: 'other',
   components: [
     {
       name: '测试组件',
@@ -345,6 +350,8 @@ version: string     // 服务版本号
 description: string // 服务描述
 ```
 
+`categories` 按预览页按钮的显示顺序定义分类。组件可通过 `category` 引用分类的 `id`，省略时归入 `defaultCategory`。
+
 ---
 
 ### components（组件列表）
@@ -354,6 +361,7 @@ components: [
   {
     name: string
     type: string
+    category?: string
     comFile: string
     previewPath: string
     defaultObject3D?: { ... }

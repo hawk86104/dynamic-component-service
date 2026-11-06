@@ -12,6 +12,8 @@ import dcsConfig from '../dcsConfig'
 import AnimatedPreview from './catalog/AnimatedPreview.vue'
 
 const isDev = import.meta.env.DEV
+const categoryOptions = [{ id: 'all', name: '全部' }, ...dcsConfig.categories] as const
+const selectedCategory = ref<(typeof categoryOptions)[number]['id']>('all')
 const keyword = ref('')
 const theme = ref<'light' | 'dark'>('dark')
 
@@ -31,10 +33,18 @@ watch(theme, (value) => {
 const currentBaseUrl = computed(() => window.location.origin + window.location.pathname)
 const filteredComponents = computed(() => {
   const query = keyword.value.trim().toLowerCase()
-  return dcsConfig.components.filter(item =>
-    [item.name, item.type, item.comFile].some(value => value.toLowerCase().includes(query)),
-  )
+  const category = selectedCategory.value
+  return dcsConfig.components.filter((item) => {
+    const itemCategory = ('category' in item ? item.category : undefined) ?? dcsConfig.defaultCategory
+    return (category === 'all' || itemCategory === category)
+      && (!query || [item.name, item.type, item.comFile].some(value => value.toLowerCase().includes(query)))
+  })
 })
+
+function resetFilters() {
+  keyword.value = ''
+  selectedCategory.value = 'all'
+}
 
 function previewHref(type: string) {
   return `${currentBaseUrl.value}#/preview/${encodeURIComponent(type)}`
@@ -99,6 +109,17 @@ function previewHref(type: string) {
               @keydown.esc="keyword = ''"
             />
           </div>
+          <div class="catalog-categories" role="group" aria-label="组件分类">
+            <button
+              v-for="category in categoryOptions"
+              :key="category.id"
+              type="button"
+              :aria-pressed="selectedCategory === category.id"
+              @click="selectedCategory = category.id"
+            >
+              {{ category.name }}
+            </button>
+          </div>
           <span class="search-count" role="status" aria-live="polite" aria-atomic="true">{{ filteredComponents.length }} / {{ dcsConfig.components.length }} 个组件</span>
         </form>
 
@@ -134,8 +155,8 @@ function previewHref(type: string) {
         </section>
         <div v-else class="catalog-empty">
           <h2>没有找到匹配组件</h2>
-          <p>试试其他名称、类型名或文件路径。</p>
-          <button type="button" @click="keyword = ''">查看全部组件</button>
+          <p>试试其他关键词或切换分类。</p>
+          <button type="button" @click="resetFilters">查看全部组件</button>
         </div>
       </main>
       <footer class="catalog-footer">tvt.js · 动态组件服务</footer>
@@ -257,22 +278,28 @@ function previewHref(type: string) {
 .header-links a:hover {
   color: var(--catalog-accent);
 }
-.theme-switch {
+.theme-switch,
+.catalog-categories {
   display: flex;
-  flex-shrink: 0;
   gap: 2px;
   padding: 3px;
   border: 1px solid var(--catalog-border);
   border-radius: 9px;
   background: var(--catalog-raised);
 }
-.theme-switch button {
-  min-height: 32px;
+.theme-switch {
+  flex-shrink: 0;
+}
+.theme-switch button,
+.catalog-categories button {
   border: 0;
   border-radius: 6px;
-  padding: 4px 10px;
   color: var(--catalog-muted);
   background: transparent;
+}
+.theme-switch button {
+  min-height: 32px;
+  padding: 4px 10px;
   font-size: 12px;
 }
 .theme-switch button[aria-pressed='true'] {
@@ -412,6 +439,24 @@ function previewHref(type: string) {
 }
 .catalog-search input::placeholder {
   color: var(--catalog-muted);
+}
+.catalog-categories {
+  flex-wrap: wrap;
+}
+.catalog-categories button {
+  min-height: 36px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.catalog-categories button:hover {
+  background: var(--catalog-surface);
+  color: var(--catalog-text);
+}
+.catalog-categories button[aria-pressed='true'] {
+  background: var(--catalog-button);
+  color: #fff;
 }
 .search-count {
   margin-left: auto;
@@ -653,10 +698,13 @@ function previewHref(type: string) {
     padding: 10px;
   }
   .catalog-toolbar {
+    flex-wrap: wrap;
     gap: 8px;
     margin: 12px 0;
   }
   .catalog-search {
+    flex-basis: 100%;
+    max-width: none;
     gap: 6px;
     padding: 0 8px;
   }
