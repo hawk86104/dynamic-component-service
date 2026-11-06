@@ -14,6 +14,7 @@ import { VIDEO_3D_DEFAULTS } from './components/video3DProjectionComponent/defau
 import { NEON_DONUT_DEFAULTS } from './components/neonDonutChartComponent/defaults'
 import { RIBBON_AREA_DEFAULTS } from './components/ribbonAreaChartComponent/defaults'
 import { ELEMENTAL_CARD_ENTRIES } from './components/elementalCards/catalog'
+import { PIXEL_FX_ENTRIES } from './components/pixelFx/catalog'
 import { VULCAN_FIRE_DEFAULTS } from './components/vulcanFireComponent/defaults'
 import { DIVINE_FIRE_DEFAULTS } from './components/divineFireComponent/defaults'
 import {
@@ -82,6 +83,7 @@ const config = {
   </div>
 </div>`,
   components: [
+    ...PIXEL_FX_ENTRIES,
     ...ELEMENTAL_CARD_ENTRIES,
     {
       name: '霓虹立体环形图',

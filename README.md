@@ -75,6 +75,12 @@
 
 ---
 
+## PixelFX 像素特效
+
+已接入 **19 类、201 个独立特效**，覆盖火焰、水体、爆炸、冰霜、雷电、刀光、弹道、天气和转场等。每项默认循环，支持竖轴公告牌、精灵、固定立面、地面、原生配色、随机种子和水平镜像。预览由独立特效的像素动画离线转换。
+
+组件参数、已发布类型和下架条目可在说明中查阅。上游版本、MIT LICENSE 和 NOTICE 位于 `src/vendor/pixelfx/`。[组件参数](./src/components/pixelFx/README.md) · [201 项组件清单](./src/components/pixelFx/CATALOG.md) · [PixelFX 上游](https://github.com/patch-gg/pixelfx)
+
 ## 🧱 技术栈说明
 
 | 技术                                   | 说明                   |
