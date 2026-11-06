@@ -4,7 +4,7 @@ import PixelFxPlayer from './PixelFxPlayer.vue'
 import { getPixelFxDefaults, PIXEL_FX_MAX_SEED } from './defaults'
 import { getPixelFxEffect } from './effects'
 import type { PixelFxEffectId } from './effects'
-import type { PixelFxApi, PixelFxRenderMode } from './types'
+import type { PixelFxApi, PixelFxRenderMode, PixelFxResolutionScale } from './types'
 
 export function createPixelFxComponent(effectId: PixelFxEffectId) {
   const defaults = getPixelFxDefaults(effectId)
@@ -13,6 +13,7 @@ export function createPixelFxComponent(effectId: PixelFxEffectId) {
     inheritAttrs: false,
     props: {
       renderMode: { type: String as PropType<PixelFxRenderMode>, default: defaults.renderMode },
+      resolutionScale: { type: Number as PropType<PixelFxResolutionScale>, default: defaults.resolutionScale },
       width: { type: Number, default: defaults.width },
       opacity: { type: Number, default: defaults.opacity },
       playing: { type: Boolean, default: defaults.playing },

@@ -6,6 +6,7 @@ export const PIXEL_FX_MAX_SEED = 9999
 
 export const PIXEL_FX_DEFAULTS: Required<PixelFxProps> = {
   renderMode: 'billboard',
+  resolutionScale: 1,
   width: 4,
   opacity: 1,
   playing: true,

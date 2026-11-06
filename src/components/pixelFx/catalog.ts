@@ -14,6 +14,15 @@ export const PIXEL_FX_CONFIG: ConfigSchema = {
       { label: '地面（XZ）', value: 'ground' },
     ],
   },
+  resolutionScale: {
+    name: '贴图分辨率',
+    com: 'Select',
+    options: [
+      { label: '原图（1×）', value: 1 },
+      { label: '平滑（2×）', value: 2 },
+      { label: '平滑（4×）', value: 4 },
+    ],
+  },
   width: { name: '纹理平面宽度', com: 'Slider', min: 0.1, max: 50, step: 0.1 },
   opacity: { name: '整体不透明度', com: 'Slider', min: 0, max: 1, step: 0.01 },
   palette: {
@@ -40,7 +49,7 @@ export const PIXEL_FX_ENTRIES = PIXEL_FX_EFFECTS.map(effect => ({
   previewPath: `./preview/animated/pixelFx/${effect.type}.webp`,
   previewPosterPath: `./preview/animated/pixelFx/${effect.type}.poster.webp`,
   previewTransform: true,
-  description: `${effect.description} 公告牌绕本地 Y 轴转向相机，精灵随相机俯仰。支持固定立面、地面、配色、种子和水平镜像。${effect.screenSpace ? '界面或全幅效果显示在局部纹理面板。' : ''}默认循环播放。`,
+  description: `${effect.description} 公告牌绕本地 Y 轴转向相机，精灵随相机俯仰。支持固定立面、地面、贴图分辨率、配色、种子和水平镜像。${effect.screenSpace ? '界面或全幅效果显示在局部纹理面板。' : ''}默认循环播放。`,
   default: getPixelFxDefaults(effect.id),
   defaultObject3D: {},
   config: { ...PIXEL_FX_CONFIG },

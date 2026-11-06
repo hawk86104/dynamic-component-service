@@ -36,6 +36,7 @@ watch(() => props.effectId, async (effectId) => {
     runtime = createPixelFxRuntime(module, { palette: props.palette, seed: props.seed })
     root.add(runtime.object)
     runtime.setMode(props.renderMode)
+    runtime.setResolutionScale(props.resolutionScale)
     syncAppearance()
   }
   catch (error) {
@@ -46,6 +47,7 @@ watch(() => props.effectId, async (effectId) => {
 }, { immediate: true })
 
 watch(() => props.renderMode, mode => runtime?.setMode(mode))
+watch(() => props.resolutionScale, scale => runtime?.setResolutionScale(scale))
 watch(() => [props.width, props.opacity, props.mirror], syncAppearance)
 watch(() => [props.loop, props.palette, props.seed], () => {
   runtime?.restart({ palette: props.palette, seed: props.seed })

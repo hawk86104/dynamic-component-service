@@ -88,7 +88,6 @@ const config = {
   ] as const,
   defaultCategory: 'other' as const,
   components: [
-    ...PIXEL_FX_ENTRIES.map(entry => ({ ...entry, category: 'pixelFx' as const })),
     ...ELEMENTAL_CARD_ENTRIES,
     {
       name: '霓虹立体环形图',
@@ -2273,6 +2272,7 @@ const config = {
         showTongue: { name: '显示舌头', com: 'Switch' },
       },
     },
+    ...PIXEL_FX_ENTRIES.map(entry => ({ ...entry, category: 'pixelFx' as const })),
   ],
 }
 

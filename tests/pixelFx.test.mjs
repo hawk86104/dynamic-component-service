@@ -45,10 +45,12 @@ test('the pinned source and all 201 standalone entries expose the requested cont
     assert.equal(entry.default.seed, module.meta.options.seed)
     assert.equal(entry.default.palette, '')
     assert.equal(entry.default.mirror, false)
+    assert.equal(entry.default.resolutionScale, 1)
     assert.ok(/[\u4E00-\u9FFF]/.test(entry.name))
     const controls = Object.entries(entry.config).filter(([, item]) => item.com !== 'ActionButton').map(([key]) => key)
     assert.deepEqual(Object.keys(entry.default).sort(), controls.sort())
     assert.deepEqual(entry.config.renderMode.options.map(item => item.value), ['billboard', 'sprite', 'vertical', 'ground'])
+    assert.deepEqual(entry.config.resolutionScale.options.map(item => item.value), [1, 2, 4])
     assert.deepEqual(entry.config.palette.options.map(item => item.value), ['', ...Object.keys(PAL)])
     assert.equal(entry.config.newSeed.action, 'newSeed')
     assert.equal(entry.config.restart.action, 'restart')
@@ -264,21 +266,37 @@ test('billboards stay upright and mirror about the same anchor in all presentati
   texture.dispose()
 })
 
-test('Canvas resources are reused, nearest filtered and disposed once', async () => {
+test('native and smooth Canvas textures keep the same anchor and animation frame', async () => {
   const previousDocument = globalThis.document
   const previousImageData = globalThis.ImageData
+  const canvases = []
   const uploads = []
-  const canvas = { width: 0, height: 0, getContext: () => ({ putImageData: data => uploads.push(data) }) }
-  globalThis.document = { createElement: () => canvas }
+  const draws = []
+  globalThis.document = {
+    createElement: () => {
+      const canvas = { width: 0, height: 0 }
+      const context = {
+        canvas,
+        putImageData: data => uploads.push(data),
+        drawImage: (...args) => draws.push(args),
+      }
+      canvas.getContext = () => context
+      canvases.push(canvas)
+      return canvas
+    },
+  }
   globalThis.ImageData = class {
     constructor(data, width, height) {
       Object.assign(this, { data, width, height })
     }
   }
   try {
-    const runtime = createPixelFxRuntime(await load('fire/candle'))
+    const module = await load('fire/candle')
+    const [width, height] = module.meta.size
+    const runtime = createPixelFxRuntime(module)
     const [plane, sprite] = runtime.object.children
     const [mesh] = plane.children
+    const anchor = mesh.position.clone()
     const texture = mesh.material.map
     const resources = [mesh.geometry, mesh.material, sprite.material, texture]
     const disposed = resources.map(() => 0)
@@ -295,14 +313,43 @@ test('Canvas resources are reused, nearest filtered and disposed once', async ()
     runtime.restart({ palette: 'ice', seed: 77 })
     assert.equal(uploads.length, 3)
     assert.ok(uploads.every(image => image === uploads[0]))
+    runtime.tick(0.2, 1, true)
+    const frame = hash(uploads[0].data)
+
+    runtime.setResolutionScale(2)
+    const [native, scaled] = canvases
+    const context = scaled.getContext('2d')
+    assert.equal(texture.image, scaled)
+    assert.equal(sprite.material.map, texture)
+    assert.equal(texture.minFilter, THREE.LinearFilter)
+    assert.equal(texture.magFilter, THREE.LinearFilter)
+    assert.equal(context.imageSmoothingEnabled, true)
+    assert.equal(context.globalCompositeOperation, 'copy')
+    assert.deepEqual(draws.at(-1), [native, 0, 0, width * 2, height * 2])
+    assert.deepEqual([scaled.width, scaled.height], [width * 2, height * 2])
+
+    runtime.setResolutionScale(4)
+    assert.equal(canvases.length, 2)
+    assert.equal(texture.image, scaled)
+    assert.deepEqual([scaled.width, scaled.height], [width * 4, height * 4])
+    assert.deepEqual(draws.at(-1), [native, 0, 0, width * 4, height * 4])
+    assert.equal(hash(uploads[0].data), frame)
+    assert.ok(mesh.position.equals(anchor))
+
+    runtime.setResolutionScale(1)
+    assert.equal(texture.image, native)
+    assert.equal(texture.magFilter, THREE.NearestFilter)
+    assert.deepEqual([scaled.width, scaled.height], [0, 0])
+    assert.deepEqual(disposed, [0, 0, 0, 3])
+    const uploaded = uploads.length
     runtime.dispose()
     runtime.dispose()
-    assert.deepEqual(disposed, [1, 1, 1, 1])
+    assert.deepEqual(disposed, [1, 1, 1, 4])
     runtime.tick(0.1, 1, true)
     runtime.restart()
-    assert.equal(uploads.length, 3)
-    assert.equal(canvas.width, 0)
-    assert.equal(canvas.height, 0)
+    runtime.setResolutionScale(2)
+    assert.equal(uploads.length, uploaded)
+    assert.deepEqual([native.width, native.height], [0, 0])
     assert.equal(runtime.object.children.length, 0)
   }
   finally {
@@ -319,7 +366,7 @@ test('the shared Vue entry resolves all imported prop types without Vite', () =>
     id: 'pixel-fx-static-props',
     fs: { fileExists: existsSync, readFile: filename => readFileSync(filename, 'utf8') },
   })
-  for (const prop of ['effectId', 'renderMode', 'width', 'opacity', 'playing', 'playbackRate', 'loop', 'palette', 'seed', 'mirror']) {
+  for (const prop of ['effectId', 'renderMode', 'resolutionScale', 'width', 'opacity', 'playing', 'playbackRate', 'loop', 'palette', 'seed', 'mirror']) {
     assert.ok(result.propsDestructureDecl || result.content.includes(prop), prop)
   }
 })

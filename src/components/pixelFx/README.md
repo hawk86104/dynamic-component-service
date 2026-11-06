@@ -7,6 +7,7 @@
 | 参数 | 默认值 | 说明 |
 | --- | --- | --- |
 | `renderMode` | `billboard` | `billboard` 保持本地竖直，只绕 Y 轴转向相机。`sprite` 完整面向相机，跟随俯仰和滚转。`vertical` 固定在本地 XY，`ground` 固定在本地 XZ。 |
+| `resolutionScale` | `1` | 贴图分辨率。1× 保留原始像素，2× 和 4× 平滑放大原始帧，适合近看或大尺寸使用。 |
 | `width` | `4` | 完整纹理的世界宽度，包含透明留白。高度沿用原图比例。 |
 | `opacity` | `1` | 整体不透明度，范围 0–1。 |
 | `palette` | `''` | 空值沿用效果本身的配色。下拉菜单提供上游的 27 个预设，包括 fire、lava、water、ice 和 neon。 |
