@@ -54,7 +54,11 @@ watch(() => [props.loop, props.palette, props.seed], () => {
 })
 
 const { onBeforeRender } = useLoop()
-onBeforeRender(({ delta }) => {
+let lastElapsed: number | null = null
+onBeforeRender(({ elapsed }) => {
+  // TresJS also samples its clock after rendering, so the callback delta excludes render time.
+  const delta = lastElapsed === null ? 0 : Math.max(0, elapsed - lastElapsed)
+  lastElapsed = elapsed
   if (runtime && props.playing) {
     runtime.tick(delta, props.playbackRate, props.loop)
   }
